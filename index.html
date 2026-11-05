@@ -611,9 +611,21 @@ function dueIds(){
   var now = Date.now();
   return allCardIds().filter(function(id){
     var c = store.cards[id];
-    if(!c) return true;
+    if(!c){
+      var sid = cardSceneId(id);
+      return sid ? sceneCompleted(sceneById(sid)) : false;
+    }
     return new Date(c.due).getTime() <= now;
   });
+}
+function seedSceneCards(s){
+  var ids = [];
+  s.lines.forEach(function(_, i){ ids.push('L:' + s.id + ':' + i); });
+  s.targets.forEach(function(w){ ids.push('W_' + w); });
+  ids.forEach(function(id){
+    if(!store.cards[id]) store.cards[id] = dumpCard(FSRS.createEmptyCard(new Date()));
+  });
+  saveStore();
 }
 function rateCard(id, rating){
   var raw = store.cards[id];
@@ -1136,6 +1148,7 @@ function finishPractice(){
   var prev = store.sceneStats[S.id];
   store.sceneStats[S.id] = {accuracy:acc, tries:(prev ? prev.tries + 1 : 1), ts:Date.now()};
   if(S.id === 'price') store.learned = true;
+  seedSceneCards(S);
   touchStreak(); markDone(1);
   var fresh = refreshBadges();
   saveStore(); updateTabBadge();
