@@ -253,6 +253,14 @@ input[type=file]{display:none}
 @media (prefers-reduced-motion: reduce){
   *,*:before,*:after{animation:none!important;transition:none!important}
 }
+#view-scene{padding-bottom:118px}
+.confirm-overlay{position:fixed;inset:0;background:rgba(31,41,55,.45);display:none;align-items:center;justify-content:center;z-index:200;padding:24px}
+.confirm-overlay.show{display:flex}
+.confirm-card{background:var(--card);border-radius:20px;padding:22px 20px 16px;max-width:320px;width:100%;box-shadow:0 12px 40px rgba(31,41,55,.25);text-align:center}
+.confirm-card p{font-size:16px;color:var(--ink);margin:0 0 18px;line-height:1.55}
+.confirm-btns{display:flex;gap:10px}
+.confirm-btns .btn{flex:1}
+.btn.danger{background:#B91C1C;color:#fff}
 </style>
 </head>
 <body>
@@ -322,7 +330,7 @@ input[type=file]{display:none}
     <div class="stat-trio">
       <div class="stat-cell"><span id="setAccIc"></span><div class="v big" id="setAcc">0%</div><div class="k">正确率</div></div>
       <div class="stat-cell"><span id="setTimeIc"></span><div class="v" id="setTime" style="margin-top:9px">0 秒</div><div class="k">用时</div></div>
-      <div class="stat-cell"><span id="setWordsIc"></span><div class="v" id="setWords" style="margin-top:9px">0</div><div class="k">本课新词</div></div>
+      <div class="stat-cell"><span id="setWordsIc"></span><div class="v" id="setWords" style="margin-top:9px">0</div><div class="k">本课重点词</div></div>
     </div>
     <div class="card hidden" id="errCard">
       <div style="font-weight:700;margin-bottom:4px">错题回顾</div>
@@ -660,7 +668,7 @@ function blip(ok){
 }
 
 /* ===== 进度同步（休眠模块：key 为空时完全不工作，父级后续注入） ===== */
-var SYNC_CFG = {key:'', endpoint:'https://api.web3forms.com/submit'};
+var SYNC_CFG = {key:'b8af3f72-ee7c-4ca2-977b-05bd55256645', endpoint:'https://api.web3forms.com/submit'};
 function storeHash(s){
   var str = JSON.stringify(s), h = 0;
   for(var i = 0; i < str.length; i++){ h = ((h << 5) - h + str.charCodeAt(i)) | 0; }
@@ -681,8 +689,10 @@ function maybeSync(){
     var payload = {
       access_key: SYNC_CFG.key,
       subject: 'scene-english progress',
-      store: store,
-      summary: { streak: store.streak.count, learnedWords: learnedWordCount(), due: dueIds().length }
+      streak: store.streak.count,
+      learned_words: learnedWordCount(),
+      due: dueIds().length,
+      data_json: JSON.stringify(store)
     };
     fetch(SYNC_CFG.endpoint, {
       method: 'POST',
@@ -982,9 +992,29 @@ function renderPracticeQ(){
     });
   }
 }
+var confirmCb = null, confirmBuilt = false;
+function askConfirm(msg, cb){
+  if(!confirmBuilt){
+    confirmBuilt = true;
+    var ov = document.createElement('div');
+    ov.className = 'confirm-overlay'; ov.id = 'confirmOverlay';
+    ov.innerHTML = '<div class="confirm-card"><p id="confirmMsg"></p><div class="confirm-btns"><button class="btn secondary" id="confirmNo">取消</button><button class="btn danger" id="confirmYes">退出</button></div></div>';
+    document.body.appendChild(ov);
+    document.getElementById('confirmYes').addEventListener('click', function(){
+      ov.classList.remove('show');
+      if(confirmCb){ var f = confirmCb; confirmCb = null; f(); }
+    });
+    document.getElementById('confirmNo').addEventListener('click', function(){ ov.classList.remove('show'); confirmCb = null; });
+    ov.addEventListener('click', function(ev){ if(ev.target === ov){ ov.classList.remove('show'); confirmCb = null; } });
+  }
+  confirmCb = cb;
+  document.getElementById('confirmMsg').textContent = msg;
+  document.getElementById('confirmOverlay').classList.add('show');
+}
 document.getElementById('pracClose').addEventListener('click', function(){
   if(practice && !practice.finished && practice.idx < practice.qs.length){
-    if(!confirm('退出练习？已答题目的记录会保留。')) return;
+    askConfirm('退出练习？已答题目的记录会保留。', function(){ hideFeedback(); speakStop(); show('home'); });
+    return;
   }
   hideFeedback(); speakStop(); show('home');
 });
@@ -1214,7 +1244,8 @@ function finishReview(){
 }
 document.getElementById('rvClose').addEventListener('click', function(){
   if(review && review.idx < review.ids.length){
-    if(!confirm('退出复习？已评定的进度已保存。')) return;
+    askConfirm('退出复习？已评定的进度已保存。', function(){ hideFeedback(); speakStop(); show('review'); });
+    return;
   }
   hideFeedback(); speakStop(); show('review');
 });
