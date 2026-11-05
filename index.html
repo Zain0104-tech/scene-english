@@ -846,8 +846,11 @@ document.getElementById('sceneBack').addEventListener('click', function(){
 var PRAISE = ['记住了，就是这个', '漂亮，答对了', '对，就是这一句'];
 var ENCOURAGE = ['差一点，看上面这句', '没关系，先把正确答案记下来', '这句很常用，多看两眼'];
 function pickOf(a){ return a[Math.floor(Math.random() * a.length)]; }
-var fbState = {onContinue:null};
+var fbState = {onContinue:null, timer:null, auto:false};
 function showFeedback(ok, correctText, onContinue){
+  if(fbState.timer){ clearTimeout(fbState.timer); fbState.timer = null; }
+  fbState.auto = false;
+  document.getElementById('fbContinue').classList.remove('hidden');
   var bar = document.getElementById('feedbackBar');
   bar.className = ok ? 'ok show' : 'no show';
   document.getElementById('fbTitle').textContent = ok ? '答对了' : '差一点';
@@ -858,8 +861,37 @@ function showFeedback(ok, correctText, onContinue){
   fbState.onContinue = onContinue || null;
   blip(ok);
 }
+function showAutoFeedback(ok, correctText, delay, onNext, note){
+  showFeedback(ok, correctText, null);
+  fbState.onContinue = onNext || null;
+  fbState.auto = true;
+  document.getElementById('fbContinue').classList.add('hidden');
+  if(note){
+    var sub = document.getElementById('fbSub');
+    sub.textContent = note;
+    sub.classList.remove('hidden');
+  }
+  fbState.timer = setTimeout(function(){
+    var cb = fbState.onContinue;
+    fbState.onContinue = null;
+    fbState.timer = null;
+    fbState.auto = false;
+    hideFeedback();
+    if(cb) cb();
+  }, delay);
+}
+function makeFeedbackManual(){
+  if(fbState.timer){ clearTimeout(fbState.timer); fbState.timer = null; }
+  if(fbState.auto && fbState.onContinue){
+    fbState.auto = false;
+    document.getElementById('fbContinue').classList.remove('hidden');
+  }
+}
 function hideFeedback(){
+  if(fbState.timer){ clearTimeout(fbState.timer); fbState.timer = null; }
+  fbState.auto = false;
   document.getElementById('feedbackBar').classList.remove('show');
+  document.getElementById('fbContinue').classList.remove('hidden');
   fbState.onContinue = null;
 }
 document.getElementById('fbContinue').addEventListener('click', function(){
@@ -925,7 +957,7 @@ function practiceAnswer(ok, correctText, errInfo){
   recordAnswer(ok);
   if(ok) practice.right++;
   else if(errInfo) practice.errors.push(errInfo);
-  showFeedback(ok, correctText, nextPractice);
+  showAutoFeedback(ok, correctText, ok ? 850 : 1900, nextPractice);
 }
 function renderPracticeQ(){
   practiceHead();
@@ -965,20 +997,21 @@ function renderPracticeQ(){
         if(ch.classList.contains('used')) return;
         ch.classList.add('used'); answer.push(c);
         ansBox.textContent = answer.join(' ');
+        if(answer.length === chunks.length){
+          btnRedo.disabled = true;
+          chipBox.querySelectorAll('.chip').forEach(function(x){ x.disabled = true; });
+          var ok = answer.join(' ') === chunks.join(' ');
+          setTimeout(function(){
+            practiceAnswer(ok, L3.en, {line:q.line, label:'句子排序：' + L3.cn});
+          }, 180);
+        }
       });
       chipBox.appendChild(ch);
     });
     var row = document.createElement('div'); row.style.display = 'flex'; row.style.gap = '10px';
     var btnRedo = document.createElement('button'); btnRedo.className = 'btn secondary'; btnRedo.textContent = '重来';
     btnRedo.addEventListener('click', function(){ renderPracticeQ(); });
-    var btnCheck = document.createElement('button'); btnCheck.className = 'btn'; btnCheck.textContent = '检查';
-    btnCheck.addEventListener('click', function(){
-      btnCheck.disabled = true; btnRedo.disabled = true;
-      chipBox.querySelectorAll('.chip').forEach(function(c){ c.disabled = true; });
-      var ok = answer.join(' ') === chunks.join(' ');
-      practiceAnswer(ok, L3.en, {line:q.line, label:'句子排序：' + L3.cn});
-    });
-    row.appendChild(btnRedo); row.appendChild(btnCheck);
+    row.appendChild(btnRedo);
     box.appendChild(ansBox); box.appendChild(chipBox); box.appendChild(row);
   }
   else if(q.type === 'image'){
@@ -1012,6 +1045,7 @@ function askConfirm(msg, cb){
   document.getElementById('confirmOverlay').classList.add('show');
 }
 document.getElementById('pracClose').addEventListener('click', function(){
+  makeFeedbackManual();
   if(practice && !practice.finished && practice.idx < practice.qs.length){
     askConfirm('退出练习？已答题目的记录会保留。', function(){ hideFeedback(); speakStop(); show('home'); });
     return;
@@ -1178,26 +1212,18 @@ function renderReviewQ(){
   review.rated = false;
   var box = document.getElementById('reviewBox'); box.innerHTML = '';
   var id = review.ids[review.idx];
-  function ratingRow(){
-    if(review.rated) return;
-    var row = document.createElement('div'); row.className = 'rate-row';
-    [['不认识', FSRS.Rating.Again, 'r1'], ['模糊', FSRS.Rating.Hard, 'r2'], ['认识', FSRS.Rating.Good, 'r3']].forEach(function(r){
-      var b = document.createElement('button'); b.className = 'rate ' + r[2]; b.textContent = r[0];
-      b.addEventListener('click', function(){
-        if(review.rated) return;
-        review.rated = true;
-        rateCard(id, r[1]);
-        reviewDoneToday++;
-        review.idx++;
-        if(review.idx >= review.ids.length) finishReview();
-        else renderReviewQ();
-      });
-      row.appendChild(b);
-    });
-    box.appendChild(row);
-  }
-  function revealRating(ok, correctText){
-    showFeedback(ok, correctText, function(){ ratingRow(); });
+  function answerReview(ok, correctText){
+    recordAnswer(ok);
+    if(!review.rated){
+      review.rated = true;
+      rateCard(id, ok ? FSRS.Rating.Good : FSRS.Rating.Again);
+      reviewDoneToday++;
+    }
+    showAutoFeedback(ok, correctText, ok ? 950 : 1900, function(){
+      review.idx++;
+      if(review.idx >= review.ids.length) finishReview();
+      else renderReviewQ();
+    }, ok ? '已自动记为「认识」' : '已自动记为「不认识」');
   }
   if(id.charAt(0) === 'L'){
     var li = parseInt(id.slice(1), 10);
@@ -1207,7 +1233,7 @@ function renderReviewQ(){
       var blanked = L.en.replace(new RegExp('\\b' + t + '\\b', 'i'), '______');
       box.innerHTML = '<div class="qprompt">填空复习</div><div class="answerbox">' + esc(blanked) + '</div><div class="muted">' + L.cn + '</div>';
       var opts = shuffle([t].concat(shuffle(TARGETS.filter(function(w){ return w !== t; })).slice(0, 2)));
-      renderOptions(box, opts, t, function(ok){ recordAnswer(ok); revealRating(ok, t); });
+      renderOptions(box, opts, t, function(ok){ answerReview(ok, t); });
     } else {
       box.innerHTML = '<div class="qprompt">听一听，选出意思</div>';
       var pb = document.createElement('button'); pb.className = 'playbig';
@@ -1215,7 +1241,7 @@ function renderReviewQ(){
       pb.addEventListener('click', function(){ speak(L.en); });
       box.appendChild(pb);
       var opts2 = pick3(LINES.map(function(x){ return x.cn; }), L.cn);
-      renderOptions(box, opts2, L.cn, function(ok){ recordAnswer(ok); revealRating(ok, L.cn); });
+      renderOptions(box, opts2, L.cn, function(ok){ answerReview(ok, L.cn); });
       speak(L.en);
     }
   } else {
@@ -1229,7 +1255,7 @@ function renderReviewQ(){
     pb2.addEventListener('click', function(){ speak(w); });
     box.appendChild(pb2);
     var opts3 = pick3(WORDS.map(function(x){ return x.cn; }), wd2.cn);
-    renderOptions(box, opts3, wd2.cn, function(ok){ recordAnswer(ok); revealRating(ok, wd2.cn); });
+    renderOptions(box, opts3, wd2.cn, function(ok){ answerReview(ok, wd2.cn); });
   }
 }
 function finishReview(){
@@ -1243,6 +1269,7 @@ function finishReview(){
   maybeSync();
 }
 document.getElementById('rvClose').addEventListener('click', function(){
+  makeFeedbackManual();
   if(review && review.idx < review.ids.length){
     askConfirm('退出复习？已评定的进度已保存。', function(){ hideFeedback(); speakStop(); show('review'); });
     return;
