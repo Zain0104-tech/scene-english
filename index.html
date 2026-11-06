@@ -296,6 +296,7 @@ input[type=file]{display:none}
         </span>
       </div>
     </header>
+    <div class="muted" id="streakFreezeNote" style="font-size:12px;margin:0 2px 6px"></div>
     <button class="due-banner hidden" id="dueBanner"><span id="dueBannerTxt">有 0 条复习到期</span><span class="arr" id="dueBannerArr"></span></button>
     <div id="sceneList"></div>
     <div class="placeholder-row" id="moreRow"></div>
@@ -310,7 +311,7 @@ input[type=file]{display:none}
       <p class="desc" id="sceneDesc">客户 Anna 看中了 Wei 公司的一款手提包，在网上向他问价格。点句子可以看中文，点喇叭听发音。</p>
     </div>
     <div id="dialogBox" style="margin-top:14px"></div>
-    <div class="playall-row"><button class="btn secondary" id="btnPlayAll"></button></div>
+    <div class="playall-row"><button class="btn secondary" id="btnPlayAll"></button><div style="text-align:center;margin-top:8px"><button class="chip" id="btnSlowTts">语速：正常</button></div></div>
     <div class="sec-title">本课重点词</div>
     <div class="word-scroll" id="targetRow"></div>
     <div class="cta-dock">
@@ -414,13 +415,17 @@ input[type=file]{display:none}
         <div class="sr-main"><div class="sr-name">答题音效</div><div class="sr-desc">答对 / 答错时播放短音，默认关</div></div>
         <label class="switch"><input type="checkbox" id="soundToggle"><span class="track"></span></label>
       </div>
+      <div class="set-row">
+        <div class="sr-main"><div class="sr-name">朗读语速</div><div class="sr-desc">慢速时句子和单词都读得更慢，方便跟读</div></div>
+        <button class="chip" id="btnSlowTtsMy">语速：正常</button>
+      </div>
       <button class="btn secondary" id="btnExport" style="margin:10px 0">导出进度</button>
       <button class="btn secondary" id="btnImport">导入进度</button>
       <input type="file" id="fileImport" accept=".json,application/json">
       <p class="msg-line" id="myMsg"></p>
       <p class="muted" style="margin-bottom:0">学习进度只保存在这台设备上。换设备前，请先导出进度。单词音标来源：ECDICT 开源英汉词典（MIT 许可）；对话与题目均为原创。</p>
     </div>
-    <div class="version-line">情景英语 v3.5</div>
+    <div class="version-line">情景英语 v3.6</div>
   </section>
 </div>
 
@@ -1490,7 +1495,7 @@ function speak(text){
   try{
     speechSynthesis.cancel();
     var u = new SpeechSynthesisUtterance(text);
-    u.lang = 'en-US'; u.rate = 0.85;
+    u.lang = 'en-US'; u.rate = 0.85 * ((typeof store !== 'undefined' && store.settings && store.settings.slowTts) ? 0.72 : 1);
     speechSynthesis.speak(u);
   }catch(e){}
 }
@@ -1506,9 +1511,9 @@ function dayStr(t){
 }
 function defaultStore(){
   return { cards:{}, learned:false,
-    streak:{lastDay:'', count:0}, badges:{}, sceneStats:{},
+    streak:{lastDay:'', count:0}, streakFreeze:{week:'', used:false, lastUsed:''}, badges:{}, sceneStats:{},
     stats:{answered:0, correct:0}, today:{day:dayStr(), done:0},
-    settings:{sound:false} };
+    settings:{sound:false, slowTts:false} };
 }
 function migrate(s){
   var d = defaultStore();
@@ -1516,11 +1521,12 @@ function migrate(s){
   if(s.cards && typeof s.cards === 'object') d.cards = s.cards;
   d.learned = !!s.learned;
   if(s.streak && typeof s.streak.count === 'number') d.streak = {lastDay:String(s.streak.lastDay || ''), count:s.streak.count};
+  if(s.streakFreeze) d.streakFreeze = {week:String(s.streakFreeze.week || ''), used:!!s.streakFreeze.used, lastUsed:String(s.streakFreeze.lastUsed || '')};
   if(s.badges && typeof s.badges === 'object') d.badges = s.badges;
   if(s.sceneStats && typeof s.sceneStats === 'object') d.sceneStats = s.sceneStats;
   if(s.stats) d.stats = {answered:(s.stats.answered | 0), correct:(s.stats.correct | 0)};
   if(s.today && s.today.day) d.today = {day:String(s.today.day), done:(s.today.done | 0)};
-  if(s.settings) d.settings = {sound:!!s.settings.sound};
+  if(s.settings) d.settings = {sound:!!s.settings.sound, slowTts:!!s.settings.slowTts};
   Object.keys(d.cards).forEach(function(k){
     var m = /^L(\d+)$/.exec(k);
     if(m){
@@ -1542,7 +1548,45 @@ function rollDay(){
   if(store.today.day !== t){ store.today = {day:t, done:0}; saveStore(); }
 }
 function markDone(n){ rollDay(); store.today.done += (n || 1); saveStore(); }
+/* ===== 连胜保护（每周 1 个白卷日：漏学恰好 1 天时不断链，自动消耗本周保护） ===== */
+function weekKey(t){
+  var d = new Date(t || Date.now());
+  d.setHours(0, 0, 0, 0);
+  var dow = (d.getDay() + 6) % 7;
+  d.setDate(d.getDate() - dow + 3);
+  var jan4 = new Date(d.getFullYear(), 0, 4);
+  var jdow = (jan4.getDay() + 6) % 7;
+  jan4.setDate(jan4.getDate() - jdow + 3);
+  var wk = 1 + Math.round((d - jan4) / (7 * DAY_MS));
+  return d.getFullYear() + '-W' + ('0' + wk).slice(-2);
+}
+function dayGap(a, b){
+  if(!a || !b) return 0;
+  var pa = a.split('-'), pb = b.split('-');
+  return Math.round((Date.UTC(+pb[0], +pb[1] - 1, +pb[2]) - Date.UTC(+pa[0], +pa[1] - 1, +pa[2])) / DAY_MS);
+}
+function freezeAvailable(){
+  var sf = store.streakFreeze;
+  return !(sf && sf.used && sf.week === weekKey());
+}
+function evalStreak(){
+  var last = store.streak.lastDay;
+  if(!last) return;
+  var gap = dayGap(last, dayStr());
+  if(gap <= 1) return;
+  if(gap === 2 && freezeAvailable()){
+    var missed = dayStr(Date.now() - DAY_MS);
+    store.streakFreeze = {week:weekKey(), used:true, lastUsed:missed};
+    store.streak.lastDay = missed;
+    saveStore();
+    return;
+  }
+  store.streak.count = 0;
+  store.streak.lastDay = '';
+  saveStore();
+}
 function touchStreak(){
+  evalStreak();
   var t = dayStr();
   if(store.streak.lastDay === t) return;
   var y = dayStr(Date.now() - DAY_MS);
@@ -1815,8 +1859,9 @@ function openScene(id){
   renderScene(); show('scene');
 }
 function renderHome(){
-  rollDay(); refreshBadges();
+  rollDay(); evalStreak(); refreshBadges();
   document.getElementById('streakChip').innerHTML = icon('flame') + '<span>' + store.streak.count + '</span>';
+  document.getElementById('streakFreezeNote').textContent = '连胜保护：' + (freezeAvailable() ? '本周可用' : '本周已用');
   document.getElementById('todayNum').textContent = store.today.done;
   document.getElementById('todayRingFg').style.strokeDashoffset = String(97.4 * (1 - Math.min(1, store.today.done)));
   var due = dueIds().length;
@@ -1860,6 +1905,7 @@ document.getElementById('dueBanner').addEventListener('click', function(){ goTab
 
 /* ===== ② 场景详情（气泡对话） ===== */
 function renderScene(){
+  syncSlowTtsUI();
   document.getElementById('sceneHero').src = cur.img;
   document.getElementById('sceneTitle').innerHTML = esc(cur.title) + '<span class="en">' + esc(cur.en) + '</span>';
   var story = cur.desc.replace(/点句子可以看中文，点喇叭听发音。\s*$/, '');
@@ -2980,12 +3026,24 @@ function renderMy(){
     wall.appendChild(d);
   });
   document.getElementById('soundToggle').checked = !!store.settings.sound;
+  syncSlowTtsUI();
 }
 document.getElementById('soundToggle').addEventListener('change', function(ev){
   store.settings.sound = !!ev.target.checked;
   saveStore();
   if(store.settings.sound) blip(true);
 });
+function syncSlowTtsUI(){
+  var label = '语速：' + (store.settings.slowTts ? '慢速' : '正常');
+  document.getElementById('btnSlowTts').textContent = label;
+  document.getElementById('btnSlowTtsMy').textContent = label;
+}
+function toggleSlowTts(){
+  store.settings.slowTts = !store.settings.slowTts;
+  saveStore(); syncSlowTtsUI();
+}
+document.getElementById('btnSlowTts').addEventListener('click', toggleSlowTts);
+document.getElementById('btnSlowTtsMy').addEventListener('click', toggleSlowTts);
 
 /* ===== 导出 / 导入（接受 v1、v2 与裸 store） ===== */
 document.getElementById('btnExport').addEventListener('click', function(){
