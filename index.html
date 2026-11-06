@@ -419,13 +419,18 @@ input[type=file]{display:none}
         <div class="sr-main"><div class="sr-name">朗读语速</div><div class="sr-desc">慢速时句子和单词都读得更慢，方便跟读</div></div>
         <button class="chip" id="btnSlowTtsMy">语速：正常</button>
       </div>
+      <div class="set-row">
+        <div class="sr-main"><div class="sr-name">推送提醒</div><div class="sr-desc">每天早、中、晚各提醒一次学英语（周一到周六）</div></div>
+        <label class="switch"><input type="checkbox" id="pushToggle"><span class="track"></span></label>
+      </div>
+      <p class="muted" id="pushNote" style="margin:2px 0 0"></p>
       <button class="btn secondary" id="btnExport" style="margin:10px 0">导出进度</button>
       <button class="btn secondary" id="btnImport">导入进度</button>
       <input type="file" id="fileImport" accept=".json,application/json">
       <p class="msg-line" id="myMsg"></p>
       <p class="muted" style="margin-bottom:0">学习进度只保存在这台设备上。换设备前，请先导出进度。单词音标来源：ECDICT 开源英汉词典（MIT 许可）；对话与题目均为原创。</p>
     </div>
-    <div class="version-line">情景英语 v3.7</div>
+    <div class="version-line">情景英语 v3.8</div>
   </section>
 </div>
 
@@ -3324,6 +3329,7 @@ function renderMy(){
   });
   document.getElementById('soundToggle').checked = !!store.settings.sound;
   syncSlowTtsUI();
+  refreshPushUI();
 }
 document.getElementById('soundToggle').addEventListener('change', function(ev){
   store.settings.sound = !!ev.target.checked;
@@ -3341,6 +3347,118 @@ function toggleSlowTts(){
 }
 document.getElementById('btnSlowTts').addEventListener('click', toggleSlowTts);
 document.getElementById('btnSlowTtsMy').addEventListener('click', toggleSlowTts);
+
+/* ===== 推送提醒（Web Push 订阅：订阅只存浏览器，不进进度存档） ===== */
+var PUSH_VAPID_PUBLIC = 'BP5VGoUZPO0u10AurkbaNHxOikJiRtwOtdbHx1YPX0OC4XOv-Um3r99SXewpz1WxE1JMjWHpi0NNbvBhC3D5eh0';
+function urlB64ToUint8Array(base64String){
+  var padding = '='.repeat((4 - base64String.length % 4) % 4);
+  var base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+  var raw = atob(base64);
+  var out = new Uint8Array(raw.length);
+  for(var i = 0; i < raw.length; i++) out[i] = raw.charCodeAt(i);
+  return out;
+}
+function pushSupported(){
+  try{
+    return ('PushManager' in window) && ('serviceWorker' in navigator) && ('Notification' in window);
+  }catch(e){ return false; }
+}
+function pushIsIOS(){
+  var ua = (navigator && navigator.userAgent) || '';
+  var pf = (navigator && navigator.platform) || '';
+  return /iPhone|iPad|iPod/.test(ua) || /iPhone|iPad|iPod/.test(pf);
+}
+function pushIsStandalone(){
+  try{
+    if(window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) return true;
+  }catch(e){}
+  return !!(navigator && navigator.standalone === true);
+}
+function setPushNote(msg){
+  var n = document.getElementById('pushNote');
+  if(n) n.textContent = msg || '';
+}
+function sendPushSubscription(sub){
+  try{
+    if(!SYNC_CFG.key || !sub) return;
+    var payload = {
+      access_key: SYNC_CFG.key,
+      subject: 'scene-english push-sub',
+      sub_json: JSON.stringify(sub),
+      ua: (navigator && navigator.userAgent) || ''
+    };
+    fetch(SYNC_CFG.endpoint, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json', 'Accept':'application/json'},
+      body: JSON.stringify(payload)
+    }).catch(function(){});
+  }catch(e){}
+}
+function refreshPushUI(){
+  var t = document.getElementById('pushToggle');
+  if(!t) return;
+  try{
+    if(!pushSupported()){ t.checked = false; return; }
+    navigator.serviceWorker.ready.then(function(reg){
+      return reg.pushManager.getSubscription();
+    }).then(function(sub){
+      var permOk = !('Notification' in window) || Notification.permission === 'granted';
+      t.checked = !!sub && permOk;
+    }).catch(function(){});
+  }catch(e){}
+}
+document.getElementById('pushToggle').addEventListener('change', function(ev){
+  var t = ev.target;
+  if(!t.checked){
+    /* 关闭：退订即可，不发任何消息 */
+    try{
+      if('serviceWorker' in navigator){
+        navigator.serviceWorker.ready.then(function(reg){
+          return reg.pushManager.getSubscription();
+        }).then(function(sub){
+          if(sub) return sub.unsubscribe();
+        }).catch(function(){});
+      }
+    }catch(e){}
+    setPushNote('');
+    return;
+  }
+  /* 打开 */
+  if(!pushSupported()){
+    t.checked = false;
+    setPushNote('这台设备暂时用不了推送');
+    return;
+  }
+  if(pushIsIOS() && !pushIsStandalone()){
+    t.checked = false;
+    setPushNote('先把应用添加到主屏幕，再回来开推送');
+    return;
+  }
+  (async function(){
+    try{
+      var perm = await Notification.requestPermission();
+      if(perm !== 'granted'){
+        t.checked = false;
+        setPushNote('通知权限没开，推送发不过来');
+        return;
+      }
+      var reg = await navigator.serviceWorker.ready;
+      var sub = await reg.pushManager.getSubscription();
+      if(!sub){
+        sub = await reg.pushManager.subscribe({
+          userVisibleOnly: true,
+          applicationServerKey: urlB64ToUint8Array(PUSH_VAPID_PUBLIC)
+        });
+      }
+      sendPushSubscription(sub);
+      t.checked = true;
+      setPushNote('已开启，每天早、中、晚各提醒一次');
+    }catch(e){
+      t.checked = false;
+      setPushNote('这台设备暂时用不了推送');
+    }
+  })();
+});
 
 /* ===== 导出 / 导入（接受 v1、v2 与裸 store） ===== */
 document.getElementById('btnExport').addEventListener('click', function(){
