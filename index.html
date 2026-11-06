@@ -345,6 +345,77 @@ body.skin-excel .err-row{border-bottom:1px solid #E4E8EE}
   body.skin-excel .xl-ribbon{display:none}
 }
 
+/* ===== Word 伪装皮肤（body.skin-word 时生效） ===== */
+.wd-top{display:none}
+body.skin-word{font-family:"Segoe UI","Microsoft YaHei",Calibri,sans-serif;background:#E9E7E4}
+body.skin-word .wd-top{display:block;position:sticky;top:0;z-index:45;background:#F3F3F3;border-bottom:1px solid #D2D0CE}
+.wd-rtabs{display:flex;gap:2px;align-items:flex-end;padding:4px 10px 0}
+.wd-rtab{font-size:13px;color:#444;padding:5px 12px;border:1px solid transparent;border-bottom:none}
+.wd-rtab.on{background:#fff;border-color:#D2D0CE;color:#2B579A;font-weight:600}
+.wd-rtab.file{background:#2B579A;color:#fff;font-weight:600}
+.wd-rgroups{display:flex;background:#fff;border-top:1px solid #EDEBE9;padding:5px 6px}
+.wd-rgroup{font-size:12px;color:#666;text-align:center;padding:4px 14px;border-right:1px solid #EDEBE9}
+.wd-rgroup:last-child{border-right:none}
+.wd-ruler{height:18px;background:#fff;border-top:1px solid #EDEBE9;position:relative;overflow:hidden}
+.wd-ruler-in{position:absolute;left:30px;right:30px;top:0;bottom:0;background:repeating-linear-gradient(90deg,#BFBFBF 0 1px,transparent 1px 12px);opacity:.75}
+body.skin-word #app{background:#fff;box-shadow:0 1px 8px rgba(0,0,0,.28);padding-left:24px;padding-right:24px}
+body.skin-word .card{border-radius:2px;box-shadow:none;border:1px solid #D6DCE4}
+body.skin-word #sceneHero{display:none}
+@media (min-width:1024px){
+  body.skin-word #app{max-width:820px;margin:24px auto 100px;padding:48px 58px 120px;min-height:920px}
+}
+/* Word 皮下场景对话 = 文档正文 */
+.wd-doc-head{border-bottom:2px solid #2B579A;padding-bottom:9px;margin-bottom:15px}
+.wd-doc-title{font-size:20px;font-weight:700;color:#1F3864}
+.wd-doc-sub{font-size:12.5px;color:#777;margin-top:3px}
+.wd-line{font-size:16.5px;line-height:1.55;margin:0 0 2px;cursor:pointer}
+.wd-line .hl{color:#2B579A;font-weight:700}
+.wd-line.flash{background:#FFF2CC;border-radius:4px}
+.wd-sp{font-weight:700;color:#2B579A}
+.wd-cn{font-size:13.5px;color:#8A8A8A;line-height:1.5;margin:0 0 13px}
+
+/* ===== Python 伪装皮肤（body.skin-python 时生效，轻量） ===== */
+.py-top,.py-tree{display:none}
+body.skin-python{font-family:Consolas,"Courier New",monospace;background:#1E1E1E;color:#D4D4D4}
+body.skin-python #app{background:#1E1E1E}
+body.skin-python .py-top{display:block;position:sticky;top:0;z-index:45;background:#252526;border-bottom:1px solid #111}
+.py-tabs{display:flex}
+.py-tab{font-size:12.5px;color:#969696;padding:8px 16px;background:#2D2D2D;border-right:1px solid #1E1E1E}
+.py-tab.on{background:#1E1E1E;color:#fff;box-shadow:inset 0 2px 0 #007ACC}
+.py-crumbs{font-size:12px;color:#8A8A8A;padding:4px 14px;border-top:1px solid #2D2D2D}
+body.skin-python .card{background:#252526;box-shadow:none;border:1px solid #3C3C3C;border-radius:4px;color:#D4D4D4}
+body.skin-python .sec-title{color:#D4D4D4}
+body.skin-python .muted{color:#8A8A8A}
+body.skin-python .btn{border-radius:4px}
+body.skin-python .chip{border-radius:4px;background:#2D2D2D;color:#9CDCFE;border-color:#3C3C3C}
+body.skin-python .stat-cell{background:#252526;box-shadow:none;border:1px solid #3C3C3C;border-radius:4px;color:#D4D4D4}
+body.skin-python .review-ring-fg{stroke:#007ACC}
+body.skin-python .review-ring-bg{stroke:#3C3C3C}
+body.skin-python .qprompt{font-family:Consolas,"Courier New",monospace;color:#D4D4D4}
+body.skin-python .qprompt::before{content:"# ";color:#6A9955}
+body.skin-python .answerbox{background:#252526;color:#CE9178;border-radius:4px;box-shadow:inset 0 0 0 1px #3C3C3C;font-family:Consolas,"Courier New",monospace}
+body.skin-python .opt{background:#252526;border:1px solid #3C3C3C;color:#D4D4D4;border-radius:4px;box-shadow:none;font-family:Consolas,"Courier New",monospace;font-size:15px}
+body.skin-python .opt.right{background:#1F3D2B;border-color:#4EC9B0}
+body.skin-python .opt.wrong{background:#3D1F24;border-color:#F48771}
+body.skin-python .opt.sel{background:#264F78;border-color:#007ACC}
+body.skin-python .playbig{border-radius:4px;background:#0E639C}
+.py-comment{font-family:Consolas,"Courier New",monospace;color:#6A9955;font-size:13.5px;line-height:1.6}
+.py-chapter{font-family:Consolas,"Courier New",monospace;color:#6A9955;font-size:13.5px;padding:12px 2px 6px;cursor:pointer}
+.py-line{font-family:Consolas,"Courier New",monospace;font-size:13.5px;line-height:1.55;color:#D4D4D4;border-left:2px solid #3C3C3C;padding:6px 10px;margin:0 0 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;display:flex;align-items:center;gap:8px}
+.py-line .py-txt{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis}
+.py-line.learned{border-left-color:#4EC9B0}
+.py-line.dim{color:#6E6E6E}
+.py-line .word-del{flex:none}
+@media (min-width:1024px){
+  body.skin-python .py-tree{display:block;position:fixed;left:0;top:0;bottom:0;width:188px;background:#252526;border-right:1px solid #111;z-index:44;padding-top:10px;font-family:"Segoe UI","Microsoft YaHei",sans-serif}
+  .py-tree-head{font-size:11px;letter-spacing:1px;color:#BBBBBB;padding:8px 16px}
+  .py-file{font-size:13px;color:#CCCCCC;padding:5px 16px 5px 26px;font-family:Consolas,"Courier New",monospace}
+  .py-file.on{background:#37373D;color:#fff}
+  .py-file::before{content:"› ";color:#8A8A8A}
+  body.skin-python #app{margin-left:188px;max-width:1020px}
+  body.skin-python #tabbar{left:188px}
+}
+
 /* ===== 老板键静态假屏（一张静止的报价表） ===== */
 .boss-screen{display:none;position:fixed;inset:0;z-index:500;background:#fff;overflow:auto;font-family:Calibri,"Segoe UI","Microsoft YaHei",sans-serif;color:#222}
 .boss-screen.show{display:block}
@@ -369,6 +440,25 @@ body.boss-on #app,body.boss-on #tabbar,body.boss-on #feedbackBar{visibility:hidd
 </style>
 </head>
 <body>
+<!-- Word 伪装皮肤外壳（仅 body.skin-word 时显示） -->
+<div id="wdTop" class="wd-top">
+  <div class="wd-ribbon">
+    <div class="wd-rtabs"><span class="wd-rtab file">文件</span><span class="wd-rtab on">开始</span><span class="wd-rtab">插入</span><span class="wd-rtab">引用</span><span class="wd-rtab">审阅</span><span class="wd-rtab">视图</span></div>
+    <div class="wd-rgroups"><span class="wd-rgroup">剪贴板</span><span class="wd-rgroup">字体</span><span class="wd-rgroup">段落</span><span class="wd-rgroup">样式</span><span class="wd-rgroup">编辑</span></div>
+  </div>
+  <div class="wd-ruler"><span class="wd-ruler-in"></span></div>
+</div>
+<!-- Python 伪装皮肤外壳（仅 body.skin-python 时显示） -->
+<div id="pyTree" class="py-tree">
+  <div class="py-tree-head">资源管理器</div>
+  <div class="py-file on">vocab_review.py</div>
+  <div class="py-file">words.csv</div>
+  <div class="py-file">notes.md</div>
+</div>
+<div id="pyTop" class="py-top">
+  <div class="py-tabs"><span class="py-tab on">vocab_review.py</span><span class="py-tab">words.csv</span><span class="py-tab">notes.md</span></div>
+  <div class="py-crumbs">src&nbsp;&nbsp;›&nbsp;&nbsp;vocab_review.py</div>
+</div>
 <!-- Excel 伪装皮肤外壳（仅 body.skin-excel 时显示；窄屏只剩公式栏一行） -->
 <div id="xlTop" class="xl-top">
   <div class="xl-ribbon">
@@ -474,6 +564,13 @@ body.boss-on #app,body.boss-on #tabbar,body.boss-on #feedbackBar{visibility:hidd
 
   <!-- ⑥ 复习标签 -->
   <section id="view-review" class="view">
+    <div class="sec-title" style="margin-top:14px">我的进度</div>
+    <div class="stat-grid">
+      <div class="stat-cell"><div class="v" id="myWords">0</div><div class="k">累计学词</div></div>
+      <div class="stat-cell"><div class="v" id="myScenes">0</div><div class="k">完成场景</div></div>
+      <div class="stat-cell"><div class="v" id="myStreak">0</div><div class="k">连胜天数</div></div>
+      <div class="stat-cell"><div class="v" id="myAcc">—</div><div class="k">总正确率</div></div>
+    </div>
     <div class="review-hero">
       <div class="review-ring-box">
         <svg width="150" height="150" viewBox="0 0 150 150"><circle class="review-ring-bg" cx="75" cy="75" r="68"></circle><circle class="review-ring-fg" id="reviewRingFg" cx="75" cy="75" r="68"></circle></svg>
@@ -523,7 +620,7 @@ body.boss-on #app,body.boss-on #tabbar,body.boss-on #feedbackBar{visibility:hidd
         <button class="chip" id="btnSlowTtsMy">语速：正常</button>
       </div>
       <div class="set-row">
-        <div class="sr-main"><div class="sr-name">外观皮肤</div><div class="sr-desc">Excel：把界面装成表格的样子（电脑上更完整），手机上只多一条公式栏</div></div>
+        <div class="sr-main"><div class="sr-name">外观皮肤</div><div class="sr-desc">Excel 表格 / Word 文档 / Python 编辑器，电脑上更像真的在办公</div></div>
         <button class="chip" id="btnSkin">皮肤：无</button>
       </div>
       <div class="set-row">
@@ -531,7 +628,7 @@ body.boss-on #app,body.boss-on #tabbar,body.boss-on #feedbackBar{visibility:hidd
         <button class="chip" id="btnKeyBoss">Esc</button>
       </div>
       <div class="set-row">
-        <div class="sr-main"><div class="sr-name">切皮键</div><div class="sr-desc">在无皮肤 / Excel 之间切换</div></div>
+        <div class="sr-main"><div class="sr-name">切皮键</div><div class="sr-desc">在无 / Excel / Word / Python 之间轮换</div></div>
         <button class="chip" id="btnKeySkin">F2</button>
       </div>
       <p class="muted" style="margin:2px 0 0">改快捷键：点按钮后按下新键即可；再点一次按钮取消。答题时按数字键 1–4 直接选对应选项。皮肤与快捷键只存本机，不同步。</p>
@@ -563,14 +660,7 @@ body.boss-on #app,body.boss-on #tabbar,body.boss-on #feedbackBar{visibility:hidd
       </div>
       <p class="muted" style="margin-bottom:0">开启双端同步后，进度会自动在手机和电脑之间同步；导出/导入可以用来手动备份。单词音标来源：ECDICT 开源英汉词典（MIT 许可）；对话与题目均为原创。</p>
     </div>
-    <div class="sec-title">我的进度</div>
-    <div class="stat-grid">
-      <div class="stat-cell"><div class="v" id="myWords">0</div><div class="k">累计学词</div></div>
-      <div class="stat-cell"><div class="v" id="myScenes">0</div><div class="k">完成场景</div></div>
-      <div class="stat-cell"><div class="v" id="myStreak">0</div><div class="k">连胜天数</div></div>
-      <div class="stat-cell"><div class="v" id="myAcc">—</div><div class="k">总正确率</div></div>
-    </div>
-    <div class="version-line">情景英语 v3.11</div>
+    <div class="version-line">情景英语 v3.12</div>
   </section>
 </div>
 <!-- Excel 伪装皮肤：底部工作表标签 + 状态栏（仅桌面宽屏显示） -->
@@ -2273,10 +2363,16 @@ document.getElementById('btnSyncNow').addEventListener('click', function(){
 
 
 
-/* ===== 桌面皮肤（Excel 伪装）+ 老板键 + 自定义快捷键 =====
-   皮肤与按键只存本机 settings（同步时 settings 整体不离开设备）；框架预留 word/python。 */
-var SKIN_TITLES = {excel:'供应商报价汇总_2026Q4.xlsx - Excel'};
+/* ===== 桌面皮肤（Excel / Word / Python 伪装）+ 老板键 + 自定义快捷键 =====
+   皮肤与按键只存本机 settings（同步时 settings 整体不离开设备）。 */
+var SKIN_TITLES = {excel:'供应商报价汇总_2026Q4.xlsx - Excel', word:'客户沟通记录.docx - Word', python:'vocab_review.py - Visual Studio Code'};
+var SKIN_LABELS = {none:'无', excel:'Excel', word:'Word', python:'Python'};
 var SKIN_FAVICON_SVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#217346"/><path d="M10 10l12 12M22 10L10 22" stroke="#fff" stroke-width="3.6" stroke-linecap="round"/></svg>';
+var SKIN_FAVICONS = {
+  excel: SKIN_FAVICON_SVG,
+  word: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#2B579A"/><path d="M6.5 8l3.6 15L14 11.5 17.9 23 21.5 8" fill="#2B579A" stroke="#fff" stroke-width="2.8" stroke-linejoin="round" stroke-linecap="round"/></svg>',
+  python: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#007ACC"/><path d="M12 10l-6 6 6 6M20 10l6 6-6 6" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+};
 var DEFAULT_TITLE = '情景英语';
 var DEFAULT_FAVICON = 'icon-192.png';
 var curView = 'home';
@@ -2291,16 +2387,21 @@ function setFavicon(href){ var l = document.getElementById('faviconLink'); if(l)
 function applySkin(){
   var sk = skinName();
   document.body.classList.toggle('skin-excel', sk === 'excel');
+  document.body.classList.toggle('skin-word', sk === 'word');
+  document.body.classList.toggle('skin-python', sk === 'python');
   document.body.classList.toggle('skin-on', sk !== 'none');
-  if(sk === 'excel'){
-    document.title = SKIN_TITLES.excel;
-    setFavicon('data:image/svg+xml;charset=utf-8,' + encodeURIComponent(SKIN_FAVICON_SVG));
+  if(SKIN_TITLES[sk]){
+    document.title = SKIN_TITLES[sk];
+    setFavicon('data:image/svg+xml;charset=utf-8,' + encodeURIComponent(SKIN_FAVICONS[sk]));
   } else {
     document.title = DEFAULT_TITLE;
     setFavicon(DEFAULT_FAVICON);
   }
   refreshSkinUI();
   updateFormulaBar();
+  /* 渲染随皮肤分支的视图（场景文档体 / 词书代码行）在切皮时就地重绘 */
+  if(curView === 'scene' && typeof cur !== 'undefined' && cur) renderScene();
+  if(curView === 'words') renderWords();
 }
 function setSkin(name){
   if(!store.settings) store.settings = defaultStore().settings;
@@ -2309,13 +2410,13 @@ function setSkin(name){
   applySkin();
 }
 function cycleSkin(){
-  var order = ['none', 'excel'];
+  var order = ['none', 'excel', 'word', 'python'];
   var i = order.indexOf(skinName());
   setSkin(order[(i + 1) % order.length]);
 }
 function refreshSkinUI(){
   var b = document.getElementById('btnSkin');
-  if(b) b.textContent = '皮肤：' + (skinName() === 'excel' ? 'Excel' : '无');
+  if(b) b.textContent = '皮肤：' + (SKIN_LABELS[skinName()] || '无');
 }
 /* 公式栏镜像：练习/复习时是当前题目，其余视图给个体面的占位内容 */
 function currentQuestionText(){
@@ -2583,6 +2684,11 @@ function renderScene(){
   document.getElementById('sceneDesc').textContent = '小故事：' + story;
   fillCultureCard(document.getElementById('sceneCulture'), cur);
   var box = document.getElementById('dialogBox'); box.innerHTML = '';
+  if(skinName() === 'word'){
+    renderSceneDoc(box);
+    finishRenderScene();
+    return;
+  }
   var prevSp = null;
   cur.lines.forEach(function(L, i){
     var row = document.createElement('div');
@@ -2608,6 +2714,24 @@ function renderScene(){
     row.appendChild(line);
     box.appendChild(row);
   });
+  finishRenderScene();
+}
+/* Word 皮：对话就是文档正文——沟通记录格式，每句一段，译文随后一行（无图片） */
+function renderSceneDoc(box){
+  var head = document.createElement('div'); head.className = 'wd-doc-head';
+  head.innerHTML = '<div class="wd-doc-title">沟通记录</div>' +
+    '<div class="wd-doc-sub">' + esc(cur.title) + ' · ' + esc(cur.en) + '</div>';
+  box.appendChild(head);
+  cur.lines.forEach(function(L, i){
+    var p = document.createElement('p'); p.className = 'wd-line'; p.id = 'line-' + i;
+    p.innerHTML = '<span class="wd-sp">' + esc(L.sp) + ':</span> ' + hlTargetsOf(cur, L.en);
+    p.addEventListener('click', function(){ speak(L.en); });
+    box.appendChild(p);
+    var cn = document.createElement('p'); cn.className = 'wd-cn'; cn.textContent = L.cn;
+    box.appendChild(cn);
+  });
+}
+function finishRenderScene(){
   var tr = document.getElementById('targetRow'); tr.innerHTML = '';
   cur.targets.forEach(function(w){
     var wd = wordOf(w);
@@ -3710,6 +3834,7 @@ function renderWords(){
     var v = store.customWords[w];
     return {w:w, phon:v.phon || '', mean:v.mean || '', ts:v.ts || 0};
   }).sort(function(a, b){ return a.ts - b.ts; });
+  if(skinName() === 'python'){ renderWordsPy(box, learned, known, customList); return; }
   var ov = document.createElement('div'); ov.className = 'book-overview';
   var pct = N ? Math.round(known / N * 100) : 0;
   ov.innerHTML = '<div class="book-total">词书 · 共 ' + N + ' 词 · ' + chapters + ' 章 · 导入 ' + customList.length + ' 词</div>' +
@@ -3775,6 +3900,73 @@ function renderWords(){
     });
   }
 }
+/* Python 皮：词书渲染成代码——每行一条 JSON 记录，章节头与总览是 # 注释行 */
+function renderWordsPy(box, learned, known, customList){
+  var N = WORDBOOK.length, chapters = Math.ceil(N / 100);
+  var pct = N ? Math.round(known / N * 100) : 0;
+  function comment(txt){
+    var d = document.createElement('div'); d.className = 'py-comment'; d.textContent = txt;
+    box.appendChild(d);
+  }
+  comment('# vocab_review.py — 词书');
+  comment('# total: ' + N + ' words, ' + chapters + ' chapters, imported: ' + customList.length);
+  comment('# learned: ' + known + ' / ' + N + ' (' + pct + '%)');
+  var weakN = weakWordCount();
+  if(weakN > 0) comment('# weak words: ' + weakN + ' — review will drill them first');
+  function pyRow(w, phon, mean, opts){
+    opts = opts || {};
+    var row = document.createElement('div');
+    row.className = 'py-line' + (opts.learned ? ' learned' : ' dim');
+    row.setAttribute('data-w', w);
+    var txt = '{"word": "' + w + '", "phonetic": "' + (phon || '') + '", "meaning": "' + (mean || '') + '"';
+    if(opts.learned) txt += ', "learned": true';
+    if(opts.weak) txt += ', "weak": true, "errors": ' + (opts.errs || 0);
+    if(opts.source) txt += ', "source": "' + opts.source + '"';
+    txt += '}';
+    var span = document.createElement('span'); span.className = 'py-txt'; span.textContent = txt;
+    row.appendChild(span);
+    row.addEventListener('click', function(){ speak(w); });
+    return row;
+  }
+  for(var ci = 0; ci < chapters; ci++){
+    (function(ci){
+      var slice = WORDBOOK.slice(ci * 100, ci * 100 + 100);
+      var k = 0;
+      slice.forEach(function(e){ if(learned[e[0]]) k++; });
+      var hd = document.createElement('div'); hd.className = 'py-chapter';
+      hd.setAttribute('data-chapter', ci);
+      hd.textContent = '# ===== chapter ' + (ci + 1) + ' · learned ' + k + '/' + slice.length + ' =====';
+      hd.addEventListener('click', function(){ bookChapter = (bookChapter === ci) ? -1 : ci; renderWords(); });
+      box.appendChild(hd);
+      if(bookChapter !== ci) return;
+      slice.forEach(function(e){
+        var w = e[0];
+        var weak = isWeakWord(w);
+        var ws = store.wordStats[w];
+        box.appendChild(pyRow(w, e[1], e[2], {learned:!!learned[w], weak:weak, errs:(weak && ws) ? ws.err : 0}));
+      });
+    })(ci);
+  }
+  if(customList.length){
+    var chd = document.createElement('div'); chd.className = 'py-chapter';
+    chd.textContent = '# ===== imported words · ' + customList.length + ' =====';
+    box.appendChild(chd);
+    customList.forEach(function(cw){
+      var row = pyRow(cw.w, cw.phon, cw.mean, {source:'import'});
+      row.classList.remove('dim');
+      var del = document.createElement('button');
+      del.className = 'chip word-del'; del.setAttribute('data-del', cw.w); del.textContent = '删除';
+      del.addEventListener('click', function(ev){
+        if(ev && ev.stopPropagation) ev.stopPropagation();
+        delete store.customWords[cw.w];
+        saveStore(); scheduleSync(); renderWords();
+      });
+      row.appendChild(del);
+      box.appendChild(row);
+    });
+  }
+}
+
 /* ===== 词书导入（文件 / 链接） ===== */
 function parseWordList(text){
   var out = [], seen = {};
@@ -3840,6 +4032,11 @@ var review = null;
 var reviewDoneToday = 0;
 function renderReviewHome(){
   rollDay();
+  /* 进度统计（v3.12 起从「我的」页移到复习页顶部）：数据来源与原先一致 */
+  document.getElementById('myWords').textContent = learnedWordCount();
+  document.getElementById('myScenes').textContent = SCENES.filter(function(s){ return sceneCompleted(s); }).length;
+  document.getElementById('myStreak').textContent = store.streak.count;
+  document.getElementById('myAcc').textContent = store.stats.answered ? (Math.round(store.stats.correct / store.stats.answered * 100) + '%') : '—';
   var due = dueIds().length;
   document.getElementById('reviewDueNum').textContent = due;
   var total = reviewDoneToday + due;
@@ -3978,10 +4175,6 @@ document.getElementById('rsetDone').addEventListener('click', function(){ show('
 /* ===== ⑦ 我的页 ===== */
 function renderMy(){
   rollDay();
-  document.getElementById('myWords').textContent = learnedWordCount();
-  document.getElementById('myScenes').textContent = SCENES.filter(function(s){ return sceneCompleted(s); }).length;
-  document.getElementById('myStreak').textContent = store.streak.count;
-  document.getElementById('myAcc').textContent = store.stats.answered ? (Math.round(store.stats.correct / store.stats.answered * 100) + '%') : '—';
   document.getElementById('soundToggle').checked = !!store.settings.sound;
   syncSlowTtsUI();
   refreshPushUI();
