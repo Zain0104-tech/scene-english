@@ -141,6 +141,12 @@ header.top h1{font-size:22px;margin:0;color:var(--brand);font-weight:800}
 .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
 .chip{background:#fff;border:1.5px solid var(--brand);color:var(--brand);border-radius:999px;padding:9px 16px;font-size:17px;min-height:44px}
 .chip.used{background:var(--brand);color:#fff}
+.chip.placed{background:var(--brand);color:#fff;border-color:var(--brand)}
+.answerbox .chip{margin:2px 3px}
+.matchgrid{display:flex;gap:12px;margin:10px 0}
+.matchcol{flex:1;display:flex;flex-direction:column;min-width:0}
+.matchcol .opt{justify-content:center;text-align:center}
+.opt.sel{border-color:var(--brand);background:var(--accent-soft)}
 .answerbox{min-height:52px;background:#fff;border-radius:16px;box-shadow:var(--shadow);padding:13px 14px;font-size:18px;margin:10px 0}
 .playbig{display:flex;align-items:center;justify-content:center;gap:8px;margin:10px auto 16px;background:var(--brand);color:#fff;border-radius:999px;padding:13px 30px;font-size:17px;font-weight:600;min-height:52px}
 .playbig .ic{width:20px;height:20px}
@@ -405,7 +411,7 @@ input[type=file]{display:none}
       <p class="msg-line" id="myMsg"></p>
       <p class="muted" style="margin-bottom:0">学习进度只保存在这台设备上。换设备前，请先导出进度。单词音标来源：ECDICT 开源英汉词典（MIT 许可）；对话与题目均为原创。</p>
     </div>
-    <div class="version-line">情景英语 v3.1</div>
+    <div class="version-line">情景英语 v3.2</div>
   </section>
 </div>
 
@@ -1847,7 +1853,8 @@ document.getElementById('dueBanner').addEventListener('click', function(){ goTab
 function renderScene(){
   document.getElementById('sceneHero').src = cur.img;
   document.getElementById('sceneTitle').innerHTML = esc(cur.title) + '<span class="en">' + esc(cur.en) + '</span>';
-  document.getElementById('sceneDesc').textContent = cur.desc;
+  var story = cur.desc.replace(/点句子可以看中文，点喇叭听发音。\s*$/, '');
+  document.getElementById('sceneDesc').textContent = '小故事：' + story;
   var box = document.getElementById('dialogBox'); box.innerHTML = '';
   var prevSp = null;
   cur.lines.forEach(function(L, i){
@@ -1997,26 +2004,189 @@ function renderOptions(box, options, correct, onDone){
   });
 }
 
+/* ===== 拼句题：纯状态助手（词块带唯一 id，重复词按出现次序区分；判分比文本序） ===== */
+function orderChunksOf(text){
+  var parts = String(text).replace(/[.!?]+$/, '').split(' ');
+  var out = [];
+  for(var i = 0; i < parts.length; i++) if(parts[i]) out.push({id:i, text:parts[i]});
+  return out;
+}
+function orderNewState(chunks){ return {chunks:chunks, placed:[]}; }
+function orderPlace(st, chunk){ st.placed.push(chunk); return chunk; }
+function orderRemoveAt(st, pos){
+  if(pos < 0 || pos >= st.placed.length) return null;
+  return st.placed.splice(pos, 1)[0];
+}
+function orderPlacedIds(st){ return st.placed.map(function(c){ return c.id; }); }
+function orderIsComplete(st){ return st.placed.length === st.chunks.length; }
+function orderIsCorrect(st){
+  if(st.placed.length !== st.chunks.length) return false;
+  for(var i = 0; i < st.chunks.length; i++) if(st.placed[i].text !== st.chunks[i].text) return false;
+  return true;
+}
+/* 词题选项：优先本场景词表凑干扰项，去重，不足再从全局词表补 */
+function uniqPush(arr, v){ if(arr.indexOf(v) < 0) arr.push(v); }
+function wordOptsCn(scene, word){
+  var wd = wordOf(word);
+  var pool = [];
+  scene.words.forEach(function(x){ if(x.w !== word && x.cn !== wd.cn) uniqPush(pool, x.cn); });
+  if(pool.length < 2) ALL_WORDS.forEach(function(x){ if(x.w !== word && x.cn !== wd.cn) uniqPush(pool, x.cn); });
+  return shuffle([wd.cn].concat(shuffle(pool).slice(0, 2)));
+}
+function wordOptsEn(scene, word){
+  var pool = [];
+  scene.words.forEach(function(x){ if(x.w !== word) uniqPush(pool, x.w); });
+  if(pool.length < 2) ALL_WORDS.forEach(function(x){ if(x.w !== word) uniqPush(pool, x.w); });
+  return shuffle([word].concat(shuffle(pool).slice(0, 2)));
+}
+/* 拼句题共用渲染：order / listenOrder / buildFromCn。已放词块点一下即取消该次出现 */
+function renderBuildQ(box, cfg){
+  var chunks = orderChunksOf(cfg.lineText);
+  var st = orderNewState(chunks);
+  var bank = shuffle(chunks.slice());
+  var finished = false;
+  box.innerHTML = '<div class="qprompt">' + cfg.title + '</div>';
+  if(cfg.listen){
+    var pb = document.createElement('button'); pb.className = 'playbig';
+    pb.innerHTML = icon('play') + '<span>播放句子</span>';
+    pb.addEventListener('click', function(){ speak(cfg.lineText); });
+    box.appendChild(pb);
+  }
+  if(cfg.cnText){
+    var md = document.createElement('div'); md.className = 'muted'; md.textContent = cfg.cnText;
+    box.appendChild(md);
+  }
+  var ansBox = document.createElement('div'); ansBox.className = 'answerbox';
+  var chipBox = document.createElement('div'); chipBox.className = 'chips';
+  var bankBtns = {};
+  function paintAnswer(){
+    ansBox.innerHTML = '';
+    if(!st.placed.length){
+      var ph = document.createElement('span'); ph.className = 'muted'; ph.textContent = '（点下面的词块）';
+      ansBox.appendChild(ph);
+      return;
+    }
+    st.placed.forEach(function(c, pos){
+      var b = document.createElement('button'); b.className = 'chip placed'; b.textContent = c.text;
+      b.addEventListener('click', function(){
+        if(finished) return;
+        orderRemoveAt(st, pos);
+        paintAll();
+      });
+      ansBox.appendChild(b);
+    });
+  }
+  function paintBank(){
+    var ids = orderPlacedIds(st);
+    bank.forEach(function(c){
+      if(ids.indexOf(c.id) >= 0) bankBtns[c.id].classList.add('used');
+      else bankBtns[c.id].classList.remove('used');
+    });
+  }
+  function paintAll(){ paintAnswer(); paintBank(); }
+  bank.forEach(function(c){
+    var b = document.createElement('button'); b.className = 'chip'; b.textContent = c.text;
+    bankBtns[c.id] = b;
+    b.addEventListener('click', function(){
+      if(finished) return;
+      if(orderPlacedIds(st).indexOf(c.id) >= 0) return;
+      orderPlace(st, c);
+      paintAll();
+      if(orderIsComplete(st)){
+        finished = true;
+        bank.forEach(function(x){ bankBtns[x.id].disabled = true; });
+        ansBox.querySelectorAll('.chip').forEach(function(x){ x.disabled = true; });
+        btnRedo.disabled = true;
+        var ok = orderIsCorrect(st);
+        setTimeout(function(){ cfg.onDone(ok); }, 180);
+      }
+    });
+    chipBox.appendChild(b);
+  });
+  var row = document.createElement('div'); row.style.display = 'flex'; row.style.gap = '10px';
+  var btnRedo = document.createElement('button'); btnRedo.className = 'btn secondary'; btnRedo.textContent = '重来';
+  btnRedo.addEventListener('click', function(){ renderPracticeQ(); });
+  row.appendChild(btnRedo);
+  box.appendChild(ansBox); box.appendChild(chipBox); box.appendChild(row);
+  paintAnswer();
+  if(cfg.listen) speak(cfg.lineText);
+}
+
 /* ===== ③ 练习流程 ===== */
 function buildPractice(scene){
+  /* 难度阶梯：认读 → 听辨 → 提取 → 产出 → 迁移，共 13 步（跟读 1 步不计分） */
   var qs = [];
+  var T = scene.targets;
+  var n = scene.lines.length;
+  var usedLines = {};
+  function markUsed(i){ if(i != null) usedLines[i] = 1; }
+  function linesWithTarget(){
+    var c = [];
+    scene.lines.forEach(function(_, i){ if(lineTargetOf(scene, i)) c.push(i); });
+    return c;
+  }
+  function wordCount(i){ return scene.lines[i].en.replace(/[.!?]+$/, '').split(' ').filter(Boolean).length; }
   /* 1 听句选义 */
-  var li = Math.floor(Math.random() * scene.lines.length);
-  qs.push({type:'listen', line:li});
-  /* 2 对话填空 */
-  var cand = [];
-  scene.lines.forEach(function(_, i){ if(lineTargetOf(scene, i)) cand.push(i); });
-  var ci = cand[Math.floor(Math.random() * cand.length)];
-  qs.push({type:'cloze', line:ci, word:lineTargetOf(scene, ci)});
-  /* 3 句子排序 */
-  qs.push({type:'order', line:scene.orderLine});
-  /* 4 看图选句 */
+  var li = Math.floor(Math.random() * n);
+  qs.push({type:'listen', line:li}); markUsed(li);
+  /* 2 听词选拼写 */
+  var wListen = T[Math.floor(Math.random() * T.length)];
+  qs.push({type:'wordListen', word:wListen});
+  /* 3 看词选义 */
+  var wMean = T[Math.floor(Math.random() * T.length)];
+  qs.push({type:'wordMeaning', word:wMean});
+  /* 4 看义选词（尽量与第 3 题不同的词） */
+  var restT = T.filter(function(w){ return w !== wMean; });
+  var wRecall = restT.length ? restT[Math.floor(Math.random() * restT.length)] : wMean;
+  qs.push({type:'wordRecall', word:wRecall});
+  /* 5 词语配对（4 个目标词全覆盖） */
+  qs.push({type:'match'});
+  /* 6 对话填空 A */
+  var candA = linesWithTarget();
+  var ciA = candA[Math.floor(Math.random() * candA.length)];
+  var wordA = lineTargetOf(scene, ciA);
+  qs.push({type:'cloze', line:ciA, word:wordA}); markUsed(ciA);
+  /* 7 接下一句 */
+  var ri = Math.floor(Math.random() * (n - 1));
+  qs.push({type:'respond', line:ri}); markUsed(ri); markUsed(ri + 1);
+  /* 8 句子排序 */
+  qs.push({type:'order', line:scene.orderLine}); markUsed(scene.orderLine);
+  /* 9 听音拼句（与排序不同的台词，优先未用过、至少 3 个词） */
+  var loCands = [];
+  scene.lines.forEach(function(_, i){ if(i !== scene.orderLine && wordCount(i) >= 3) loCands.push(i); });
+  var loFresh = loCands.filter(function(i){ return !usedLines[i]; });
+  var loPool = loFresh.length ? loFresh : loCands;
+  var loLine = loPool.length ? loPool[Math.floor(Math.random() * loPool.length)] : scene.orderLine;
+  qs.push({type:'listenOrder', line:loLine}); markUsed(loLine);
+  /* 10 填空 B（不同台词、不同目标词；实在没有就换一个没考过的词做看义选词） */
+  var candB = [];
+  scene.lines.forEach(function(_, i){ var t = lineTargetOf(scene, i); if(t && t !== wordA && i !== ciA) candB.push(i); });
+  if(!candB.length) scene.lines.forEach(function(_, i){ if(lineTargetOf(scene, i) && i !== ciA) candB.push(i); });
+  if(candB.length){
+    var ciB = candB[Math.floor(Math.random() * candB.length)];
+    qs.push({type:'cloze', line:ciB, word:lineTargetOf(scene, ciB)}); markUsed(ciB);
+  } else {
+    var unusedT = T.filter(function(w){ return w !== wMean && w !== wRecall; });
+    qs.push({type:'wordRecall', word:(unusedT.length ? unusedT[0] : T[0])});
+  }
+  /* 11 看图选句 */
   qs.push({type:'image'});
+  /* 12 跟读（不计分） */
+  var spCands = linesWithTarget();
+  var spLine = spCands.length ? spCands[Math.floor(Math.random() * spCands.length)] : Math.floor(Math.random() * n);
+  qs.push({type:'speak', line:spLine, scored:false});
+  /* 13 看中文拼句（与 8、9 不同的台词，优先至少 4 个词） */
+  var bcCands = [];
+  scene.lines.forEach(function(_, i){ if(i !== scene.orderLine && i !== loLine && wordCount(i) >= 4) bcCands.push(i); });
+  if(!bcCands.length) scene.lines.forEach(function(_, i){ if(i !== scene.orderLine && i !== loLine && wordCount(i) >= 3) bcCands.push(i); });
+  if(!bcCands.length) scene.lines.forEach(function(_, i){ if(i !== scene.orderLine && i !== loLine) bcCands.push(i); });
+  var bcLine = bcCands.length ? bcCands[Math.floor(Math.random() * bcCands.length)] : scene.orderLine;
+  qs.push({type:'buildFromCn', line:bcLine});
   return qs;
 }
 var practice = null;
 function startPractice(){
-  practice = {scene:cur, qs:buildPractice(cur), idx:0, right:0, errors:[], startedAt:Date.now(), finished:false};
+  practice = {scene:cur, qs:buildPractice(cur), idx:0, right:0, scored:0, errors:[], startedAt:Date.now(), finished:false};
   hideFeedback();
   renderPracticeQ();
   show('practice');
@@ -2031,9 +2201,20 @@ function nextPractice(){
   renderPracticeQ();
 }
 function practiceAnswer(ok, correctText, errInfo){
+  var q = practice.qs[practice.idx];
   recordAnswer(ok);
+  practice.scored++;
   if(ok) practice.right++;
-  else if(errInfo) practice.errors.push(errInfo);
+  else {
+    if(errInfo && !(q && q.retry)) practice.errors.push(errInfo);
+    /* 答错的计分题在本轮末尾再考一次（克隆题不再追加，队列上限 18） */
+    if(q && !q.retry && practice.qs.length < 18){
+      var clone = {};
+      for(var k in q) clone[k] = q[k];
+      clone.retry = true;
+      practice.qs.push(clone);
+    }
+  }
   showAutoFeedback(ok, correctText, ok ? 850 : 1900, nextPractice);
 }
 function renderPracticeQ(){
@@ -2062,38 +2243,122 @@ function renderPracticeQ(){
     renderOptions(box, opts2, q.word,
       function(ok){ practiceAnswer(ok, q.word, {scene:S.id, line:q.line, label:'对话填空：' + L2.en}); });
   }
-  else if(q.type === 'order'){
-    var L3 = S.lines[q.line];
-    var chunks = L3.en.replace(/\.$/, '').split(' ');
-    var answer = [];
-    box.innerHTML = '<div class="qprompt">把词块排成一句话</div><div class="muted">' + L3.cn + '</div>';
-    var ansBox = document.createElement('div'); ansBox.className = 'answerbox'; ansBox.textContent = '（点下面的词块）';
-    var chipBox = document.createElement('div'); chipBox.className = 'chips';
-    shuffle(chunks).forEach(function(c){
-      var ch = document.createElement('button'); ch.className = 'chip'; ch.textContent = c;
-      ch.addEventListener('click', function(){
-        if(ch.classList.contains('used')) return;
-        ch.classList.add('used'); answer.push(c);
-        ansBox.textContent = answer.join(' ');
-        if(answer.length === chunks.length){
-          btnRedo.disabled = true;
-          chipBox.querySelectorAll('.chip').forEach(function(x){ x.disabled = true; });
-          var ok = answer.join(' ') === chunks.join(' ');
-          setTimeout(function(){
-            practiceAnswer(ok, L3.en, {scene:S.id, line:q.line, label:'句子排序：' + L3.cn});
-          }, 180);
+  else if(q.type === 'wordListen'){
+    var wdL = wordOf(q.word);
+    box.innerHTML = '<div class="qprompt">听一听，选出你听到的单词</div>';
+    var pbL = document.createElement('button'); pbL.className = 'playbig';
+    pbL.innerHTML = icon('play') + '<span>播放单词</span>';
+    pbL.addEventListener('click', function(){ speak(q.word); });
+    box.appendChild(pbL);
+    renderOptions(box, wordOptsEn(S, q.word), q.word, function(ok){
+      practiceAnswer(ok, q.word + '（' + wdL.cn + '）', {scene:S.id, line:0, label:'听词选拼写：' + q.word});
+    });
+    speak(q.word);
+  }
+  else if(q.type === 'wordMeaning'){
+    var wdM = wordOf(q.word);
+    box.innerHTML = '<div class="qprompt">这个词是什么意思？</div>' +
+      '<div style="text-align:center;font-size:30px;font-weight:800;margin:8px 0">' + esc(q.word) +
+      ' <span class="muted" style="font-size:16px">/' + wdM.ipa + '/</span></div>';
+    var pbM = document.createElement('button'); pbM.className = 'playbig';
+    pbM.innerHTML = icon('play') + '<span>听发音</span>';
+    pbM.addEventListener('click', function(){ speak(q.word); });
+    box.appendChild(pbM);
+    renderOptions(box, wordOptsCn(S, q.word), wdM.cn, function(ok){
+      practiceAnswer(ok, wdM.cn, {scene:S.id, line:0, label:'看词选义：' + q.word});
+    });
+  }
+  else if(q.type === 'wordRecall'){
+    var wdR = wordOf(q.word);
+    box.innerHTML = '<div class="qprompt">这个意思的英文词是哪个？</div>' +
+      '<div style="text-align:center;font-size:26px;font-weight:800;margin:8px 0">' + esc(wdR.cn) + '</div>';
+    renderOptions(box, wordOptsEn(S, q.word), q.word, function(ok){
+      practiceAnswer(ok, q.word, {scene:S.id, line:0, label:'看义选词：' + wdR.cn});
+    });
+  }
+  else if(q.type === 'match'){
+    var pairs = S.targets.map(function(w){ return {en:w, cn:wordOf(w).cn}; });
+    box.innerHTML = '<div class="qprompt">把英文和中文配成一对（共 ' + pairs.length + ' 对）</div>';
+    var grid = document.createElement('div'); grid.className = 'matchgrid';
+    var colL = document.createElement('div'); colL.className = 'matchcol';
+    var colR = document.createElement('div'); colR.className = 'matchcol';
+    var selM = null, lockedM = 0, mistakesM = 0, doneM = false;
+    function mkMatchBtn(text, side, val){
+      var b = document.createElement('button'); b.className = 'opt'; b.textContent = text;
+      b.addEventListener('click', function(){
+        if(doneM || b.classList.contains('right')) return;
+        if(selM && selM.btn === b){ b.classList.remove('sel'); selM = null; return; }
+        if(!selM || selM.side === side){
+          if(selM) selM.btn.classList.remove('sel');
+          b.classList.add('sel');
+          selM = {side:side, val:val, btn:b};
+          return;
+        }
+        var enVal = side === 'en' ? val : selM.val;
+        var cnVal = side === 'cn' ? val : selM.val;
+        var enBtn = side === 'en' ? b : selM.btn;
+        var cnBtn = side === 'cn' ? b : selM.btn;
+        selM = null;
+        enBtn.classList.remove('sel'); cnBtn.classList.remove('sel');
+        var pr = null;
+        pairs.forEach(function(p){ if(p.en === enVal) pr = p; });
+        if(pr && pr.cn === cnVal){
+          enBtn.classList.add('right'); cnBtn.classList.add('right');
+          enBtn.disabled = true; cnBtn.disabled = true;
+          speak(enVal);
+          lockedM++;
+          if(lockedM === pairs.length){
+            doneM = true;
+            var okAll = mistakesM === 0;
+            var pairText = pairs.map(function(p){ return p.en + ' ' + p.cn; }).join('；');
+            setTimeout(function(){
+              practiceAnswer(okAll, pairText, {scene:S.id, line:0, label:'词语配对：点错了 ' + mistakesM + ' 次'});
+            }, 350);
+          }
+        } else {
+          mistakesM++;
+          enBtn.classList.add('wrong'); cnBtn.classList.add('wrong');
+          setTimeout(function(){ enBtn.classList.remove('wrong'); cnBtn.classList.remove('wrong'); }, 600);
         }
       });
-      chipBox.appendChild(ch);
+      return b;
+    }
+    pairs.forEach(function(p){ colL.appendChild(mkMatchBtn(p.en, 'en', p.en)); });
+    shuffle(pairs.slice()).forEach(function(p){ colR.appendChild(mkMatchBtn(p.cn, 'cn', p.cn)); });
+    grid.appendChild(colL); grid.appendChild(colR);
+    box.appendChild(grid);
+  }
+  else if(q.type === 'respond'){
+    var Lr = S.lines[q.line];
+    var nxt = S.lines[q.line + 1];
+    box.innerHTML = '<div class="qprompt">' + esc(Lr.sp) + ' 说：</div>' +
+      '<div class="answerbox">' + esc(Lr.en) + '</div><div class="muted">' + esc(Lr.cn) + '</div>' +
+      '<div class="qprompt" style="margin-top:14px">接下来，对方会说什么？</div>';
+    var optsR = pick3(S.lines.map(function(x){ return x.en; }), nxt.en);
+    renderOptions(box, optsR, nxt.en, function(ok){
+      practiceAnswer(ok, nxt.en, {scene:S.id, line:q.line + 1, label:'接下一句：' + Lr.en});
     });
-    var row = document.createElement('div'); row.style.display = 'flex'; row.style.gap = '10px';
-    var btnRedo = document.createElement('button'); btnRedo.className = 'btn secondary'; btnRedo.textContent = '重来';
-    btnRedo.addEventListener('click', function(){ renderPracticeQ(); });
-    row.appendChild(btnRedo);
-    box.appendChild(ansBox); box.appendChild(chipBox); box.appendChild(row);
+  }
+  else if(q.type === 'order'){
+    var L3 = S.lines[q.line];
+    renderBuildQ(box, {title:'把词块排成一句话', cnText:L3.cn, lineText:L3.en, onDone:function(ok){
+      practiceAnswer(ok, L3.en, {scene:S.id, line:q.line, label:'句子排序：' + L3.cn});
+    }});
+  }
+  else if(q.type === 'listenOrder'){
+    var L9 = S.lines[q.line];
+    renderBuildQ(box, {title:'听音拼句：把听到的句子拼出来', listen:true, lineText:L9.en, onDone:function(ok){
+      practiceAnswer(ok, L9.en, {scene:S.id, line:q.line, label:'听音拼句：' + L9.cn});
+    }});
+  }
+  else if(q.type === 'buildFromCn'){
+    var Lb = S.lines[q.line];
+    renderBuildQ(box, {title:'看中文，拼出英文句子', cnText:Lb.cn, lineText:Lb.en, onDone:function(ok){
+      practiceAnswer(ok, Lb.en, {scene:S.id, line:q.line, label:'看中文拼句：' + Lb.cn});
+    }});
   }
   else if(q.type === 'image'){
-    box.innerHTML = '<div class="qprompt">看图，选出和画面相符的句子</div>';
+    box.innerHTML = '<div class="qprompt">结合小故事和画面，选出相符的句子</div>';
     var img = document.createElement('img'); img.className = 'qimg'; img.src = S.img; img.alt = '场景图';
     box.appendChild(img);
     var correct = S.imgAnswer;
@@ -2102,6 +2367,27 @@ function renderPracticeQ(){
     renderOptions(box, opts3, correct, function(ok){
       practiceAnswer(ok, correct, {scene:S.id, line:(ansIdx < 0 ? 0 : ansIdx), label:'看图选句：和画面相符的句子'});
     });
+  }
+  else if(q.type === 'speak'){
+    var Ls = S.lines[q.line];
+    box.innerHTML = '<div class="qprompt">跟读：听一遍，大声读出来</div><div class="muted">' + esc(Ls.cn) + '</div>';
+    var pbS = document.createElement('button'); pbS.className = 'playbig';
+    pbS.innerHTML = icon('play') + '<span>播放句子</span>';
+    pbS.addEventListener('click', function(){ speak(Ls.en); });
+    box.appendChild(pbS);
+    var enBox = document.createElement('div'); enBox.className = 'answerbox hidden'; enBox.textContent = Ls.en;
+    box.appendChild(enBox);
+    var rowSp = document.createElement('div'); rowSp.style.display = 'flex'; rowSp.style.gap = '10px';
+    var btnShow = document.createElement('button'); btnShow.className = 'btn secondary'; btnShow.textContent = '显示句子';
+    btnShow.addEventListener('click', function(){
+      enBox.classList.remove('hidden');
+      btnShow.classList.add('hidden');
+    });
+    var btnDid = document.createElement('button'); btnDid.className = 'btn accent'; btnDid.textContent = '我读出声了';
+    btnDid.addEventListener('click', function(){ nextPractice(); });
+    rowSp.appendChild(btnShow); rowSp.appendChild(btnDid);
+    box.appendChild(rowSp);
+    speak(Ls.en);
   }
 }
 var confirmCb = null, confirmBuilt = false;
@@ -2135,8 +2421,8 @@ document.getElementById('pracClose').addEventListener('click', function(){
 /* ===== ④ 练习结算 ===== */
 function finishPractice(){
   var S = practice.scene;
-  var total = practice.qs.length;
-  var acc = Math.round(practice.right / total * 100);
+  var total = practice.scored || practice.qs.length;
+  var acc = total ? Math.round(practice.right / total * 100) : 100;
   var secs = Math.max(1, Math.round((Date.now() - practice.startedAt) / 1000));
   var prev = store.sceneStats[S.id];
   store.sceneStats[S.id] = {accuracy:acc, tries:(prev ? prev.tries + 1 : 1), ts:Date.now()};
@@ -2347,15 +2633,27 @@ function renderReviewQ(){
   } else {
     var w = id.slice(2);
     var wd2 = wordOf(w);
-    box.innerHTML = '<div class="qprompt">这个词是什么意思？</div>' +
-      '<div style="text-align:center;font-size:30px;font-weight:800;margin:8px 0">' + w +
-      ' <span class="muted" style="font-size:16px">/' + wd2.ipa + '/</span></div>';
-    var pb2 = document.createElement('button'); pb2.className = 'playbig';
-    pb2.innerHTML = icon('play') + '<span>听发音</span>';
-    pb2.addEventListener('click', function(){ speak(w); });
-    box.appendChild(pb2);
-    var opts3 = pick3(ALL_WORDS.map(function(x){ return x.cn; }), wd2.cn);
-    renderOptions(box, opts3, wd2.cn, function(ok){ answerReview(ok, wd2.cn); });
+    /* 词卡复习双向交替：按词字符串哈希定方向，约一半中→英（不放发音，先提取再核对） */
+    var wh = 0;
+    for(var wi = 0; wi < w.length; wi++) wh = (wh * 31 + w.charCodeAt(wi)) >>> 0;
+    if(wh % 2 === 0){
+      box.innerHTML = '<div class="qprompt">这个意思的英文词是哪个？</div>' +
+        '<div style="text-align:center;font-size:26px;font-weight:800;margin:8px 0">' + esc(wd2.cn) + '</div>';
+      var poolRv = [];
+      ALL_WORDS.forEach(function(x){ if(x.w !== w && poolRv.indexOf(x.w) < 0) poolRv.push(x.w); });
+      var optsRv = shuffle([w].concat(shuffle(poolRv).slice(0, 2)));
+      renderOptions(box, optsRv, w, function(ok){ answerReview(ok, w); });
+    } else {
+      box.innerHTML = '<div class="qprompt">这个词是什么意思？</div>' +
+        '<div style="text-align:center;font-size:30px;font-weight:800;margin:8px 0">' + w +
+        ' <span class="muted" style="font-size:16px">/' + wd2.ipa + '/</span></div>';
+      var pb2 = document.createElement('button'); pb2.className = 'playbig';
+      pb2.innerHTML = icon('play') + '<span>听发音</span>';
+      pb2.addEventListener('click', function(){ speak(w); });
+      box.appendChild(pb2);
+      var opts3 = pick3(ALL_WORDS.map(function(x){ return x.cn; }), wd2.cn);
+      renderOptions(box, opts3, wd2.cn, function(ok){ answerReview(ok, wd2.cn); });
+    }
   }
 }
 function finishReview(){
@@ -2443,7 +2741,7 @@ document.querySelectorAll('.tab-ic').forEach(function(el){ el.innerHTML = icon(e
 document.getElementById('dueBanner').insertAdjacentHTML('afterbegin', icon('refresh'));
 document.getElementById('dueBannerArr').innerHTML = icon('arrow');
 document.getElementById('sceneBack').innerHTML = icon('back') + '<span>返回</span>';
-document.getElementById('btnPlayAll').innerHTML = icon('play') + '<span>播放全部</span>';
+document.getElementById('btnPlayAll').innerHTML = icon('play') + '<span>听完整对话</span>';
 document.getElementById('pracClose').innerHTML = icon('x');
 document.getElementById('rvClose').innerHTML = icon('x');
 document.getElementById('searchIc').innerHTML = icon('search');
