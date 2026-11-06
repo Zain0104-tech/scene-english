@@ -283,6 +283,8 @@ input[type=file]{display:none}
 .word-row.dim{opacity:.5}
 .tag.learned{background:#E5F4EA;color:#1C7C43}
 .word-del{flex:none;color:var(--err);align-self:center}
+.scene-src{flex:none;align-self:center}
+.py-scene-link{display:inline-block;margin-left:10px;color:#4ec9b0;cursor:pointer;font-size:12px;text-decoration:underline}
 .book-import{margin-top:22px}
 /* ===== 桌面适配（≥1024px，与皮肤无关） ===== */
 @media (min-width:1024px){
@@ -571,6 +573,7 @@ body.boss-on #app,body.boss-on #tabbar,body.boss-on #feedbackBar{visibility:hidd
       <div class="stat-cell"><div class="v" id="myStreak">0</div><div class="k">连胜天数</div></div>
       <div class="stat-cell"><div class="v" id="myAcc">—</div><div class="k">总正确率</div></div>
     </div>
+    <p class="muted" id="reviewTodayLine" style="margin:10px 2px 0"></p>
     <div class="review-hero">
       <div class="review-ring-box">
         <svg width="150" height="150" viewBox="0 0 150 150"><circle class="review-ring-bg" cx="75" cy="75" r="68"></circle><circle class="review-ring-fg" id="reviewRingFg" cx="75" cy="75" r="68"></circle></svg>
@@ -649,10 +652,18 @@ body.boss-on #app,body.boss-on #tabbar,body.boss-on #feedbackBar{visibility:hidd
           <button class="chip" id="btnSyncUnbind" style="display:none">解绑</button>
         </span>
       </div>
+      <p class="muted" id="syncStatusLine" style="display:none;margin:2px 0 0"></p>
       <div id="syncCodeBox" style="display:none;text-align:center;padding:2px 0 4px">
         <div id="syncCodeText" style="font-family:ui-monospace,Menlo,Consolas,monospace;font-size:24px;font-weight:700;letter-spacing:3px"></div>
         <button class="chip" id="btnSyncCopy" style="margin-top:6px">复制同步码</button>
         <p class="muted" style="margin:6px 0 0">在另一台设备上输入这串码，就能同步</p>
+        <div id="syncLabelBox" style="margin-top:10px;text-align:left">
+          <div class="sr-desc" id="syncLabelLine" style="text-align:center"></div>
+          <div class="set-row" style="margin-top:6px">
+            <div class="sr-main"><input id="syncLabelInput" type="text" placeholder="给这份进度起个名" autocomplete="off" style="width:100%;padding:8px 10px;border:1px solid #ddd;border-radius:8px;font-size:14px;box-sizing:border-box"></div>
+            <button class="chip" id="btnSyncLabelSave">保存</button>
+          </div>
+        </div>
       </div>
       <div class="set-row" id="syncBindRow">
         <div class="sr-main"><input id="syncCodeInput" type="text" placeholder="输入另一台设备的同步码" autocomplete="off" style="width:100%;padding:8px 10px;border:1px solid #ddd;border-radius:8px;font-size:14px;box-sizing:border-box"></div>
@@ -660,7 +671,7 @@ body.boss-on #app,body.boss-on #tabbar,body.boss-on #feedbackBar{visibility:hidd
       </div>
       <p class="muted" style="margin-bottom:0">开启双端同步后，进度会自动在手机和电脑之间同步；导出/导入可以用来手动备份。单词音标来源：ECDICT 开源英汉词典（MIT 许可）；对话与题目均为原创。</p>
     </div>
-    <div class="version-line">情景英语 v3.12</div>
+    <div class="version-line">情景英语 v3.13</div>
   </section>
 </div>
 <!-- Excel 伪装皮肤：底部工作表标签 + 状态栏（仅桌面宽屏显示） -->
@@ -1293,7 +1304,7 @@ var SCENES = [
     lines: [
       {sp:'Wei', en:'You look happy today.', cn:'你今天看起来很高兴。'},
       {sp:'Anna', en:'It\'s cold today.', cn:'今天很冷。'},
-      {sp:'Wei', en:'Just water, please.', cn:'请给我水就好了。'},
+      {sp:'Wei', en:'I love the rain.', cn:'我喜欢下雨。'},
       {sp:'Anna', en:'Why don\'t we go home?', cn:'我们何不回家呢？'},
       {sp:'Wei', en:'Do you want a drink?', cn:'你想喝点什么吗？'},
       {sp:'Anna', en:'I want hot water.', cn:'我想要热水。'},
@@ -1301,10 +1312,10 @@ var SCENES = [
       {sp:'Anna', en:'May I see you tomorrow?', cn:'我明天能见你吗？'}
     ],
     culture:{line:"Why don't we go home?", note:"Why don't we…? 是提建议，意思是『咱们…吧』；别按字面听成质问『为什么不』。"},
-    targets: ['cold', 'home', 'today', 'look'],
+    targets: ['cold', 'rain', 'today', 'look'],
     words: [
       {w:'cold', ipa:'kəuld', cn:'感冒；寒冷'},
-      {w:'home', ipa:'həum', cn:'家；避难所'},
+      {w:'rain', ipa:'rein', cn:'雨；下雨'},
       {w:'today', ipa:'təˈdeɪ', cn:'今天'},
       {w:'look', ipa:'luk', cn:'一看；神色'},
       {w:'you', ipa:'juː', cn:'你；你们'},
@@ -1627,7 +1638,7 @@ var SCENES = [
     img: BIRTHDAY_IMG, badgeName: '生日小能手', imgAnswer: 'Looks like a fine day today.', orderLine: 0,
     lines: [
       {sp:'Wei', en:'Looks like a fine day today.', cn:'今天看上去是个晴天。'},
-      {sp:'Anna', en:'I\'m so happy.', cn:'我好高兴。'},
+      {sp:'Anna', en:'Today is my birthday.', cn:'今天是我的生日。'},
       {sp:'Wei', en:'Can you sing?', cn:'您会唱歌吗？'},
       {sp:'Anna', en:'Sing!', cn:'你唱。'},
       {sp:'Wei', en:'I am happy.', cn:'我很高兴。'},
@@ -1636,11 +1647,11 @@ var SCENES = [
       {sp:'Anna', en:'See you tomorrow at school.', cn:'明天在学校见。'}
     ],
     culture:{line:"It's OK, thanks.", note:"别人请吃请喝时说 It's OK, thanks，是笑着婉拒『不用了，谢谢』，不是『没关系』。"},
-    targets: ['happy', 'sing', 'day', 'today'],
+    targets: ['happy', 'sing', 'birthday', 'today'],
     words: [
       {w:'happy', ipa:'ˈhæpi', cn:'快乐的；幸福的'},
       {w:'sing', ipa:'siŋ', cn:'唱；唱歌'},
-      {w:'day', ipa:'deɪ', cn:'天；日子'},
+      {w:'birthday', ipa:'ˈbə:θdei', cn:'生日'},
       {w:'today', ipa:'təˈdeɪ', cn:'今天'},
       {w:'look', ipa:'luk', cn:'一看；神色'},
       {w:'like', ipa:'laɪk', cn:'相似的；同样的'},
@@ -1831,7 +1842,7 @@ function dayStr(t){
 function defaultStore(){
   return { cards:{}, learned:false,
     streak:{lastDay:'', count:0}, streakFreeze:{week:'', used:false, lastUsed:''}, badges:{}, sceneStats:{},
-    wordStats:{}, unitTests:{}, customWords:{},
+    wordStats:{}, unitTests:{}, customWords:{}, syncLabel:'',
     stats:{answered:0, correct:0}, today:{day:dayStr(), done:0},
     settings:{sound:false, slowTts:false, skin:'none', keys:{boss:'Escape', skin:'F2'}} };
 }
@@ -1862,6 +1873,7 @@ function migrate(s){
       d.customWords[w] = {phon:String(v.phon || ''), mean:String(v.mean || ''), ts:(typeof v.ts === 'number' ? v.ts : 0)};
     });
   }
+  if(typeof s.syncLabel === 'string') d.syncLabel = s.syncLabel;
   if(s.stats) d.stats = {answered:(s.stats.answered | 0), correct:(s.stats.correct | 0)};
   if(s.today && s.today.day) d.today = {day:String(s.today.day), done:(s.today.done | 0)};
   if(s.settings) d.settings = {sound:!!s.settings.sound, slowTts:!!s.settings.slowTts,
@@ -2202,6 +2214,10 @@ function mergeStores(local, remote){
     if(!a){ out.customWords[k] = b; continue; }
     if((b.ts || 0) >= (a.ts || 0)) out.customWords[k] = b;
   }
+  /* syncLabel：非空胜空；两边都非空且不同 → _syncedAt 晚的一侧胜；再平 local */
+  var lLab = L.syncLabel || '', rLab = R.syncLabel || '';
+  if(rLab && (!lLab || (lLab !== rLab && rStamp > lStamp))) out.syncLabel = rLab;
+  else out.syncLabel = lLab;
   /* streak + streakFreeze：lastDay 晚的一侧整组胜；平了 count 高者；再平 remote */
   var lDay = L.streak.lastDay || '', rDay = R.streak.lastDay || '';
   if(rDay > lDay || (rDay === lDay && (R.streak.count | 0) >= (L.streak.count | 0))){
@@ -2241,6 +2257,25 @@ function pushStore(){
     if(r && r.ok){ store._syncedAt = stamp; saveStore(); }
   }).catch(function(){});
 }
+/* 最近一次同步结果：只存本机 localStorage，永不进 store、永不同步 */
+var SYNC_STATUS_KEY = 'qingjing_sync_status';
+function getSyncStatus(){
+  try{
+    var s = JSON.parse(localStorage.getItem(SYNC_STATUS_KEY) || 'null');
+    if(s && typeof s.ok === 'boolean' && s.at) return s;
+  }catch(e){}
+  return null;
+}
+function setSyncStatus(ok){
+  try{ localStorage.setItem(SYNC_STATUS_KEY, JSON.stringify({ok:!!ok, at:new Date().toISOString()})); }catch(e){}
+}
+function syncStatusText(){
+  var s = getSyncStatus();
+  if(!s) return '尚未同步';
+  if(!s.ok) return '上次同步失败，检查网络后可点『立即同步』重试';
+  var d = new Date(s.at);
+  return '上次同步成功 ' + ('0' + d.getHours()).slice(-2) + ':' + ('0' + d.getMinutes()).slice(-2);
+}
 var syncBusy = false, lastSyncAt = 0;
 async function syncNow(reason){
   var code = getSyncCode();
@@ -2249,7 +2284,7 @@ async function syncNow(reason){
   lastSyncAt = Date.now();
   try{
     var resp = await fetch(SB_URL + '/rest/v1/progress_sync?sync_code=eq.' + encodeURIComponent(code) + '&select=store,updated_at', {headers: sbHeaders()});
-    if(!resp || !resp.ok) return;
+    if(!resp || !resp.ok){ setSyncStatus(false); return; }
     var rows = resp.json ? await resp.json() : null;
     var row = (rows && rows.length) ? rows[0] : null;
     if(row && row.store && typeof row.store === 'object'){
@@ -2266,7 +2301,9 @@ async function syncNow(reason){
     } else {
       await pushStore();
     }
+    setSyncStatus(true);
   }catch(e){
+    setSyncStatus(false);
     /* 同步失败静默：离线或服务不可达时不打扰使用，下个触发点再试 */
   } finally {
     syncBusy = false;
@@ -2334,12 +2371,18 @@ function refreshSyncUI(note){
   var bu = document.getElementById('btnSyncUnbind'); if(bu) bu.style.display = bound ? '' : 'none';
   var box = document.getElementById('syncCodeBox'); if(box) box.style.display = bound ? '' : 'none';
   var ct = document.getElementById('syncCodeText'); if(ct) ct.textContent = bound ? code : '';
+  var sl = document.getElementById('syncStatusLine');
+  if(sl){ sl.style.display = bound ? '' : 'none'; if(bound) sl.textContent = syncStatusText(); }
+  var ll = document.getElementById('syncLabelLine');
+  if(ll) ll.textContent = bound ? ((store.syncLabel || '') ? ('标签：' + store.syncLabel) : '给这份进度起个名，另一台设备加入时能看到') : '';
+  var li = document.getElementById('syncLabelInput');
+  if(li && bound && document.activeElement !== li) li.value = store.syncLabel || '';
 }
 document.getElementById('btnSyncEnable').addEventListener('click', function(){
   if(getSyncCode()){ refreshSyncUI(); return; }
   setSyncCode(genSyncCode());
   refreshSyncUI();
-  syncNow('enable');
+  syncNow('enable').then(function(){ refreshSyncUI(); });
 });
 document.getElementById('btnSyncCopy').addEventListener('click', function(){
   copySyncCodeText();
@@ -2350,7 +2393,7 @@ document.getElementById('btnSyncBind').addEventListener('click', function(){
   setSyncCode(v);
   document.getElementById('syncCodeInput').value = '';
   refreshSyncUI();
-  syncNow('bind');
+  syncNow('bind').then(function(){ refreshSyncUI(); });
 });
 document.getElementById('btnSyncUnbind').addEventListener('click', function(){
   clearSyncCode();
@@ -2359,6 +2402,13 @@ document.getElementById('btnSyncUnbind').addEventListener('click', function(){
 document.getElementById('btnSyncNow').addEventListener('click', function(){
   refreshSyncUI('同步中…');
   syncNow('manual').then(function(){ refreshSyncUI(); });
+});
+document.getElementById('btnSyncLabelSave').addEventListener('click', function(){
+  var inp = document.getElementById('syncLabelInput');
+  store.syncLabel = (inp && inp.value ? String(inp.value) : '').trim();
+  saveStore();
+  refreshSyncUI();
+  syncNow('label').then(function(){ refreshSyncUI(); });
 });
 
 
@@ -3641,6 +3691,15 @@ document.getElementById('pracClose').addEventListener('click', function(){
 /* ===== ③b 组测验（学完一组解锁：12 题混合抽查，通过线 80%；不播卡、不入弱词账、无错题轮） ===== */
 var settleMode = 'practice', settleUnit = '';
 function unitScenes(unit){ return SCENES.filter(function(s){ return s.unit === unit; }); }
+/* 路径顺序里第一个还有未完成场景的组（全部完成返回 ''） */
+function nextUnitName(){
+  var order = [];
+  SCENES.forEach(function(s){ if(s.unit && order.indexOf(s.unit) < 0) order.push(s.unit); });
+  for(var i = 0; i < order.length; i++){
+    if(unitScenes(order[i]).some(function(s){ return !sceneCompleted(s); })) return order[i];
+  }
+  return '';
+}
 function unitUnlocked(unit){ return unitScenes(unit).every(function(s){ return sceneCompleted(s); }); }
 function buildUnitTest(unit){
   var scenes = unitScenes(unit);
@@ -3823,6 +3882,28 @@ function bookLearnedSet(){
   SCENES.forEach(function(s){ if(sceneCompleted(s)) s.targets.forEach(function(w){ set[w] = 1; }); });
   return set;
 }
+/* 词 → 它作为目标词首次出现的场景（词书「出处」用；非目标词返回 null） */
+var TARGET_SCENE_MAP = null;
+function targetSceneOf(w){
+  if(!TARGET_SCENE_MAP){
+    TARGET_SCENE_MAP = {};
+    SCENES.forEach(function(s){
+      (s.targets || []).forEach(function(t){ if(!TARGET_SCENE_MAP[t]) TARGET_SCENE_MAP[t] = s; });
+    });
+  }
+  return TARGET_SCENE_MAP[w] || null;
+}
+function sceneChipEl(scene){
+  var chip = document.createElement('button');
+  chip.className = 'chip scene-src';
+  chip.setAttribute('data-scene', scene.id);
+  chip.textContent = '出处：' + scene.title;
+  chip.addEventListener('click', function(ev){
+    if(ev && ev.stopPropagation) ev.stopPropagation();
+    openScene(scene.id);
+  });
+  return chip;
+}
 var bookChapter = 0;
 function renderWords(){
   var box = document.getElementById('wordList'); box.innerHTML = '';
@@ -3870,6 +3951,8 @@ function renderWords(){
           (isL ? '<span class="tag learned">已学</span>' : '') +
           (isWeakWord(w) ? '<span class="tag">弱</span>' : '') +
           '</div><div class="m">' + esc(e[2]) + wordErrSuffix(w) + '</div></div>';
+        var tsc = targetSceneOf(w);
+        if(tsc) row.appendChild(sceneChipEl(tsc));
         row.addEventListener('click', function(){ speak(w); });
         box.appendChild(row);
       });
@@ -3921,10 +4004,21 @@ function renderWordsPy(box, learned, known, customList){
     var txt = '{"word": "' + w + '", "phonetic": "' + (phon || '') + '", "meaning": "' + (mean || '') + '"';
     if(opts.learned) txt += ', "learned": true';
     if(opts.weak) txt += ', "weak": true, "errors": ' + (opts.errs || 0);
+    if(opts.scene) txt += ', "scene": "' + opts.scene.title + '"';
     if(opts.source) txt += ', "source": "' + opts.source + '"';
     txt += '}';
     var span = document.createElement('span'); span.className = 'py-txt'; span.textContent = txt;
     row.appendChild(span);
+    if(opts.scene){
+      var lk = document.createElement('span');
+      lk.className = 'py-scene-link scene-src';
+      lk.setAttribute('data-scene', opts.scene.id);
+      lk.textContent = '场景：' + opts.scene.title;
+      lk.addEventListener('click', (function(sid){
+        return function(ev){ if(ev && ev.stopPropagation) ev.stopPropagation(); openScene(sid); };
+      })(opts.scene.id));
+      row.appendChild(lk);
+    }
     row.addEventListener('click', function(){ speak(w); });
     return row;
   }
@@ -3943,7 +4037,7 @@ function renderWordsPy(box, learned, known, customList){
         var w = e[0];
         var weak = isWeakWord(w);
         var ws = store.wordStats[w];
-        box.appendChild(pyRow(w, e[1], e[2], {learned:!!learned[w], weak:weak, errs:(weak && ws) ? ws.err : 0}));
+        box.appendChild(pyRow(w, e[1], e[2], {learned:!!learned[w], weak:weak, errs:(weak && ws) ? ws.err : 0, scene:targetSceneOf(w)}));
       });
     })(ci);
   }
@@ -4038,6 +4132,13 @@ function renderReviewHome(){
   document.getElementById('myStreak').textContent = store.streak.count;
   document.getElementById('myAcc').textContent = store.stats.answered ? (Math.round(store.stats.correct / store.stats.answered * 100) + '%') : '—';
   var due = dueIds().length;
+  /* 今日安排（v3.13）：纯渲染期计算，不改任何状态 */
+  var nu = nextUnitName();
+  var tl = document.getElementById('reviewTodayLine');
+  if(due > 0 && nu) tl.textContent = '今天先清 ' + due + ' 个到期复习，再学新的一组：' + nu;
+  else if(nu) tl.textContent = '今天没有到期复习，学新的一组：' + nu;
+  else if(due > 0) tl.textContent = '新课都学完了，今天清 ' + due + ' 个到期复习';
+  else tl.textContent = '今天的任务都完成了';
   document.getElementById('reviewDueNum').textContent = due;
   var total = reviewDoneToday + due;
   var pct = total === 0 ? 1 : reviewDoneToday / total;
