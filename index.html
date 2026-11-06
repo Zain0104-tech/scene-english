@@ -29,14 +29,14 @@
   --glass:rgba(255,253,248,.82);
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--ink);font-size:16px;line-height:1.55}
-#app{max-width:560px;margin:0 auto;padding:0 16px calc(84px + env(safe-area-inset-bottom))}
+html,body{margin:0;padding:0;height:100%}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--ink);font-size:16px;line-height:1.55;display:flex;flex-direction:column;height:100dvh;overflow:hidden;overscroll-behavior:none}
+#app{flex:1;min-height:0;display:flex;flex-direction:column;width:100%;max-width:560px;margin:0 auto;padding:0 16px}
 button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
 button:disabled{cursor:default}
 .hidden{display:none!important}
 .view{display:none}
-.view.active{display:block;animation:viewIn .2s ease}
+.view.active{display:block;animation:viewIn .2s ease;flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
 @keyframes viewIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 .ic{width:24px;height:24px;flex:none}
 .muted{color:var(--ink-2);font-size:14px}
@@ -89,7 +89,7 @@ header.top h1{font-size:22px;margin:0;color:var(--brand);font-weight:800}
 .placeholder-row{display:flex;align-items:center;gap:10px;color:#A8A29E;background:rgba(255,255,255,.55);border:1.5px dashed var(--line);border-radius:20px;padding:16px;font-size:15px;margin-bottom:14px}
 
 /* ===== 底部标签栏 ===== */
-#tabbar{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--line);box-shadow:0 -2px 10px rgba(31,41,55,.05);z-index:40}
+#tabbar{flex:none;background:#fff;border-top:1px solid var(--line);box-shadow:0 -2px 10px rgba(31,41,55,.05);z-index:40}
 #tabbar .tabs{max-width:560px;margin:0 auto;display:flex;padding-bottom:env(safe-area-inset-bottom)}
 .tab{flex:1;min-height:56px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:var(--ink-2);font-size:12px;position:relative;padding-top:6px}
 .tab .ic{width:24px;height:24px}
@@ -133,7 +133,7 @@ header.top h1{font-size:22px;margin:0;color:var(--brand);font-weight:800}
 .last-acc{color:var(--ink-2);font-size:13px;text-align:center;margin-top:8px}
 
 /* ===== 全屏流程外壳（练习/复习） ===== */
-.flow-head{display:flex;align-items:center;gap:12px;padding:12px 0 10px}
+.flow-head{display:flex;align-items:center;gap:12px;padding:12px 0 10px;flex:none}
 .flow-x{width:44px;height:44px;display:flex;align-items:center;justify-content:center;color:var(--ink-2);flex:none;margin-left:-10px}
 .flow-x .ic{width:26px;height:26px}
 .flow-prog{flex:1;height:4px;background:var(--line);border-radius:999px;overflow:hidden}
@@ -263,7 +263,6 @@ input[type=file]{display:none}
 @media (prefers-reduced-motion: reduce){
   *,*:before,*:after{animation:none!important;transition:none!important}
 }
-#view-scene{padding-bottom:118px}
 .confirm-overlay{position:fixed;inset:0;background:rgba(31,41,55,.45);display:none;align-items:center;justify-content:center;z-index:200;padding:24px}
 .confirm-overlay.show{display:flex}
 .confirm-card{background:var(--card);border-radius:20px;padding:22px 20px 16px;max-width:320px;width:100%;box-shadow:0 12px 40px rgba(31,41,55,.25);text-align:center}
@@ -302,13 +301,10 @@ input[type=file]{display:none}
 .iconbtn .ic{width:22px;height:22px}
 
 /* —— 书本首页 —— */
-#view-home.active{display:flex;flex-direction:column;height:calc(100vh - 84px - env(safe-area-inset-bottom));height:calc(100dvh - 84px - env(safe-area-inset-bottom))}
+#view-home.active{display:flex;flex-direction:column;flex:1;min-height:0;overflow:hidden}
 .bk-head{flex:none;padding:12px 2px 8px}
 .bk-head-row{display:flex;align-items:center;gap:10px}
 .bk-name{flex:1;text-align:center;font-size:13px;color:var(--ink-2);letter-spacing:3px;font-weight:600}
-.bk-mode{position:relative;min-width:44px;display:flex;justify-content:flex-end}
-.bk-modebtn{display:inline-flex;align-items:center;gap:6px;background:#fff;border:.5px solid var(--hair);border-radius:12px;padding:9px 12px;font-size:13.5px;font-weight:600;box-shadow:var(--shadow);min-height:44px;color:var(--ink);white-space:nowrap}
-.bk-mode .db-menu{top:50px;right:0;left:auto}
 .bk-prog-row{display:flex;align-items:baseline;justify-content:space-between;margin-top:10px}
 .bk-pageno{font-size:16px;font-weight:800}
 .bk-pageno b{color:var(--brand)}
@@ -371,17 +367,11 @@ input[type=file]{display:none}
 .toc-row .acc{flex:none;color:var(--brand);font-size:12.5px;font-weight:700;font-variant-numeric:tabular-nums}
 .toc-body .scene-card{box-shadow:none;border:.5px solid var(--hair);border-radius:14px;margin:4px 14px 10px;width:auto;padding:12px 14px}
 
-/* —— 桌面：书本首页时藏顶栏（下拉进页眉槽位） —— */
-body.desk-on.book-on .desk-bar{display:none}
-body.desk-on.book-on #app{padding-top:0}
 
 /* —— 一屏练习/复习：固定列 + 恒高底部槽 —— */
-body.flow-lock{overflow:hidden}
-body.flow-lock #app{padding-bottom:0}
-#view-practice.active,#view-reviewrun.active{display:flex;flex-direction:column;height:calc(100vh - 84px - env(safe-area-inset-bottom));height:100dvh;overflow:hidden}
-body.desk-on #view-practice.active,body.desk-on #view-reviewrun.active{height:calc(100dvh - 44px)}
+#view-practice.active,#view-reviewrun.active{display:flex;flex-direction:column;flex:1;min-height:0;overflow:hidden}
 #practiceBox,#reviewBox{flex:1;display:flex;flex-direction:column;min-height:0}
-.qwrap{flex:1;overflow-y:auto;min-height:0;padding-bottom:10px;-webkit-overflow-scrolling:touch}
+.qwrap{flex:1;overflow-y:auto;min-height:0;padding-bottom:10px;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
 .pslot{flex:none;height:84px;box-sizing:border-box;display:flex;align-items:center;justify-content:center;gap:10px;margin:4px calc(-1 * var(--padx)) 0;padding:10px var(--padx) calc(10px + env(safe-area-inset-bottom));border-top:.5px solid var(--hair);background:var(--glass);backdrop-filter:blur(18px) saturate(1.6);-webkit-backdrop-filter:blur(18px) saturate(1.6)}
 .pslot .skipbtn{margin:0}
 .pslot .btn{flex:1}
@@ -407,19 +397,7 @@ body.desk-on #view-practice.active,body.desk-on #view-reviewrun.active{height:ca
 .words-head h2{font-size:20px;margin:0}
 .import-panel{margin-top:10px}
 
-@media (min-width:1024px){
-  :root{--padx:28px}
-  #view-home.active{height:calc(100vh - 96px - env(safe-area-inset-bottom));height:calc(100dvh - 96px - env(safe-area-inset-bottom))}
-}
 /* ===== 桌面适配（≥1024px，与皮肤无关） ===== */
-@media (min-width:1024px){
-  #app{max-width:900px;padding:0 28px calc(96px + env(safe-area-inset-bottom))}
-  #tabbar .tabs{max-width:900px}
-  #feedbackBar .fb-in{max-width:900px}
-  .qprompt{font-size:18px}
-  .opt{padding:15px 18px}
-}
-
 /* ===== 交互回馈（按压 / 答错抖动 / 题目切换动画） ===== */
 .pressed{transform:scale(.96)!important;box-shadow:0 0 1px rgba(16,24,40,.10)!important;transition:transform .16s var(--spring),box-shadow .16s var(--spring)}
 @keyframes shakeX{0%,100%{transform:translateX(0)}20%{transform:translateX(-7px)}45%{transform:translateX(6px)}70%{transform:translateX(-4px)}85%{transform:translateX(3px)}}
@@ -427,121 +405,18 @@ body.desk-on #view-practice.active,body.desk-on #view-reviewrun.active{height:ca
 @keyframes qIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 .qanim{animation:qIn .18s ease}
 #practiceBox .chip,#reviewBox .chip{min-height:52px}
-/* ===== 桌面顶栏（模式下拉，仅桌面构建） ===== */
-.desk-bar{display:none}
-body.desk-on .desk-bar{display:flex;align-items:center;gap:12px;position:fixed;top:0;left:0;right:0;z-index:60;background:#eceff3;border-bottom:1px solid #c9d1d9;padding:6px 14px;font-size:13px;color:#333;box-sizing:border-box}
-body.desk-on #app{padding-top:44px}
-.db-btn{display:inline-flex;align-items:center;gap:6px;background:#fff;border:1px solid #b8c2cc;border-radius:6px;padding:5px 12px;font-size:13px;color:#222;cursor:pointer}
-.db-btn:hover{border-color:#8fa3b8}
-.db-caret{color:#666;font-size:11px}
-.db-hint{color:#8a94a0;font-size:12px}
-.db-menu{position:absolute;top:40px;left:14px;background:#fff;border:1px solid #c9d1d9;border-radius:8px;box-shadow:0 10px 28px rgba(15,30,50,.16);padding:5px;min-width:188px;z-index:61}
-.db-item{display:block;width:100%;text-align:left;background:none;border:0;padding:8px 12px;font-size:13px;color:#222;border-radius:5px;cursor:pointer}
-.db-item:hover{background:#eef3f8}
-.db-sep{height:1px;background:#e2e7ec;margin:4px 2px}
-/* ===== 背词模式三张脸（仅桌面） ===== */
-.wmface{background:#fff;border:1px solid #dfe4ea;border-radius:10px;overflow:hidden;margin:8px 0 24px;text-align:left}
-.wm-ribbon{background:#f4f6f8;border-bottom:1px solid #dde3ea;padding:8px 12px 6px}
-.wm-rtabs{display:flex;gap:2px;margin-bottom:6px}
-.wm-rtab{font-size:12.5px;color:#444;padding:3px 10px;border-radius:4px}
-.wm-rtab.file{background:#2f6f4e;color:#fff}
-.wm-wd .wm-rtab.file{background:#2B579A}
-.wm-rtab.on{background:#fff;border:1px solid #d4dbe3;border-bottom-color:#fff;font-weight:600}
-.wm-rgroups{display:flex;gap:14px}
-.wm-rgroup{font-size:11px;color:#7a8594}
-.wm-ruler{height:14px;background:#fff;border-top:1px solid #e3e8ee;margin-top:6px}
-.wm-ruler-in{display:block;height:100%;background:repeating-linear-gradient(to right,#c9d1d9 0 1px,transparent 1px 24px)}
-.wm-formrow{display:flex;align-items:center;gap:10px;padding:7px 12px;border-bottom:1px solid #dde3ea;background:#fbfcfd}
-.wm-namebox{border:1px solid #c9d1d9;background:#fff;border-radius:3px;padding:3px 12px;font-size:12.5px;color:#333;min-width:56px;text-align:center}
-.wm-fx{color:#8a94a0;font-style:italic;font-size:13px}
-.wm-formula{font-size:13.5px;color:#1d2733;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.wm-colhead{display:grid;grid-template-columns:34px 1fr 1.6fr 2.2fr .8fr 1fr;background:#f4f6f8;border-bottom:1px solid #dde3ea}
-.wm-colhead span{text-align:center;font-size:11.5px;color:#7a8594;border-right:1px solid #e6ebf0;padding:3px 0}
-.wm-colhead span.g{background:#e9edf2}
-.wm-sheet{width:100%;border-collapse:collapse;font-size:13.5px}
-.wm-sheet td{border-bottom:1px solid #eef1f5;border-right:1px solid #eef1f5;padding:7px 10px;color:#1d2733}
-.wm-sheet .wm-hrow td{background:#f4f6f8;color:#5b6673;font-weight:600;font-size:12.5px}
-.wm-sheet .wm-rnum{background:#f4f6f8;color:#8a94a0;text-align:center;width:34px}
-.wm-sheet .wm-code{color:#5b6673}
-.wm-sheet tr.cur td{background:#fff7e0}
-.wm-sheet tr.cur .wm-rnum{background:#ffe9a8}
-.wm-sheet tr.done td{color:#5b6673}
-.wm-status{font-weight:600;color:#2f6f4e}
-.wm-note{color:#8a94a0;font-size:12px}
-.wm-input{width:92%;border:1.5px solid #2f6f4e;border-radius:2px;padding:4px 7px;font-size:13.5px;outline:none;background:#fff;color:#1d2733}
-.wm-wd .wm-input{border-color:#2B579A}
-.wm-py .wm-input{border-color:#007ACC;background:#252526;color:#d4d4d4;width:170px}
-.wm-actions{display:flex;flex-wrap:wrap;gap:8px;padding:10px 12px;background:#fbfcfd;border-top:1px solid #eef1f5}
-.wm-act{background:#fff;border:1px solid #b8c2cc;color:#222;border-radius:6px;padding:7px 16px;font-size:13px;cursor:pointer;min-height:36px}
-.wm-act:hover{border-color:#8fa3b8}
-.wm-act.primary{background:#2f6f4e;border-color:#2f6f4e;color:#fff;font-weight:600}
-.wm-wd .wm-act.primary{background:#2B579A;border-color:#2B579A}
-.wm-py .wm-act.primary{background:#007ACC;border-color:#007ACC}
-.wm-sheetbar{background:#f4f6f8;border-top:1px solid #dde3ea;padding:5px 12px}
-.wm-stab{font-size:12px;color:#5b6673;padding:3px 12px;border-radius:4px;margin-right:6px}
-.wm-stab.on{background:#fff;border:1px solid #d4dbe3;font-weight:600}
-.wm-statusbar{display:flex;justify-content:space-between;gap:16px;background:#2f6f4e;color:#fff;font-size:12.5px;padding:6px 14px}
-.wm-wd .wm-page{background:#fcfcfc;padding:28px 34px 18px;min-height:320px}
-.wm-wd-head{border-bottom:2px solid #2B579A;padding-bottom:10px;margin-bottom:14px}
-.wm-wd-title{font-size:21px;font-weight:700;color:#1d2733}
-.wm-wd-sub{font-size:12px;color:#8a94a0;margin-top:2px}
-.wm-wd-entry{display:flex;align-items:baseline;gap:12px;padding:8px 10px;border-radius:6px;font-size:15px;color:#1d2733;cursor:pointer}
-.wm-wd-entry.cur{background:#eef3fa}
-.wm-wd-num{color:#8a94a0;min-width:26px}
-.wm-wd-prompt{font-weight:600;min-width:170px}
-.wm-wd-ans{flex:1;color:#37424e}
-.wm-wd-tag{font-size:12px;color:#2B579A;font-weight:600}
-.wm-wd-foot{margin-top:16px;border-top:1px solid #e6ebf0;padding-top:8px;font-size:12.5px;color:#8a94a0}
-.wm-py{background:#1e1e1e;border-color:#333}
-.wm-py-top{background:#2d2d2d;padding:0 10px}
-.wm-py-tab{display:inline-block;padding:7px 14px;font-size:12.5px;color:#969696;background:#2d2d2d}
-.wm-py-tab.on{background:#1e1e1e;color:#fff}
-.wm-py-crumbs{font-size:11.5px;color:#8a8a8a;padding:4px 2px 7px}
-.wm-py-tree{background:#252526;color:#ccc;padding:10px 12px;font-size:12.5px}
-.wm-py-tree-head{color:#8a8a8a;font-size:11px;letter-spacing:1px;margin-bottom:6px}
-.wm-py-file{padding:2px 0}
-.wm-py-file.on{color:#fff}
-.wm-py-code{padding:12px 0 8px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13.5px}
-.wm-py-line{display:flex;align-items:center;gap:12px;padding:3px 14px;color:#d4d4d4;white-space:nowrap;overflow:hidden}
-.wm-py-line.comment{color:#6a9955}
-.wm-py-line.cur{background:#2a2d2e}
-.wm-py-num{color:#5a5a5a;min-width:26px;text-align:right}
-.wm-py-status{color:#6a9955}
-.wm-py-console{background:#1e1e1e;border-top:1px solid #333;color:#9cdcfe;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12.5px;padding:8px 14px}
-
-/* ===== 老板键静态假屏（一张静止的报价表） ===== */
-.boss-screen{display:none;position:fixed;inset:0;z-index:500;background:#fff;overflow:auto;font-family:Calibri,"Segoe UI","Microsoft YaHei",sans-serif;color:#222}
-.boss-screen.show{display:block}
-body.boss-on{overflow:hidden}
-body.boss-on #app,body.boss-on #tabbar,body.boss-on #feedbackBar{visibility:hidden}
-.bs-titlebar{background:#217346;color:#fff;font-size:13px;padding:7px 12px}
-.bs-ribbon{background:#F3F2F1;border-bottom:1px solid #D6DCE4;font-size:13px;color:#444;padding:6px 12px;display:flex;gap:18px}
-.bs-ribbon b{color:#217346}
-.bs-formrow{display:flex;align-items:stretch;border-bottom:1px solid #D6DCE4;min-height:29px;background:#fff}
-.bs-namebox{width:86px;flex:none;display:flex;align-items:center;justify-content:center;font-size:13px;border-right:1px solid #D6DCE4;background:#FAFAFA}
-.bs-fx{width:34px;flex:none;display:flex;align-items:center;justify-content:center;color:#888;font-style:italic;border-right:1px solid #EDEBE9}
-.bs-formula{flex:1;display:flex;align-items:center;padding:3px 10px;font-size:14px}
-.bs-table{border-collapse:collapse;width:100%;font-size:13.5px}
-.bs-table th,.bs-table td{border:1px solid #D4D4D4;padding:5px 9px;white-space:nowrap;text-align:left}
-.bs-table th{background:#F2F2F2;font-weight:600;color:#333}
-.bs-table td.num,.bs-table th.num{text-align:right}
-.bs-table .rowhead{background:#F2F2F2;color:#777;text-align:center;width:34px}
-.bs-table tr.total td{font-weight:700;border-top:2px solid #999;background:#FAFAFA}
-.bs-table td.sel{box-shadow:inset 0 0 0 2px #217346;background:#EDF5EF}
-.bs-statusbar{position:sticky;bottom:0;background:#217346;color:#fff;font-size:12.5px;padding:4px 12px}
-
 /* ===== v3.16 大改：列表首页 / 聊天式开场 / 收藏卡文化卡 / 文化本 ===== */
 /* 玻璃控件层：blur + saturate + 亮边；正文实底 */
 .glassbar-bg{background:var(--glass);backdrop-filter:blur(18px) saturate(1.6);-webkit-backdrop-filter:blur(18px) saturate(1.6);border-bottom:.5px solid rgba(255,255,255,.65);box-shadow:0 1px 0 rgba(16,24,40,.05),0 10px 28px rgba(16,24,40,.08)}
 /* —— 首页 —— */
-.home-head{position:sticky;top:0;z-index:20;margin:0 -16px;padding:14px 16px 10px;background:var(--glass);backdrop-filter:blur(18px) saturate(1.6);-webkit-backdrop-filter:blur(18px) saturate(1.6);border-bottom:.5px solid var(--hair);box-shadow:0 8px 22px rgba(16,24,40,.05)}
+.home-head{flex:none;z-index:20;margin:0 -16px;padding:14px 16px 10px;background:var(--glass);backdrop-filter:blur(18px) saturate(1.6);-webkit-backdrop-filter:blur(18px) saturate(1.6);border-bottom:.5px solid var(--hair);box-shadow:0 8px 22px rgba(16,24,40,.05)}
 .hh-row{display:flex;align-items:center;gap:10px}
 .hh-title{flex:1;font-size:20px;font-weight:800;color:var(--brand)}
 .hh-status{margin-top:7px;font-size:12.5px;color:var(--ink-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .hh-status b{color:var(--ink);font-weight:700}
 .hh-freeze{font-size:11.5px;color:var(--ink-2);margin-top:3px}
 #view-home .due-banner{margin:12px 0 2px}
-.unit-head{position:sticky;top:86px;z-index:10;background:var(--bg);padding:14px 2px 8px;font-size:13px;font-weight:800;color:var(--ink-2);letter-spacing:2px}
+.unit-head{position:sticky;top:0;z-index:10;background:var(--bg);padding:14px 2px 8px;font-size:13px;font-weight:800;color:var(--ink-2);letter-spacing:2px}
 .lesson-row{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:var(--card);border:.5px solid var(--hair);border-radius:16px;padding:13px 14px;margin-bottom:9px;box-shadow:var(--shadow-card);transition:transform .18s var(--spring)}
 .lesson-row:active{transform:scale(.985)}
 .lesson-row.cur{border:1.5px solid var(--brand);box-shadow:0 2px 4px rgba(15,118,110,.10),0 10px 26px rgba(15,118,110,.13)}
@@ -557,29 +432,29 @@ body.boss-on #app,body.boss-on #tabbar,body.boss-on #feedbackBar{visibility:hidd
 .lr-state .st-new{color:#B6AB98}
 .unit-test-row{margin-bottom:9px}
 /* —— 开场页 —— */
-#view-scene{position:fixed;inset:0;z-index:35;background:#241a10}
-#view-scene.active{display:flex;flex-direction:column}
+#view-scene{position:relative;background:#241a10;margin:0 -16px}
+#view-scene.active{display:flex;flex-direction:column;flex:1;min-height:0;overflow:hidden}
 .op-bg{position:absolute;inset:0;overflow:hidden}
 .op-bg img{width:100%;height:100%;object-fit:cover;display:block;transform:scale(1.04)}
 .op-shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(24,15,6,.30) 0%,rgba(24,15,6,.06) 26%,rgba(24,15,6,.10) 60%,rgba(24,15,6,.42) 100%);backdrop-filter:brightness(.94) saturate(1.02);-webkit-backdrop-filter:brightness(.94) saturate(1.02)}
 .op-top{position:relative;z-index:6;display:flex;align-items:center;gap:10px;padding:calc(8px + env(safe-area-inset-top)) 12px 8px;background:rgba(255,251,243,.55);backdrop-filter:blur(16px) saturate(1.5);-webkit-backdrop-filter:blur(16px) saturate(1.5);border-bottom:.5px solid rgba(255,255,255,.55);box-shadow:0 6px 20px rgba(30,18,4,.12)}
-.glass-btn{flex:none;min-width:40px;height:40px;padding:0 10px;border-radius:50%;background:rgba(255,255,255,.68);border:.5px solid rgba(255,255,255,.9);box-shadow:0 2px 8px rgba(60,35,0,.18);display:flex;align-items:center;justify-content:center;font-size:16px;color:#44403c}
+.glass-btn{flex:none;min-width:44px;height:44px;padding:0 10px;border-radius:50%;background:rgba(255,255,255,.68);border:.5px solid rgba(255,255,255,.9);box-shadow:0 2px 8px rgba(60,35,0,.18);display:flex;align-items:center;justify-content:center;font-size:16px;color:#44403c}
 .op-slow{border-radius:999px;font-size:12.5px;font-weight:600;color:var(--brand)}
 .op-tt{flex:1;min-width:0}
 .op-t1{font-size:16.5px;font-weight:800;color:#292018;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .op-t2{font-size:11px;color:#6d5c48;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.op-scroll{position:relative;z-index:5;flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:8px 12px 6px}
+.op-scroll{position:relative;z-index:5;flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding:8px 12px 6px}
 .op-msg{display:flex;gap:8px;margin-bottom:5px;align-items:flex-start}
 .op-msg.me{flex-direction:row-reverse}
-.op-ava{width:34px;height:34px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;font-weight:800;border:1.5px solid rgba(255,255,255,.85);box-shadow:0 2px 6px rgba(50,30,0,.3)}
-.op-col{max-width:78%}
+.op-ava{width:30px;height:30px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;font-weight:800;border:1.5px solid rgba(255,255,255,.85);box-shadow:0 2px 6px rgba(50,30,0,.3)}
+.op-col{flex:1;min-width:0}
 .op-name{font-size:10.5px;font-weight:600;color:rgba(255,246,224,.92);margin-bottom:3px;text-shadow:0 1px 3px rgba(40,22,0,.55)}
 .op-rowin{display:flex;align-items:center;gap:6px}
 .op-msg.me .op-rowin{flex-direction:row-reverse}
-.op-bub{border-radius:15px;padding:7px 12px 6px;box-shadow:0 2px 9px rgba(50,28,0,.22)}
+.op-bub{border-radius:15px;padding:6px 11px 5px;box-shadow:0 2px 9px rgba(50,28,0,.22);max-width:calc(100% - 42px)}
 .op-msg.other .op-bub{background:rgba(255,253,248,.97);border:1px solid rgba(238,227,205,.9);border-top-left-radius:5px}
 .op-msg.me .op-bub{background:rgba(13,110,100,.97);color:#fff;border-top-right-radius:5px}
-.op-en{font-size:15.5px;line-height:1.32}
+.op-en{font-size:15px;line-height:1.35}
 .op-bub .hl{color:var(--accent);font-weight:700}
 .op-msg.me .op-bub .hl{color:#FFD9A0}
 .op-w{padding:0;margin:0;font:inherit;color:inherit;border-bottom:1.5px dotted rgba(217,119,6,.75);border-radius:2px}
@@ -587,14 +462,14 @@ body.boss-on #app,body.boss-on #tabbar,body.boss-on #feedbackBar{visibility:hidd
 .op-w:active{background:rgba(217,119,6,.18)}
 .op-cn{display:block;font-size:11.5px;margin-top:2px;color:#A39E93}
 .op-msg.me .op-cn{color:rgba(255,255,255,.72)}
-.op-play{flex:none;width:28px;height:28px;border-radius:50%;background:rgba(255,253,248,.92);border:1px solid rgba(191,224,215,.9);color:#0f766e;font-size:10.5px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(50,28,0,.22)}
-.op-rec{flex:none;width:28px;height:28px;border-radius:50%;background:rgba(255,253,248,.92);border:1px solid rgba(238,227,205,.9);font-size:12px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(50,28,0,.22)}
+.op-play{flex:none;width:30px;height:30px;position:relative;border-radius:50%;background:rgba(255,253,248,.92);border:1px solid rgba(191,224,215,.9);color:#0f766e;font-size:11px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(50,28,0,.22)}
+.op-rec{flex:none;width:30px;height:30px;position:relative;border-radius:50%;background:rgba(255,253,248,.92);border:1px solid rgba(238,227,205,.9);font-size:13px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(50,28,0,.22)}
 .op-rec.listening{background:#FDE8E8;border-color:#F3B4B4}
 .op-msg.shadowed .op-bub{box-shadow:0 0 0 2px rgba(74,222,128,.75),0 2px 9px rgba(50,28,0,.22)}
 .op-note{font-size:11.5px;color:#FFE9BC;text-shadow:0 1px 3px rgba(40,22,0,.6);margin:2px 2px 0;min-height:0}
 .op-msg.me .op-note{text-align:right}
 .op-tools{display:flex;align-items:center;gap:10px;margin:2px 2px 4px}
-.op-quiet{font-size:12.5px;color:#FFF3D6;background:rgba(30,20,8,.38);border:.5px solid rgba(255,243,214,.5);border-radius:999px;padding:6px 12px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.op-quiet{font-size:12.5px;color:#FFF3D6;background:rgba(30,20,8,.38);border:.5px solid rgba(255,243,214,.5);border-radius:999px;padding:6px 14px;min-height:44px;display:inline-flex;align-items:center;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
 .op-quiet.on{background:rgba(13,110,100,.85);color:#E7FFFA;border-color:rgba(255,255,255,.4)}
 .op-lastacc{font-size:12px;color:#FFE9BC;text-shadow:0 1px 3px rgba(40,22,0,.6)}
 .op-wordcard{position:absolute;z-index:8;background:#fff;color:#1c1917;border-radius:15px;padding:11px 42px 11px 14px;box-shadow:var(--shadow-pop);border:.5px solid #E7E5E0;max-width:250px}
@@ -667,6 +542,14 @@ body.boss-on #app,body.boss-on #tabbar,body.boss-on #feedbackBar{visibility:hidd
 .cc-story b{color:#B45309;font-size:11px;letter-spacing:2px;display:block;margin-bottom:3px}
 .cc-link{display:inline-block;margin-top:9px;font-size:13px;color:#2563EB;font-weight:600}
 
+/* ===== v3.17 热修：dvh 弹性壳 / 开场固定窄槽 / 44px 热区 ===== */
+#homeList{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding-bottom:8px}
+#view-home .due-banner{flex:none}
+.op-slot{flex:none;width:40px;display:flex;flex-direction:column;align-items:center;gap:6px}
+.op-play:after,.op-rec:after{content:"";position:absolute;inset:-7px}
+.op-wordcard .wc-spk{width:36px;height:36px}
+.op-wordcard .wc-spk:after{content:"";position:absolute;inset:-4px}
+.book-chapter{min-height:44px;align-items:center}
 </style>
 </head>
 <body>
@@ -677,7 +560,6 @@ body.boss-on #app,body.boss-on #tabbar,body.boss-on #feedbackBar{visibility:hidd
     <div class="home-head">
       <div class="hh-row">
         <div class="hh-title">情景英语</div>
-        <div class="bk-mode" id="bookModeSlot"></div>
       </div>
       <div class="hh-status" id="homeStatus"></div>
       <div class="hh-freeze" id="streakFreezeNote"></div>
@@ -837,16 +719,6 @@ body.boss-on #app,body.boss-on #tabbar,body.boss-on #feedbackBar{visibility:hidd
   </section>
 
   <!-- ⑦ 我的标签 -->
-  <section id="view-wordmode" class="view hidden">
-    <div id="wordmodeBox"></div>
-  </section>
-  <section id="view-shortcuts" class="view hidden">
-    <button class="backbtn" id="keysBack" type="button"></button>
-    <h2 class="vtitle">快捷键设置</h2>
-    <p class="hint" style="margin:2px 0 12px">点任意一项，再按一下新键即改绑；只存这台电脑。</p>
-    <div id="keysList"></div>
-    <p class="hint" style="margin-top:14px">场景答题可用数字键 1–9 选选项（固定，不可改）</p>
-  </section>
   <section id="view-my" class="view">
     <div class="sec-title" style="margin-top:14px">数据与设置</div>
     <div class="card">
@@ -888,7 +760,7 @@ body.boss-on #app,body.boss-on #tabbar,body.boss-on #feedbackBar{visibility:hidd
       </div>
       <p class="muted" style="margin-bottom:0">开启双端同步后，进度会自动在手机和电脑之间同步。单词音标来源：ECDICT 开源英汉词典（MIT 许可）；对话与题目均为原创。</p>
     </div>
-    <div class="version-line">情景英语 v3.16</div>
+    <div class="version-line">情景英语 v3.17</div>
   </section>
 </div>
 <!-- 文化卡收藏弹窗（v3.16：首次完成场景时弹，卡面按实体收藏卡设计） -->
@@ -930,34 +802,6 @@ body.boss-on #app,body.boss-on #tabbar,body.boss-on #feedbackBar{visibility:hidd
     <button class="tab" data-tab="my"><span class="tab-ic" data-icon="user"></span>我的</button>
   </div>
 </nav>
-<!-- 老板键静态假屏：一张静止的供应商报价表（无任何学习 UI） -->
-<div id="bossScreen" class="boss-screen" style="display:none">
-<div class="bs-titlebar">供应商报价汇总_2026Q4.xlsx - Excel</div>
-<div class="bs-ribbon"><b>开始</b><span>插入</span><span>页面布局</span><span>公式</span><span>数据</span><span>审阅</span><span>视图</span></div>
-<div class="bs-formrow"><div class="bs-namebox">G18</div><div class="bs-fx"><i>fx</i></div><div class="bs-formula">=SUM(G2:G17)</div></div>
-<table class="bs-table">
-<tr><th class="rowhead"></th><th>SKU</th><th>品名</th><th>规格型号</th><th>供应商</th><th class="num">数量</th><th class="num">单价（元）</th><th class="num">金额（元）</th><th class="num">交期（天）</th><th>状态</th></tr>
-<tr><td class="rowhead">2</td><td>SKU-100231</td><td>不锈钢法兰</td><td>DN50 PN16</td><td>上海恒铸阀门有限公司</td><td class="num">120</td><td class="num">86.50</td><td class="num">10,380.00</td><td class="num">7</td><td>已确认</td></tr>
-<tr><td class="rowhead">3</td><td>SKU-100245</td><td>铜芯电缆</td><td>YJV 3×2.5</td><td>江苏远东线缆贸易有限公司</td><td class="num">500</td><td class="num">12.80</td><td class="num">6,400.00</td><td class="num">5</td><td>已确认</td></tr>
-<tr><td class="rowhead">4</td><td>SKU-100312</td><td>劳保手套</td><td>棉线加厚</td><td>山东安泰劳保用品有限公司</td><td class="num">2,000</td><td class="num">3.60</td><td class="num">7,200.00</td><td class="num">3</td><td>已发货</td></tr>
-<tr><td class="rowhead">5</td><td>SKU-100318</td><td>A4 打印纸</td><td>70g 整箱</td><td>得力办公用品有限公司</td><td class="num">80</td><td class="num">118.00</td><td class="num">9,440.00</td><td class="num">2</td><td>已收货</td></tr>
-<tr><td class="rowhead">6</td><td>SKU-100402</td><td>角阀</td><td>4 分全铜</td><td>宁波埃美柯经销处</td><td class="num">350</td><td class="num">24.90</td><td class="num">8,715.00</td><td class="num">6</td><td>已确认</td></tr>
-<tr><td class="rowhead">7</td><td>SKU-100417</td><td>LED 平板灯</td><td>600×600 36W</td><td>佛山照明上海代理商</td><td class="num">240</td><td class="num">96.00</td><td class="num">23,040.00</td><td class="num">10</td><td>待确认</td></tr>
-<tr><td class="rowhead">8</td><td>SKU-100455</td><td>密封圈</td><td>丁腈橡胶 Φ45</td><td>河北巨鹿密封件厂</td><td class="num">1,500</td><td class="num">1.85</td><td class="num">2,775.00</td><td class="num">4</td><td>已发货</td></tr>
-<tr><td class="rowhead">9</td><td>SKU-100461</td><td>碳带</td><td>110mm×300m</td><td>深圳兆天办公耗材</td><td class="num">300</td><td class="num">28.50</td><td class="num">8,550.00</td><td class="num">3</td><td>已确认</td></tr>
-<tr><td class="rowhead">10</td><td>SKU-100478</td><td>不锈钢螺栓</td><td>M8×30</td><td>嘉兴海盐紧固件有限公司</td><td class="num">5,000</td><td class="num">0.92</td><td class="num">4,600.00</td><td class="num">5</td><td>已确认</td></tr>
-<tr><td class="rowhead">11</td><td>SKU-100503</td><td>工业酒精</td><td>25L/桶</td><td>苏州康洁化工有限公司</td><td class="num">60</td><td class="num">145.00</td><td class="num">8,700.00</td><td class="num">2</td><td>已收货</td></tr>
-<tr><td class="rowhead">12</td><td>SKU-100526</td><td>截止阀</td><td>DN25 铸钢</td><td>上海恒铸阀门有限公司</td><td class="num">85</td><td class="num">132.00</td><td class="num">11,220.00</td><td class="num">7</td><td>待确认</td></tr>
-<tr><td class="rowhead">13</td><td>SKU-100540</td><td>纸箱</td><td>500×400×350 定制</td><td>昆山宏图包装材料</td><td class="num">3,000</td><td class="num">2.35</td><td class="num">7,050.00</td><td class="num">6</td><td>已发货</td></tr>
-<tr><td class="rowhead">14</td><td>SKU-100561</td><td>绝缘胶带</td><td>PVC 18mm</td><td>公牛集团上海经销</td><td class="num">800</td><td class="num">4.20</td><td class="num">3,360.00</td><td class="num">3</td><td>已确认</td></tr>
-<tr><td class="rowhead">15</td><td>SKU-100577</td><td>液压油</td><td>46# 170kg/桶</td><td>长城润滑油代理商</td><td class="num">12</td><td class="num">2,380.00</td><td class="num">28,560.00</td><td class="num">9</td><td>待确认</td></tr>
-<tr><td class="rowhead">16</td><td>SKU-100590</td><td>潜水泵</td><td>1.5kW</td><td>上海熊猫机械集团</td><td class="num">6</td><td class="num">1,150.00</td><td class="num">6,900.00</td><td class="num">8</td><td>已确认</td></tr>
-<tr><td class="rowhead">17</td><td>SKU-100612</td><td>安全帽</td><td>ABS 白色</td><td>代尔塔（中国）有限公司</td><td class="num">150</td><td class="num">38.00</td><td class="num">5,700.00</td><td class="num">4</td><td>已发货</td></tr>
-<tr class="total"><td class="rowhead">18</td><td></td><td>合计</td><td></td><td></td><td></td><td></td><td class="num sel">152,590.00</td><td></td><td></td></tr>
-</table>
-<div class="bs-statusbar">就绪</div>
-</div>
-
 <script>(function(f,oe){typeof exports=="object"&&typeof module<"u"?oe(exports):typeof define=="function"&&define.amd?define(["exports"],oe):(f=typeof globalThis<"u"?globalThis:f||self,oe(f.FSRS={}))})(void 0,function(f){Object.defineProperty(f,Symbol.toStringTag,{value:"Module"});var oe=Object.defineProperty,p=(e,t,n)=>()=>{if(n)throw n[0];try{return e&&(t=e(e=0)),t}catch(s){throw n=[s],s}},ce=(e,t)=>{let n={};for(var s in e)oe(n,s,{get:e[s],enumerable:!0});return t||oe(n,Symbol.toStringTag,{value:"Module"}),n};function ue(e){"@babel/helpers - typeof";return ue=typeof Symbol=="function"&&typeof Symbol.iterator=="symbol"?function(t){return typeof t}:function(t){return t&&typeof Symbol=="function"&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t},ue(e)}var mn=p((()=>{}));function ui(e,t){if(ue(e)!="object"||!e)return e;var n=e[Symbol.toPrimitive];if(n!==void 0){var s=n.call(e,t||"default");if(ue(s)!="object")return s;throw new TypeError("@@toPrimitive must return a primitive value.")}return(t==="string"?String:Number)(e)}var hi=p((()=>{mn()}));function fi(e){var t=ui(e,"string");return ue(t)=="symbol"?t:t+""}var gi=p((()=>{mn(),hi()}));function M(e,t,n){return(t=fi(t))in e?Object.defineProperty(e,t,{value:n,enumerable:!0,configurable:!0,writable:!0}):e[t]=n,e}var j=p((()=>{gi()}));function D(e){return!!e&&!Array.isArray(e)&&typeof e=="object"}function O(e){return Number.isFinite(e)}function Sn(e){return typeof e=="function"}function vn(e,t,n){const s=e;if(t in e){const i=Object.getOwnPropertyDescriptor(e,t);if(i&&"value"in i&&i.writable){s[t]=n;return}}else{const i=Object.getPrototypeOf(e);if(i===Object.prototype||i===null){s[t]=n;return}}Object.defineProperty(e,t,{value:n,writable:!0,enumerable:!0,configurable:!0})}function he(e,t){const n=t;for(const s in n)Object.hasOwn(n,s)&&vn(e,s,n[s])}function G(e,...t){for(const s of t){if(s==null)continue;const i=Object(s);he(e,i);for(const r of Object.getOwnPropertySymbols(i)){var n;!((n=Object.getOwnPropertyDescriptor(i,r))===null||n===void 0)&&n.enumerable&&vn(e,r,i[r])}}return e}function mi(e){return"then"in e&&typeof e.then=="function"}function L(e,t){const n=e["~standard"].validate(t);if(mi(n))throw Promise.resolve(n).catch(s=>{console.error("Async Standard Schema validation rejected",s)}),new TypeError("Async Standard Schema validation is not supported");return n}function w(e){return{"~standard":{version:1,vendor:"@open-spaced-repetition/srs-kit",validate:e},parse(t){const n=e(t);if(n.issues)throw new ot(n.issues);return n.value},safeParse(t){const n=e(t);return n.issues?{success:!1,issues:n.issues}:{success:!0,data:n.value}}}}function C(e,t){const n=L(e,t);if(n.issues)throw new ot(n.issues);return n.value}function Si(e){return e instanceof Date&&e.getTime()!==0&&Number.isFinite(e.getTime())}function vi(e,t){return{map(n){return Array.from(this,s=>n(s))},[Symbol.iterator](){let n=0;const s={next(){return n>=e.length?{value:void 0,done:!0}:{value:t(e[n++]),done:!1}},[Symbol.iterator](){return s}};return s}}}function at(e,t,n){if(e.length===0){n(t);return}let s=-1;const i=r=>{if(r<=s)throw new Error("Middleware next() called multiple times");if(s=r,r>=e.length){n(t);return}const a=e[r];if(!a){i(r+1);return}a(t,()=>i(r+1))};i(0)}var yn,ot,yi,ct,Oe,Z,Pe,ze,fe,V=p((()=>{j(),yn=Object.freeze(Object.create(null)),ot=class ci extends Error{constructor(t){var n,s;super(t.map(i=>i.message).join(`
 `)),M(this,"issues",void 0),this.name="SRSSchemaError",this.issues=t,(n=Error)===null||n===void 0||(s=n.captureStackTrace)===null||s===void 0||s.call(n,this,ci)}},yi=w(e=>!D(e)||Object.keys(e).length>0?{issues:[{message:"Expected empty object"}]}:{value:{}}),ct=w(e=>O(e)?{value:e}:{issues:[{message:"Expected finite number"}]}),Oe=w(e=>Si(e)?{value:e}:{issues:[{message:"Expected valid Date"}]}),Z=w(e=>O(e)&&e>0&&e<1?{value:e}:{issues:[{message:"desiredRetention must be finite and in (0, 1)"}]}),Pe=w(e=>O(e)&&e>=0?{value:e}:{issues:[{message:"elapsedDays must be finite and non-negative"}]}),ze=w(e=>O(e)&&e>=0?{value:e}:{issues:[{message:"scheduledDays must be finite and non-negative"}]}),fe=w(e=>{if(!D(e))return{issues:[{message:"Expected fractional days config"}]};const t=e.fractionalDays===void 0?!1:e.fractionalDays;return typeof t!="boolean"?{issues:[{message:"Expected fractionalDays to be a boolean"}]}:{value:{fractionalDays:t}}})}));function _n(e,t){var n=Object.keys(e);if(Object.getOwnPropertySymbols){var s=Object.getOwnPropertySymbols(e);t&&(s=s.filter(function(i){return Object.getOwnPropertyDescriptor(e,i).enumerable})),n.push.apply(n,s)}return n}function z(e){for(var t=1;t<arguments.length;t++){var n=arguments[t]!=null?arguments[t]:{};t%2?_n(Object(n),!0).forEach(function(s){M(e,s,n[s])}):Object.getOwnPropertyDescriptors?Object.defineProperties(e,Object.getOwnPropertyDescriptors(n)):_n(Object(n)).forEach(function(s){Object.defineProperty(e,s,Object.getOwnPropertyDescriptor(n,s))})}return e}var ge=p((()=>{j()}));function pn(e){return w(e)}function _i(e){return typeof e=="function"?pn(e):e}function Ne(e){var t;return{schema:z(z(z({time:e.schema.time},e.schema.config?{config:e.schema.config}:{}),e.schema.card?{card:e.schema.card}:{}),e.schema.revlog?{revlog:e.schema.revlog}:{}),normalize:_i(e.normalize),defaultValue:(t=e.defaultValue)!==null&&t!==void 0?t:{},create:e.create}}var me=p((()=>{V(),ge()})),l,pi,te,wn,Se,_,wi,lt,U=p((()=>{V(),l=Object.freeze({Manual:0,Again:1,Hard:2,Good:3,Easy:4}),pi=Object.freeze([l.Manual,l.Again,l.Hard,l.Good,l.Easy]),te=Object.freeze([l.Again,l.Hard,l.Good,l.Easy]),wn=w(e=>e===l.Manual||e===l.Again||e===l.Hard||e===l.Good||e===l.Easy?{value:e}:{issues:[{message:"Expected rating"}]}),Se=w(e=>e===l.Again||e===l.Hard||e===l.Good||e===l.Easy?{value:e}:{issues:[{message:"Expected grade"}]}),_=Object.freeze({New:0,Learning:1,Review:2,Relearning:3}),wi=Object.freeze([_.New,_.Learning,_.Review,_.Relearning]),lt=w(e=>e===_.New||e===_.Learning||e===_.Review||e===_.Relearning?{value:e}:{issues:[{message:"Expected state"}]})}));function bi(e){return e}var dt,ut,ht,bn=p((()=>{V(),U(),dt=w(e=>{if(!D(e))return{issues:[{message:"Expected stats config object"}]};const{clearStatsOnForget:t}=e;return t===void 0?{value:{clearStatsOnForget:!0}}:typeof t!="boolean"?{issues:[{message:"Expected boolean clearStatsOnForget"}]}:{value:{clearStatsOnForget:t}}}),ut=w(e=>{if(!D(e))return{issues:[{message:"Expected stats object"}]};const{reps:t,lapses:n}=e;return typeof t!="number"||!Number.isSafeInteger(t)||t<0?{issues:[{message:"Expected non-negative integer reps"}]}:typeof n!="number"||!Number.isSafeInteger(n)||n<0?{issues:[{message:"Expected non-negative integer lapses"}]}:{value:{reps:t,lapses:n}}}),ht={name:Symbol("srs-kit.stats"),schema:{config:dt,card:ut},defaultValue:{card(e){if(e.operation==="forget"&&e.config.clearStatsOnForget===!1){const t=e.input;return{reps:t.reps,lapses:t.lapses}}return{reps:0,lapses:0}}},handlers:{review(e,t){t();const n=e.input.card,s=n.state,i=n.lapses,r=e.input.grade===l.Again&&s===_.Review;e.result.card.reps=n.reps+1,e.result.card.lapses=r?i+1:i},rollback(e,t){t();const n=e.input.card,s=e.input.revlog,i=s.rating===l.Again&&s.state===_.Review;e.result.card.reps=Math.max(0,n.reps-1),e.result.card.lapses=Math.max(0,n.lapses-(i?1:0))}}}}));function Mi(e){return e}var Mn=p((()=>{})),Rn,Ri,Fi=p((()=>{V(),Rn=Object.freeze(["new","learning","review"]),Ri=w(e=>e==="new"||e==="learning"||e==="review"?{value:e}:{issues:[{message:"Expected schedule status"}]})}));function xi(e,t){if(e==null)return{};var n={};for(var s in e)if({}.hasOwnProperty.call(e,s)){if(t.includes(s))continue;n[s]=e[s]}return n}var Di=p((()=>{}));function Ii(e,t){if(e==null)return{};var n,s,i=xi(e,t);if(Object.getOwnPropertySymbols){var r=Object.getOwnPropertySymbols(e);for(s=0;s<r.length;s++)n=r[s],t.includes(n)||{}.propertyIsEnumerable.call(e,n)&&(i[n]=e[n])}return i}var Ai=p((()=>{Di()}));function ft(e,t){return e[t]}function Fn(e,t,n){return Object.defineProperty(e,t,{value:n,writable:!1,enumerable:!1,configurable:!1}),e}function Ei(e){const{model:t,chrono:n,middlewares:s}=e,i=t.schema.config,r=n.schema,a=r.config,o=r.card,c=r.revlog,u=[],d=[],h=[],m=[];for(const v of s){const y=v.schema;y&&(y.config&&u.push(y.config),y.cardInitInput&&d.push(y.cardInitInput),y.card&&h.push(y.card),y.revlog&&m.push(y.revlog))}const R=w(v=>{if(typeof v!="string")return{issues:[{message:"Expected scheduleStatus string"}]};let y=Rn.includes(v);for(const F of s){var x;if(y)break;y=((x=F.scheduleStatus)===null||x===void 0?void 0:x.includes(v))===!0}return y?{value:v}:{issues:[{message:"Expected known scheduleStatus"}]}}),A=(v,y)=>{const x=L(R,v.scheduleStatus);if(x.issues)return x;const F=L(lt,v.state);if(F.issues)return F;if(!y?.rating)return{value:{state:F.value,scheduleStatus:x.value}};const E=L(Se,v.rating);return E.issues?E:{value:{state:F.value,scheduleStatus:x.value,rating:E.value}}};return{config:w(v=>{if(!D(v))return{issues:[{message:"Expected scheduler config object"}]};const y=L(i,v);if(y.issues)return y;const x={};if(he(x,y.value),a){const F=L(a,v);if(F.issues)return F;he(x,F.value)}for(const F of u){const E=L(F,v);if(E.issues)return E;he(x,E.value)}return{value:Fn(x,gt,y.value)}}),cardInitInput:w(v=>{var y,x;if(!D(v))return{issues:[{message:"Expected card init input object"}]};const{now:F}=v,E=Ii(v,Dn);let $,Y;for(const Sa of d){var ai;const gn=L(Sa,E);if(gn.issues)return gn;const oi=gn.value;if($===void 0){$=oi;continue}(ai=Y)!==null&&ai!==void 0||(Y=z({},$)),he(Y,oi)}return{value:{input:(y=(x=Y)!==null&&x!==void 0?x:$)!==null&&y!==void 0?y:{},now:F}}}),card:w(v=>{if(!D(v))return{issues:[{message:"Expected card object"}]};const y=L(t.schema.memoryState,v);if(y.issues)return y;const x=y.value,F=z({},x);if(o){const $=L(o,v);if($.issues)return $;G(F,$.value)}const E=A(v);if(E.issues)return E;F.state=E.value.state,F.scheduleStatus=E.value.scheduleStatus;for(const $ of h){const Y=L($,v);if(Y.issues)return Y;G(F,Y.value)}return{value:Fn(F,Le,x)}}),revlog:w(v=>{if(!D(v))return{issues:[{message:"Expected revlog object"}]};const y=L(t.schema.memoryState,v);if(y.issues)return y;const x=y.value;if(c){const E=L(c,v);if(E.issues)return E;G(x,E.value)}const F=A(v,{rating:!0});if(F.issues)return F;x.scheduleStatus=F.value.scheduleStatus,x.rating=F.value.rating,x.state=F.value.state;for(const E of m){const $=L(E,v);if($.issues)return $;G(x,$.value)}return{value:x}}),scheduleStatus:R}}function Ti(e){return Sn(e)?e:void 0}function Ci(e){var t;const{model:n,chrono:s,middlewares:i}=e,r=Ti((t=s.defaultValue)===null||t===void 0?void 0:t.card),a=i.map(o=>{var c;return(c=o.defaultValue)===null||c===void 0?void 0:c.card}).filter(Sn);return{newCard(o,c){const{config:u}=o,d=Object.assign(Object.create(yn),n.defaultValue.memoryState({config:u}));d.state=_.New,d.scheduleStatus="new",r&&Object.assign(d,r({config:u,time:c,previous:null}));for(const h of a)Object.assign(d,h(o));return Object.setPrototypeOf(d,Object.prototype)}}}function $i(e){if(!e)return Cn;const t=new Array(e.length);let n=e.length;for(let s=e;s;s=s.parent)t[--n]=s.middleware;return t}function xn(e){const{model:t,chrono:n}=e;function s(i){let r,a,o,c=!1;const u=()=>{var h;return(h=r)!==null&&h!==void 0||(r=$i(i)),r},d={name:t.name,modelDef:t,chronoDef:n,get defaultValue(){var h;return(h=a)!==null&&h!==void 0||(a=Ci({model:t,chrono:n,middlewares:u()})),a},get schema(){var h;return(h=o)!==null&&h!==void 0||(o=Ei({model:t,chrono:n,middlewares:u()})),o},create(h){return c||(o=d.schema,a=d.defaultValue,c=!0),new Tn({model:t,chrono:n,schema:o,defaultValue:a,middlewares:r,config:h.config})},use(...h){var m;if(h.length===0)return d;let R=i,A=(m=i?.length)!==null&&m!==void 0?m:0;for(const v of h)R={parent:R,middleware:v,length:++A};return s(R)}};return d}return s()}var Dn,gt,Le,In,An,En,Tn,Cn,$n=p((()=>{V(),U(),Fi(),Ai(),ge(),j(),Dn=["now"],gt=Symbol("parsedModelConfig"),Le=Symbol("parsedCardMemoryState"),In=.9,An={freezeCard:!1},En=class{constructor(e){M(this,"input",void 0),this.input=e}get card(){return this.input.card}set card(e){throw new Error("Review input card cannot be changed")}get grade(){return this.input.grade}set grade(e){throw new Error("Review input grade cannot be changed")}get now(){return this.input.now}set now(e){throw new Error("Review input now cannot be changed")}},Tn=class{constructor(e){M(this,"config",void 0),M(this,"model",void 0),M(this,"chrono",void 0),M(this,"schedulerDefinition",void 0),M(this,"defaultValue",void 0),M(this,"schema",void 0),M(this,"nextIntervalHandlers",void 0),M(this,"reviewHandlers",void 0),M(this,"reviewIntervalHandlers",void 0),M(this,"rollbackHandlers",void 0),M(this,"createNewCard",o=>{const{now:c,input:u}=C(this.schema.cardInitInput,o===void 0?{}:o);return this.defaultValue.newCard({operation:"newCard",config:this.config,input:u},this.parseNow(c))}),M(this,"newCard",this.createNewCard),M(this,"forward",o=>{const{history:c}=o;if(c.length===0)return[];const u=new Array(c.length),d=o.initialCard==null?this.createNewCard({now:c[0].reviewTime}):o.initialCard;let h=C(this.schema.card,d);for(let m=0;m<c.length;m++){const R=c[m],A=R.reviewTime,v=this.prepareParsedReview(h,A,An),y=this.parseReviewResult(this.runReview(v,R.rating,A));u[m]=y,h=y.card}return u}),M(this,"forget",o=>{const c=C(this.schema.card,o.card),u=this.parseNow(o.now);return this.defaultValue.newCard({operation:"forget",config:this.config,input:c},u)}),M(this,"nextInterval",(o,c,u)=>{const d=C(Se,u.grade),h=C(Pe,u.elapsedDays),m=C(Z,c),R=Object.freeze(C(this.schema.card,u.card)),A=ft(R,Le);if(!A)throw new Error("Parsed scheduler card is missing model memory state");const v=C(this.schedulerDefinition.model.schema.memoryState,o),y=this.createCandidate(A,h,void 0,[d,v],m),x={instance:this,config:this.config,input:Object.freeze({card:R,grade:d,desiredRetention:m}),elapsedDays:h,scheduledDays:void 0,candidate:y};return at(this.nextIntervalHandlers,x,F=>{var E;const $=F.candidate.step(F.input.grade);(E=F.scheduledDays)!==null&&E!==void 0||(F.scheduledDays=F.candidate.nextInterval($,C(Z,F.candidate.desiredRetention[F.input.grade])))}),C(ze,x.scheduledDays)}),M(this,"review",o=>{const{card:c,grade:u}=o,d=C(Se,u),h=this.parseNow(o.now),m=this.prepareReview(c,h);return this.parseReviewResult(this.runReview(m,d,h))}),M(this,"preview",o=>{const c=o.card,u=this.parseNow(o.now),d=this.prepareReview(c,u);return vi(te,h=>{const{card:m,revlog:R}=this.parseReviewResult(this.runReview(d,h,u));return{grade:h,card:m,revlog:R}})}),M(this,"rollback",o=>{const{card:c,revlog:u}=o,d=C(this.schema.revlog,u),h=C(this.schema.card,c),m={instance:this,config:this.config,input:{card:Object.freeze(h),revlog:Object.freeze(d)},result:{card:{}}};return at(this.rollbackHandlers,m,R=>this.finalizeRollback(R)),this.applyRollbackChronoDefaults(m.result,d),C(this.schema.card,m.result.card)});const{model:t,chrono:n,schema:s,defaultValue:i,middlewares:r=[]}=e;this.schedulerDefinition=Object.freeze({model:t,chrono:n}),this.schema=s,this.defaultValue=i;const a=C(s.config,e.config);this.config=a,this.model=t.create({config:ft(a,gt),bypass:!0}),this.chrono=Reflect.apply(n.create,n,[{config:a}]),this.nextIntervalHandlers=r.map(o=>{var c;return(c=o.handlers)===null||c===void 0?void 0:c.nextInterval}),this.reviewHandlers=r.map(o=>{var c;return(c=o.handlers)===null||c===void 0?void 0:c.review}),this.reviewIntervalHandlers=this.reviewHandlers.flatMap((o,c)=>[o,this.nextIntervalHandlers[c]]),this.rollbackHandlers=r.map(o=>{var c;return(c=o.handlers)===null||c===void 0?void 0:c.rollback})}get definition(){return this.schedulerDefinition}prepareReview(e,t){const n=C(this.schema.card,e);return this.prepareParsedReview(n,t)}prepareParsedReview(e,t,{freezeCard:n=!0}={}){var s;const i=ft(e,Le);if(!i)throw new Error("Parsed scheduler card is missing model memory state");const r=n?Object.freeze(e):e,a=C(this.schedulerDefinition.chrono.normalize,{card:r,time:t}),o=r.state===_.New?0:this.chrono.difference((s=a.previous)!==null&&s!==void 0?s:a.current,t),c=Pe.parse(o),u=this.model.forgettingCurve(i,c);return{card:r,time:a,elapsedDays:c,memoryState:i,retrievability:u,candidate:this.createCandidate(i,c,u)}}createCandidate(e,t,n,s,i=In){const r=new Map(s?[s]:void 0),a=new Map,o=h=>{let m=r.get(h);if(m===void 0){var R;(R=n)!==null&&R!==void 0||(n=this.model.forgettingCurve(e,t)),m=this.model.step({memoryState:e,rating:h,elapsedDays:t,retrievability:n}),r.set(h,m)}return a.set(m,h),m},c=h=>a.get(h),u=new Map,d=(h,m)=>{let R=u.get(h);if(R){const v=R.get(m);if(v!==void 0)return v}else R=new Map,u.set(h,R);const A=this.model.nextInterval(h,m);return R.set(m,A),A};return{desiredRetention:{[l.Again]:i,[l.Hard]:i,[l.Good]:i,[l.Easy]:i},step:o,findGrade:c,nextInterval:d}}runReview(e,t,n){const s={instance:this,config:this.config,input:new En({card:e.card,grade:t,now:n}),elapsedDays:e.elapsedDays,retrievability:e.retrievability,scheduledDays:void 0,candidate:e.candidate,result:{card:{},revlog:{}}};return at(this.reviewIntervalHandlers,s,i=>{var r;const a=i.candidate.step(i.input.grade);(r=i.scheduledDays)!==null&&r!==void 0||(i.scheduledDays=i.candidate.nextInterval(a,C(Z,i.candidate.desiredRetention[i.input.grade]))),this.finalizeReview(e,i,a)}),this.applyReviewChronoDefaults(e,s),s.result}parseReviewResult(e){return{card:C(this.schema.card,e.card),revlog:C(this.schema.revlog,e.revlog)}}finalizeReview(e,t,n){const{memoryState:s}=e,{grade:i}=t.input,r=t.result;return G(r.card,n,{state:_.Review,scheduleStatus:"review"}),G(r.revlog,s,{rating:i,state:e.card.state,scheduleStatus:e.card.scheduleStatus}),r}finalizeRollback(e){const t=e.result,n=e.input.revlog;return G(t.card,C(this.schedulerDefinition.model.schema.memoryState,n)),t.card.state=n.state,t.card.scheduleStatus=n.scheduleStatus,t.card}applyReviewChronoDefaults(e,t){var n,s;const{result:i,scheduledDays:r,input:{now:a}}=t;if(r===void 0)throw new Error("Expected scheduledDays after review middleware");const o=(n=this.schedulerDefinition.chrono.defaultValue)===null||n===void 0?void 0:n.card;o&&G(i.card,o({config:this.config,time:this.chrono.add(a,r),previous:a}));const c=(s=this.schedulerDefinition.chrono.defaultValue)===null||s===void 0?void 0:s.revlog;c&&G(i.revlog,c({config:this.config,time:e.time.current,previous:{previous:e.time.previous,current:a}}))}applyRollbackChronoDefaults(e,t){var n,s;if(!this.schedulerDefinition.chrono.schema.card)return;const i=C(this.schedulerDefinition.chrono.normalize,{revlog:t}),r=t.state===_.New,a=(n=this.schedulerDefinition.chrono.defaultValue)===null||n===void 0||(s=n.card)===null||s===void 0?void 0:s.call(n,{config:this.config,previous:r?null:i.previous,time:i.current});a&&G(e.card,a)}parseNow(e){return e===void 0?this.chrono.now():C(this.schedulerDefinition.chrono.schema.time,e)}},Cn=[]})),I=p((()=>{V(),me(),bn(),U(),Mn(),$n()}));I(),V(),me();const mt=864e5;function St(e){return Oe.safeParse(e).success}function ve(){return{issues:[{message:"Expected valid Date fields"}]}}const vt=w(e=>{if(!D(e)||!("dueAt"in e))return ve();const{dueAt:t,lastReviewAt:n}=e;return!St(t)||n!=null&&!St(n)?ve():{value:{dueAt:t,lastReviewAt:n!==void 0?n:null}}}),On=w(e=>{if(!D(e)||!("reviewTime"in e))return ve();const t=vt["~standard"].validate(e);if(t.issues)return t;const{reviewTime:n}=e;if(!St(n))return ve();const s=t.value;return s.reviewTime=n,{value:s}}),Oi={elapsed:Li,calendar:ji},Pn=Ne({schema:{config:fe,card:vt,revlog:On,time:Oe},normalize(e){if(!D(e))return{issues:[{message:"Expected valid Date fields"}]};if("card"in e){const n=vt["~standard"].validate(e.card);if(n.issues)return n;const s=Oe["~standard"].validate(e.time);return s.issues?s:{value:{previous:n.value.lastReviewAt,current:n.value.dueAt}}}const t=On["~standard"].validate(e.revlog);return t.issues?t:{value:{previous:t.value.lastReviewAt,current:t.value.dueAt}}},defaultValue:{card({previous:e,time:t}){return{dueAt:t,lastReviewAt:e??null}},revlog({time:e,previous:t}){var n,s;return{dueAt:e,lastReviewAt:(n=t?.previous)!==null&&n!==void 0?n:null,reviewTime:(s=t?.current)!==null&&s!==void 0?s:e}}},create({config:e}){const t=e.fractionalDays?"elapsed":"calendar",n=Oi[t];return{now:Pi,compare:zi,difference:n,add:Ni}}}),Pi=()=>new Date,zi=(e,t)=>{const n=e.getTime(),s=t.getTime();return n<s?-1:n>s?1:0},Ni=(e,t)=>new Date(e.getTime()+t*mt);function Li(e,t){return(t.getTime()-e.getTime())/mt}function ji(e,t){const n=Date.UTC(e.getUTCFullYear(),e.getUTCMonth(),e.getUTCDate()),s=Date.UTC(t.getUTCFullYear(),t.getUTCMonth(),t.getUTCDate());return Math.floor((s-n)/mt)}V(),me();const Ui=pn(e=>{const t=ct["~standard"].validate(e.time);return t.issues?t:{value:{previous:0,current:t.value}}}),Hi=Ne({schema:{time:ct},normalize:Ui,create(){return{now:ki,difference:Wi,add:Gi}}}),ki=()=>0,Wi=(e,t)=>t-e,Gi=(e,t)=>e+t;V(),me();function yt(){const e=globalThis.Temporal;if(e?.Instant===void 0)throw new ReferenceError("Temporal.Instant is not available in this runtime. Install a Temporal polyfill or upgrade to Node.js 26+ for native Temporal support. See https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Temporal#browser_compatibility");return e.Instant}const Vi=/^[+-](?:[01]\d|2[0-3]):[0-5]\d$/;function Bi(e){if(e==="UTC"||Vi.test(e))return e;try{return yt().fromEpochNanoseconds(0n).toZonedDateTimeISO(e).timeZoneId}catch{return}}const Yi=w(e=>{if(!D(e))return{issues:[{message:"Expected temporal instant config"}]};const t=e.timezone===void 0?"UTC":e.timezone;if(typeof t!="string")return{issues:[{message:"Expected timezone to be a string"}]};const n=Bi(t);if(n===void 0)return{issues:[{message:"Expected valid timezone"}]};const s=fe["~standard"].validate(e);return s.issues?s:{value:{timezone:n,fractionalDays:s.value.fractionalDays}}}),ye=w(e=>e instanceof yt()?{value:e}:{issues:[{message:"Expected Temporal.Instant"}]});function _e(){return{issues:[{message:"Expected Temporal.Instant fields"}]}}const _t=w(e=>{if(!D(e)||!("dueAt"in e))return _e();const t=ye.safeParse(e.dueAt);if(!t.success)return _e();if(e.lastReviewAt===void 0||e.lastReviewAt===null)return{value:{dueAt:t.data,lastReviewAt:null}};const n=ye.safeParse(e.lastReviewAt);return n.success?{value:{dueAt:t.data,lastReviewAt:n.data}}:_e()}),zn=w(e=>{if(!D(e)||!("reviewTime"in e))return _e();const t=_t["~standard"].validate(e);if(t.issues)return t;const n=ye.safeParse(e.reviewTime);if(!n.success)return _e();const s=t.value;return s.reviewTime=n.data,{value:s}}),qi=864e5;function Zi(e,t){const n=e.toZonedDateTimeISO("UTC").toPlainDate(),s=t.toZonedDateTimeISO("UTC").toPlainDate();return n.until(s,{largestUnit:"day"}).days}function Xi(e,t){return e.add({milliseconds:Math.round(t*qi)})}const Ki=1000000n,Ji={fractional:ir,utc:Zi,zoned:sr},Qi={utc:Xi,zoned:rr},er=Ne({schema:{config:Yi,card:_t,revlog:zn,time:ye},normalize(e){if(!D(e))return{issues:[{message:"Expected Temporal.Instant fields"}]};if("card"in e){const n=_t["~standard"].validate(e.card);if(n.issues)return n;const s=ye["~standard"].validate(e.time);return s.issues?s:{value:{previous:n.value.lastReviewAt,current:n.value.dueAt}}}const t=zn["~standard"].validate(e.revlog);return t.issues?t:{value:{previous:t.value.lastReviewAt,current:t.value.dueAt}}},defaultValue:{card({previous:e,time:t}){return{dueAt:t,lastReviewAt:e??null}},revlog({time:e,previous:t}){var n,s;return{dueAt:e,lastReviewAt:(n=t?.previous)!==null&&n!==void 0?n:null,reviewTime:(s=t?.current)!==null&&s!==void 0?s:e}}},create({config:e}){yt();const{fractionalDays:t,timezone:n}=e,s=n==="UTC"?"utc":"zoned",i=t?"fractional":s;return{now:tr,compare:nr,difference:(r,a)=>Ji[i](r,a,n),add:(r,a)=>Qi[s](r,a,n)}}}),tr=()=>Temporal.Now.instant();function nr(e,t){return e.epochNanoseconds<t.epochNanoseconds?-1:e.epochNanoseconds>t.epochNanoseconds?1:0}function sr(e,t,n){const s=e.toZonedDateTimeISO(n).toPlainDate(),i=t.toZonedDateTimeISO(n).toPlainDate();return s.until(i,{largestUnit:"day"}).days}function ir(e,t,n){const s=e.toZonedDateTimeISO(n),i=t.toZonedDateTimeISO(n);return s.until(i,{largestUnit:"day",smallestUnit:"nanosecond"}).total({unit:"day",relativeTo:s})}function rr(e,t,n){const s=Math.trunc(t),i=t-s,r=e.toZonedDateTimeISO(n).add({days:s});if(i===0)return r.toInstant();const a=r.add({days:i>0?1:-1}),o=Math.abs(Number((a.epochNanoseconds-r.epochNanoseconds)/Ki)),c=Math.round(Math.abs(i)*o)*Math.sign(i);return r.add({milliseconds:c}).toInstant()}function g(e,t,n){return Math.min(Math.max(e,t),n)}function b(e,t){const n=10**t;return Math.round(e*n)/n}var N=p((()=>{}));function ar(e){return typeof e=="object"&&e!==null}function ne(e){if(!Array.isArray(e))return!1;for(const t of e)if(typeof t!="number"||!Number.isFinite(t))return!1;return!0}var X=p((()=>{})),K,pt=p((()=>{X(),K=w(e=>ar(e)&&O(e.stability)&&O(e.difficulty)?{value:{stability:e.stability,difficulty:e.difficulty}}:{issues:[{message:"Expected FSRS memory state"}]})})),Nn,S,P=p((()=>{Nn=class li extends Error{constructor(t="FSRS Error"){var n,s;super(t),this.name="FSRSError",(n=(s=Error).captureStackTrace)===null||n===void 0||n.call(s,this,li)}},S=class di extends Nn{constructor(t){var n,s;super(t),this.name="FSRSValidationError",(n=(s=Error).captureStackTrace)===null||n===void 0||n.call(s,this,di)}}}));P(),U(),ge();var T=class ee{static card(t){return z(z({},t),{},{state:ee.state(t.state),due:ee.time(t.due),last_review:t.last_review?ee.time(t.last_review):void 0})}static rating(t){if(typeof t=="string"){const n=t.charAt(0).toUpperCase(),s=t.slice(1).toLowerCase(),i=l[`${n}${s}`];if(i===void 0)throw new S(`Invalid rating:[${t}]`);return i}else if(typeof t=="number")return t;throw new S(`Invalid rating:[${t}]`)}static state(t){if(typeof t=="string"){const n=t.charAt(0).toUpperCase(),s=t.slice(1).toLowerCase(),i=_[`${n}${s}`];if(i===void 0)throw new S(`Invalid state:[${t}]`);return i}else if(typeof t=="number")return t;throw new S(`Invalid state:[${t}]`)}static time(t){if(t instanceof Date)return t;const n=new Date(t);if(typeof t=="object"&&t!==null&&!Number.isNaN(Date.parse(t)||+n))return n;if(typeof t=="string"){const s=Date.parse(t);if(Number.isNaN(s))throw new S(`Invalid date:[${t}]`);return new Date(s)}else if(typeof t=="number")return new Date(t);throw new S(`Invalid date:[${t}]`)}static review_log(t){return z(z({},t),{},{due:ee.time(t.due),rating:ee.rating(t.rating),state:ee.state(t.state),review:ee.time(t.review)})}};const wt=Object.freeze([{start:2.5,end:7,factor:.15},{start:7,end:20,factor:.1},{start:20,end:Number.POSITIVE_INFINITY,factor:.05}]);function je(e,t,n,s=wt){let i=1;for(const c of s)i+=c.factor*Math.max(Math.min(e,c.end)-c.start,0);const r=Math.min(e,n);let a=Math.max(2,Math.round(r-i));const o=Math.min(Math.round(r+i),n);return r>t&&(a=Math.max(a,t+1)),a=Math.min(a,o),{minInterval:a,maxInterval:o}}function or(e){let t=2166136261;for(let n=0;n<e.length;n+=1)t^=e.charCodeAt(n),t=Math.imul(t,16777619);return t>>>0}function cr(e){let t=e>>>0;return()=>{let n=t+=1831565813;return n=Math.imul(n^n>>>15,n|1),n^=n+Math.imul(n^n>>>7,n|61),((n^n>>>14)>>>0)/4294967296}}const bt=e=>cr(or(e));function Mt(e,t,n,s){if(!n.enableFuzz||e<2.5)return n.fractionalDays?e:Math.round(e);const{minInterval:i,maxInterval:r}=je(e,t,n.maximumInterval),a=bt(s??String(Date.now()))();return Math.floor(a*(r-i+1)+i)}P(),U();function W(e,t,n){return new Date(n?T.time(e).getTime()+t*24*60*60*1e3:T.time(e).getTime()+t*60*1e3)}function pe(e,t,n){if(!e||!t)throw new S("Invalid date");const s=T.time(e).getTime()-T.time(t).getTime();let i=0;switch(n){case"days":i=Math.floor(s/864e5);break;case"minutes":i=Math.floor(s/6e4)}return i}function lr(e){const t=T.time(e),n=t.getFullYear(),s=t.getMonth()+1,i=t.getDate(),r=t.getHours(),a=t.getMinutes(),o=t.getSeconds();return`${n}-${we(s)}-${we(i)} ${we(r)}:${we(a)}:${we(o)}`}function we(e){return e<10?`0${e}`:`${e}`}const Rt=[60,60,24,31,12],Ft=["second","min","hour","day","month","year"];function dr(e,t,n,s=Ft){e=T.time(e),t=T.time(t),s.length!==Ft.length&&(s=Ft);let i=e.getTime()-t.getTime(),r=0;for(i/=1e3,r=0;r<Rt.length&&!(i<Rt[r]);r++)i/=Rt[r];return`${Math.floor(i)}${n?s[r]:""}`}const Ln=Object.freeze([l.Again,l.Hard,l.Good,l.Easy]);function ur(e,t,n){const{minInterval:s,maxInterval:i}=je(e,t,n);return{min_ivl:s,max_ivl:i}}function jn(e,t){const n=Date.UTC(e.getUTCFullYear(),e.getUTCMonth(),e.getUTCDate()),s=Date.UTC(t.getUTCFullYear(),t.getUTCMonth(),t.getUTCDate());return Math.floor((s-n)/864e5)}P(),U(),j();var xt=class{constructor(e,t,n,s,i){M(this,"last",void 0),M(this,"current",void 0),M(this,"review_time",void 0),M(this,"next",new Map),M(this,"model",void 0),M(this,"parameters",void 0),M(this,"strategies",void 0),M(this,"elapsed_days",0),M(this,"_seed",void 0),this.model=n,this.parameters=s,this.last=T.card(e),this.current=T.card(e),this.review_time=T.time(t),this.strategies=i,this.init()}checkGrade(e){if(!Number.isFinite(e)||e<1||e>4)throw new S(`Invalid grade "${e}",expected 1-4`)}init(){const{state:e,last_review:t}=this.current;let n=0;e!==_.New&&t&&(n=jn(t,this.review_time)),this.current.last_review=this.review_time,this.elapsed_days=n,this.current.reps+=1,this._seed=`${this.review_time.getTime()}_${this.current.reps}_${this.current.difficulty*this.current.stability}`}preview(){return{[l.Again]:this.review(l.Again),[l.Hard]:this.review(l.Hard),[l.Good]:this.review(l.Good),[l.Easy]:this.review(l.Easy),[Symbol.iterator]:this.previewIterator.bind(this)}}*previewIterator(){for(const e of Ln)yield this.review(e)}review(e){const{state:t}=this.last;let n;switch(this.checkGrade(e),t){case _.New:n=this.newState(e);break;case _.Learning:case _.Relearning:n=this.learningState(e);break;case _.Review:n=this.reviewState(e)}return n}buildLog(e){const{last_review:t,due:n}=this.last;return{rating:e,state:this.current.state,due:t||n,stability:this.current.stability,difficulty:this.current.difficulty,scheduled_days:this.current.scheduled_days,learning_steps:this.current.learning_steps,review:this.review_time}}},hr="6.0.0",se,Ue,fr,gr,B,He,Un,ie=p((()=>{se=.5,Ue=19/81,fr=2,gr=100,B=Object.freeze({sMin:.01,sMax:36500,dMin:1,dMax:10}),He=Object.freeze([.40255,1.18385,3.173,15.69105,7.1949,.5345,1.4604,.0046,1.54575,.1192,1.01925,1.9395,.11,.29605,2.2698,.2315,2.9898,.51655,.6621]),Un=()=>[[B.sMin,100],[B.sMin,100],[B.sMin,100],[B.sMin,100],[B.dMin,B.dMax],[.001,4],[.001,4],[.001,.75],[0,4.5],[0,.8],[.001,3.5],[.001,5],[.001,.25],[.001,.9],[0,4],[0,1],[1,6],[0,2],[0,2]]})),ke,mr,H,be,Dt,Me=p((()=>{ke=.1542,mr=100,H=Object.freeze({sMin:.001,sMax:36500,dMin:1,dMax:10}),be=Object.freeze([.212,1.2931,2.3065,8.2956,6.4133,.8334,3.0194,.001,1.8722,.1666,.796,1.4835,.0614,.2629,1.6483,.6014,1.8729,.5425,.0912,.0658,ke]),Dt=(e,t=!0)=>[[H.sMin,100],[H.sMin,100],[H.sMin,100],[H.sMin,100],[H.dMin,H.dMax],[.001,4],[.001,4],[.001,.75],[0,4.5],[0,.8],[.001,3.5],[.001,5],[.001,.25],[.001,.9],[0,4],[0,1],[1,6],[0,e],[0,e],[t?.01:0,.8],[.1,.8]]}));ie(),Me();const Sr=.9,vr=36500,yr=!1,_r=!0,pr=`v${hr}`,wr=H.sMin,br=H.sMax,Mr=100,Rr=be,Fr=2,xr=Dt;I(),P();const Dr=/^(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?$/,le=e=>{if(typeof e!="string"||e.length<2)throw new S(`Invalid step value: ${e}`);const t=e.slice(-1),n=e.slice(0,-1);if(!Dr.test(n))throw new S(`Invalid step value: ${e}`);const s=Number(n);if(!Number.isFinite(s))throw new S(`Invalid step value: ${e}`);let i;switch(t){case"m":i=s;break;case"h":i=s*60;break;case"d":i=s*1440;break;default:throw new S(`Invalid step unit: ${e}, expected m/h/d`)}if(!Number.isFinite(i)||!Number.isFinite(i*60))throw new S(`Invalid step value: ${e}`);return i},It=(e,t,n)=>{const s=t===_.Relearning||t===_.Review?e.relearningSteps:e.learningSteps,i=s.length;if(i===0||n>=i)return{};const r=s[Math.max(0,n)];if(t===_.Review)return{[l.Again]:{scheduledMinutes:le(r),nextStep:0}};const a=le(s[0]),o=i>1?le(s[1]):void 0,c=o===void 0?a*1.5:(a+o)/2,u={[l.Again]:{scheduledMinutes:a,nextStep:0},[l.Hard]:{scheduledMinutes:c,nextStep:n}},d=s[n+1];if(d){const h=n===0&&o!==void 0?o:le(d);h>0&&(u[l.Good]={scheduledMinutes:h,nextStep:n+1})}return u};I();const At=Object.freeze(["1m","10m"]),Et=Object.freeze(["10m"]),Ir=1;function Ar(e){if(typeof e!="string")return!1;try{const t=le(e);return Number.isFinite(t*9e4)}catch{return!1}}function Hn(e){if(!Array.isArray(e)||Object.getOwnPropertyNames(e).length-1<e.length)return!1;for(let t=0;t<e.length;t++)if(!Object.hasOwn(e,t)||!Ar(e[t]))return!1;return!0}const kn=w(e=>{if(!D(e))return{issues:[{message:"Expected learning steps config object"}]};const{enableShortTerm:t,learningSteps:n,relearningSteps:s}=e;if(typeof t!="boolean")return{issues:[{message:"Expected enableShortTerm boolean"}]};if(!Hn(n))return{issues:[{message:"Expected valid learningSteps array"}]};if(!Hn(s))return{issues:[{message:"Expected valid relearningSteps array"}]};const{graduatingInterval:i=1,allowModelOverride:r=!1}=e;return!O(i)||i<=0?{issues:[{message:"Expected positive graduatingInterval days"}]}:typeof r!="boolean"?{issues:[{message:"Expected allowModelOverride boolean"}]}:{value:{enableShortTerm:t,learningSteps:n,relearningSteps:s,graduatingInterval:i,allowModelOverride:r}}}),Tt=w(e=>{if(!D(e))return{issues:[{message:"Expected learning step fields object"}]};const{learningStep:t}=e;return t===void 0?{value:{learningStep:0}}:typeof t!="number"||!Number.isSafeInteger(t)||t<0?{issues:[{message:"Expected non-negative integer learningStep"}]}:{value:{learningStep:t}}});var Wn,de,Ct,Re,We,$t=p((()=>{I(),P(),N(),X(),ie(),Me(),Wn=w(e=>typeof e=="number"&&e>=.1&&e<=.8?{value:e}:{issues:[{message:"Expected decay between 0.1 and 0.8"}]}),de=(e,t=0,n=!0)=>{const s=Dt(2,n).slice(0,e.length);if(Math.max(0,t)>1&&e.length>=19){const i=g(e[11]||0,s[11][0],s[11][1]),r=g(e[13]||0,s[13][0],s[13][1]),a=g(e[14]||0,s[14][0],s[14][1]),o=-(Math.log(i)+Math.log(Math.pow(2,r)-1)+a*.3)/t,c=g(b(Math.sqrt(Math.max(o,0)),8),.01,2);s[17]=[s[17][0],c],s[18]=[s[18][0],c]}return s.map(([i,r],a)=>g(e[a]||0,i,r))},Ct=(e,t=0,n=!0)=>{const s=de(Array.from(e),t,n);if(!(e.length===be.length&&s.every((i,r)=>i===e[r])))throw new S("Expected FSRS6 weights within model bounds.");return e},Re=e=>{if(!Array.isArray(e)||e.length===0)return[...be];switch(e.length){case 21:return Array.from(e);case 19:return Array.from(e).concat([0,se]);case 17:{const t=Array.from(e);return t[4]=+(t[5]*2+t[4]).toFixed(8),t[5]=+(Math.log(t[5]*3+1)/3).toFixed(8),t[6]=+(t[6]+.5).toFixed(8),t.concat([0,0,0,se])}default:throw new S(`Invalid parameters length "${e.length}", expected 17, 19 or 21.`)}},We=w(e=>D(e)&&ne(e.weights)&&typeof e.enableShortTerm=="boolean"&&typeof e.numRelearningSteps=="number"&&Number.isSafeInteger(e.numRelearningSteps)&&e.numRelearningSteps>=0?{value:{weights:e.weights,enableShortTerm:e.enableShortTerm,numRelearningSteps:e.numRelearningSteps}}:{issues:[{message:"Expected FSRS6 config"}]})}));P(),$t(),U();const Er=e=>{if(e.find(t=>!Number.isFinite(t))!==void 0)throw new S(`Non-finite or NaN value in parameters ${e}`);if(![17,19,21].includes(e.length))throw new S(`Invalid parameter length: ${e.length}. Must be 17, 19 or 21 for FSRSv4, 5 and 6 respectively.`);return e},Gn=e=>{var t,n;const s=Array.isArray(e?.learning_steps)?e.learning_steps:At,i=Array.isArray(e?.relearning_steps)?e.relearning_steps:Et,r=(t=e?.enable_short_term)!==null&&t!==void 0?t:!0,a=Re(e?.w?Array.from(e.w):void 0);return{request_retention:e?.request_retention||.9,maximum_interval:e?.maximum_interval||36500,w:a,enable_fuzz:(n=e?.enable_fuzz)!==null&&n!==void 0?n:!1,enable_short_term:r,learning_steps:s,relearning_steps:i}};function Ge(e){return{due:e?T.time(e):new Date,stability:0,difficulty:0,scheduled_days:0,reps:0,lapses:0,learning_steps:0,state:_.New,last_review:void 0}}function Tr(e,t,n){const{decay:s,factor:i}=Ve(e);return b(Math.pow(1+i*t/n,s),8)}var Ve,Ot,Vn=p((()=>{I(),P(),N(),j(),Ve=e=>{const t=typeof e=="number"?-e:-e[20],n=Math.exp(Math.pow(t,-1)*Math.log(.9))-1;return{decay:t,factor:b(n,8)}},Ot=class{constructor(e,t,n){if(this.weights=e,this.enableShortTerm=t,this.bounds=n,M(this,"decayWeight",NaN),M(this,"decay",0),M(this,"factor",0),M(this,"forgetting_curve",void 0),!Array.isArray(e)||e.length!==21)throw new S(`FSRS6Algorithm requires exactly 21 weights, but received ${e?.length}`);this.forgetting_curve=(s,i)=>{const{decay:r,factor:a}=this.getDecayFactor();return b(Math.pow(1+a*s/i,r),8)}}getDecayFactor(){const e=this.weights[20];if(e!==this.decayWeight){const{decay:t,factor:n}=Ve(e);this.decayWeight=e,this.decay=t,this.factor=n}return{decay:this.decay,factor:this.factor}}init_stability(e){return g(this.weights[e-1],this.bounds.sMin,this.bounds.sMax)}init_difficulty(e){const t=this.weights,n=t[4]-Math.exp((e-1)*t[5])+1;return b(n,8)}next_interval(e,t){if(!Number.isFinite(t)||t<=0||t>1)throw new S("Desired retention rate should be in the range (0,1]");const{decay:n,factor:s}=this.getDecayFactor();return Math.max(Math.round(e/s*(Math.pow(t,1/n)-1)),1)}linear_damping(e,t){return b(e*(10-t)/9,8)}next_difficulty(e,t){const n=-this.weights[6]*(t-3),s=e+this.linear_damping(n,e);return g(this.mean_reversion(this.init_difficulty(l.Easy),s),1,10)}mean_reversion(e,t){const n=this.weights;return b(n[7]*e+(1-n[7])*t,8)}next_recall_stability(e,t,n,s){const i=this.weights,r=l.Hard===s?i[15]:1,a=l.Easy===s?i[16]:1;return b(g(t*(1+Math.exp(i[8])*(11-e)*Math.pow(t,-i[9])*(Math.exp((1-n)*i[10])-1)*r*a),this.bounds.sMin,this.bounds.sMax),8)}next_forget_stability(e,t,n){const s=this.weights;return b(g(s[11]*Math.pow(e,-s[12])*(Math.pow(t+1,s[13])-1)*Math.exp((1-n)*s[14]),this.bounds.sMin,this.bounds.sMax),8)}next_short_term_stability(e,t){const n=this.weights,s=Math.pow(e,-n[19])*Math.exp(n[17]*(t-3+n[18])),i=t>=l.Hard?Math.max(s,1):s;return b(g(e*i,this.bounds.sMin,this.bounds.sMax),8)}next_state(e,t,n,s){const{difficulty:i,stability:r}=e??{difficulty:0,stability:0};if(t<0)throw new S(`Invalid delta_t "${t}"`);if(n<0||n>4)throw new S(`Invalid grade "${n}"`);if(n===l.Manual)return{difficulty:i,stability:r};const a=n;if(i===0&&r===0)return{difficulty:g(this.init_difficulty(a),1,10),stability:this.init_stability(a)};if(i<1||r<this.bounds.sMin)throw new S(`Invalid memory state { difficulty: ${i}, stability: ${r} }`);const o=this.weights;s=typeof s=="number"?s:this.forgetting_curve(t,r);let c;if(t===0&&this.enableShortTerm)c=this.next_short_term_stability(r,a);else if(n===1){const u=this.next_forget_stability(i,r,s);let[d,h]=[0,0];this.enableShortTerm&&(d=o[17],h=o[18]);const m=r/Math.exp(d*h);c=g(b(m,8),this.bounds.sMin,u)}else c=this.next_recall_stability(i,r,s,a);return{difficulty:this.next_difficulty(i,a),stability:c}}}})),Fe=p((()=>{pt()})),Pt,zt,Bn=p((()=>{I(),Fe(),Vn(),Me(),$t(),Pt=e=>{const t=H,n=new Ot(e.weights,e.enableShortTerm,H),s=({memoryState:o,rating:c,elapsedDays:u,retrievability:d})=>n.next_state(o,u,c,d);return{config:e,bounds:t,algorithm:n,step:s,nextInterval:(o,c)=>n.next_interval(o.stability,c),forgettingCurve:(o,c)=>n.forgetting_curve(c,o.stability),forward:({history:o,initialState:c})=>{const u=[];let d=c||null;for(const h of o)d=s({memoryState:d,rating:h.rating,elapsedDays:h.deltaT}),u.push(d);return u}}},zt={name:"fsrs-6",schema:{config:We,memoryState:K},defaultValue:{memoryState(){return{stability:0,difficulty:0}}},create({config:e,migrate:t=!0,clip:n=!0,check:s=!0,bypass:i=!1}){if(i)return Pt(e);let r=t?Re(e.weights):e.weights;n&&Array.isArray(r)&&(r=de(r,e.numRelearningSteps,e.enableShortTerm)),s&&Ct(r,e.numRelearningSteps,e.enableShortTerm);const a=We.parse({weights:r,enableShortTerm:e.enableShortTerm,numRelearningSteps:e.numRelearningSteps});return Pt(Object.freeze(a))}}})),Cr=ce({FSRS6Algorithm:()=>Ot,FSRS6Model:()=>zt,FSRS6_DECAY:()=>ke,FSRS6_DEFAULT_WEIGHTS:()=>be,FSRS6_MODEL_BOUNDS:()=>H,FSRS6_W17_W18_CEILING:()=>2,checkFSRS6Parameters:()=>Ct,clipFSRS6Parameters:()=>de,computeDecayFactor:()=>Ve,decaySchema:()=>Wn,forgettingCurve:()=>Tr,fsrs6ConfigSchema:()=>We,migrateFSRS6Parameters:()=>Re}),Yn=p((()=>{Vn(),Me(),Bn(),$t()}));function Nt(e,t){const n=Math.min(e[0],t);if(e.length===1)return[n];const s=Math.min(Math.max(e[1],n===0?0:n+1),t);if(e.length===2)return[n,s];const i=Math.min(Math.max(e[2],s===0?0:s+1),t);return e.length===3?[n,s,i]:[n,s,i,Math.min(Math.max(e[3],i===0?0:i+1),t)]}const qn=86400,Be=e=>Math.round(e*qn);function Zn(e,t){var n;let s,i=e[0];for(let r=0;r<e.length;r++){const a=e[r];if(a>=1)s=Math.min(s===void 0?a:Math.max(a,s+1),t);else if(s===void 0&&r>0){const o=Math.max(a,i);i=i>0&&Be(a)>=Be(e[r-1])&&Be(o)===Be(i)?i+1/qn:o}}return(n=s)!==null&&n!==void 0?n:i}let $r=(function(e){return e.SCHEDULER="Scheduler",e.LEARNING_STEPS="LearningSteps",e})({});U(),j();const Xn=60;var Kn=class extends xt{constructor(e,t,n,s,i){super(e,t,n,s,i),M(this,"learningSteps",void 0),M(this,"learningStepsConfig",void 0),M(this,"learningStepsResult",void 0),this.learningStepsConfig={learningSteps:s.learning_steps,relearningSteps:s.relearning_steps};let r=It;if(this.strategies){const a=this.strategies.get("LearningSteps");a&&(r=a)}this.learningSteps=r}getLearningInfo(e,t){var n,s,i,r;e.learning_steps=e.learning_steps||0;let a=this.learningStepsResult;return a||(a=this.learningSteps(this.learningStepsConfig,e.state,e.learning_steps),this.learningStepsResult=a),{scheduled_minutes:Math.round(Math.max(0,(n=(s=a[t])===null||s===void 0?void 0:s.scheduledMinutes)!==null&&n!==void 0?n:0)*Xn)/Xn,next_steps:Math.max(0,(i=(r=a[t])===null||r===void 0?void 0:r.nextStep)!==null&&i!==void 0?i:0)}}applyLearningSteps(e,t,n){const{scheduled_minutes:s,next_steps:i}=this.getLearningInfo(this.current,t);if(s>0&&s<1440)e.learning_steps=i,e.scheduled_days=0,e.state=n,e.due=W(this.review_time,s,!1);else if(e.state=_.Review,s>=1440)e.learning_steps=i,e.due=W(this.review_time,s,!1),e.scheduled_days=Math.floor(s/1440);else{e.learning_steps=0;const r=this.scheduler_next_interval(e,this.elapsed_days);e.scheduled_days=r,e.due=W(this.review_time,r,!0)}}newState(e){const t=this.next.get(e);if(t)return t;const n=this.next_ds(this.elapsed_days,e);this.applyLearningSteps(n,e,_.Learning);const s={card:n,log:this.buildLog(e)};return this.next.set(e,s),s}learningState(e){const t=this.next.get(e);if(t)return t;const n=this.next_ds(this.elapsed_days,e);this.applyLearningSteps(n,e,this.last.state);const s={card:n,log:this.buildLog(e)};return this.next.set(e,s),s}reviewState(e){const t=this.next.get(e);if(t)return t;const n=this.elapsed_days,s=this.model.forgettingCurve(this.current,n),i=this.next_ds(n,l.Again,s),r=this.next_ds(n,l.Hard,s),a=this.next_ds(n,l.Good,s),o=this.next_ds(n,l.Easy,s);this.next_interval(r,a,o,n),this.next_state(r,a,o),this.applyLearningSteps(i,l.Again,_.Relearning),i.lapses+=1;const c={card:i,log:this.buildLog(l.Again)},u={card:r,log:super.buildLog(l.Hard)},d={card:a,log:super.buildLog(l.Good)},h={card:o,log:super.buildLog(l.Easy)};return this.next.set(l.Again,c),this.next.set(l.Hard,u),this.next.set(l.Good,d),this.next.set(l.Easy,h),this.next.get(e)}next_ds(e,t,n){const s=this.model.step({memoryState:this.current,elapsedDays:e,rating:t,retrievability:n}),i=T.card(this.current);return i.difficulty=s.difficulty,i.stability=s.stability,i}next_interval(e,t,n,s){const{maximum_interval:i}=this.parameters,[r,a,o]=Nt([this.scheduler_next_interval(e,s),this.scheduler_next_interval(t,s),this.scheduler_next_interval(n,s)],i);e.scheduled_days=r,e.due=W(this.review_time,r,!0),t.scheduled_days=a,t.due=W(this.review_time,a,!0),n.scheduled_days=o,n.due=W(this.review_time,o,!0)}scheduler_next_interval(e,t){const n=this.parameters,s=this.model.nextInterval(e,n.request_retention);return Mt(s,t,{enableFuzz:n.enable_fuzz,maximumInterval:n.maximum_interval},this._seed)}next_state(e,t,n){e.state=_.Review,e.learning_steps=0,t.state=_.Review,t.learning_steps=0,n.state=_.Review,n.learning_steps=0}};U();var Jn=class extends xt{newState(e){const t=this.next.get(e);if(t)return t;this.current.scheduled_days=0;const n=0,s=this.next_ds(n,l.Again),i=this.next_ds(n,l.Hard),r=this.next_ds(n,l.Good),a=this.next_ds(n,l.Easy);return this.next_interval(s,i,r,a,n),this.next_state(s,i,r,a),this.update_next(s,i,r,a),this.next.get(e)}next_ds(e,t){const n=this.model.step({memoryState:{difficulty:this.current.difficulty,stability:this.current.stability},elapsedDays:e,rating:t}),s=T.card(this.current);return s.difficulty=n.difficulty,s.stability=n.stability,s}learningState(e){return this.reviewState(e)}reviewState(e){const t=this.next.get(e);if(t)return t;const n=this.elapsed_days,s=this.next_ds(n,l.Again),i=this.next_ds(n,l.Hard),r=this.next_ds(n,l.Good),a=this.next_ds(n,l.Easy);return this.next_interval(s,i,r,a,n),this.next_state(s,i,r,a),s.lapses+=1,this.update_next(s,i,r,a),this.next.get(e)}next_interval(e,t,n,s,i){const{maximum_interval:r}=this.parameters,[a,o,c,u]=Nt([this.scheduler_next_interval(e,i),this.scheduler_next_interval(t,i),this.scheduler_next_interval(n,i),this.scheduler_next_interval(s,i)],r);e.scheduled_days=a,e.due=W(this.review_time,a,!0),t.scheduled_days=o,t.due=W(this.review_time,o,!0),n.scheduled_days=c,n.due=W(this.review_time,c,!0),s.scheduled_days=u,s.due=W(this.review_time,u,!0)}scheduler_next_interval(e,t){const n=this.parameters,s=this.model.nextInterval({stability:e.stability,difficulty:e.difficulty},n.request_retention);return Mt(s,t,{enableFuzz:n.enable_fuzz,maximumInterval:n.maximum_interval},this._seed)}next_state(e,t,n,s){e.state=_.Review,e.learning_steps=0,t.state=_.Review,t.learning_steps=0,n.state=_.Review,n.learning_steps=0,s.state=_.Review,s.learning_steps=0}update_next(e,t,n,s){const i={card:e,log:this.buildLog(l.Again)},r={card:t,log:super.buildLog(l.Hard)},a={card:n,log:super.buildLog(l.Good)},o={card:s,log:super.buildLog(l.Easy)};this.next.set(l.Again,i),this.next.set(l.Hard,r),this.next.set(l.Good,a),this.next.set(l.Easy,o)}};P(),U(),j(),ge();var Or=class{constructor(e){M(this,"fsrs",void 0),this.fsrs=e}replay(e,t,n){return this.fsrs.next(e,t,n)}handleManualRating(e,t,n,s,i,r){if(typeof t>"u")throw new S("reschedule: state is required for manual rating");let a,o;if(t===_.New){var c;a={rating:l.Manual,state:t,due:(c=r)!==null&&c!==void 0?c:n,stability:e.stability,difficulty:e.difficulty,scheduled_days:e.scheduled_days,learning_steps:e.learning_steps,review:n},o=Ge(n),o.last_review=n}else{if(typeof r>"u")throw new S("reschedule: due is required for manual rating");const u=pe(r,n,"days");a={rating:l.Manual,state:e.state,due:e.last_review||e.due,stability:e.stability,difficulty:e.difficulty,scheduled_days:e.scheduled_days,learning_steps:e.learning_steps,review:n},o=z(z({},e),{},{state:t,due:r,last_review:n,stability:s||e.stability,difficulty:i||e.difficulty,scheduled_days:u,reps:e.reps+1})}return{card:o,log:a}}reschedule(e,t){const n=[];let s=Ge(e.due);for(const i of t){let r;i.review=T.time(i.review),i.rating===l.Manual?r=this.handleManualRating(s,i.state,i.review,i.stability,i.difficulty,i.due?T.time(i.due):void 0):r=this.replay(s,i.review,i.rating),n.push(r),s=r.card}return n}calculateManualRecord(e,t,n,s){if(!n)return null;const{card:i}=n,r=T.card(e);return r.due.getTime()===i.due.getTime()?null:(r.scheduled_days=pe(i.due,r.due,"days"),this.handleManualRating(r,i.state,T.time(t),s?i.stability:void 0,s?i.difficulty:void 0,i.due))}};function Pr(e,t){if(t.has(e))throw new TypeError("Cannot initialize the same private elements twice on an object")}function Qn(e,t,n){Pr(e,t),t.set(e,n)}function es(e,t,n){if(typeof e=="function"?e===t:e.has(t))return arguments.length<3?t:n;throw new TypeError("Private element is not present on this object")}function J(e,t){return e.get(es(e,t))}function ts(e,t,n){return e.set(es(e,t),n),n}P(),Yn(),Bn(),U(),j(),ge();var re=new WeakMap,xe=new WeakMap,ns=class{constructor(e={}){M(this,"strategyHandler",new Map),M(this,"Scheduler",void 0),Qn(this,re,void 0),Qn(this,xe,void 0),M(this,"prepare_parameters",t=>{const n=Gn(t);return n.w=de(Array.from(n.w),n.relearning_steps.length,n.enable_short_term),n}),this.parameters=e}get model(){return J(xe,this)}get parameters(){return J(re,this)}set parameters(e){const t=this.prepare_parameters(e);ts(re,this,new Proxy(t,this.params_handler_proxy())),this.rebuildModel(),this.Scheduler=t.enable_short_term?Kn:Jn}rebuildModel(){ts(xe,this,zt.create({config:{weights:J(re,this).w,enableShortTerm:J(re,this).enable_short_term,numRelearningSteps:J(re,this).relearning_steps.length},bypass:!0}))}params_handler_proxy(){const e=this;return{set:(t,n,s)=>(n==="enable_short_term"?e.Scheduler=s===!0?Kn:Jn:n==="w"&&(s=de(Re(s),t.relearning_steps.length,t.enable_short_term)),Reflect.set(t,n,s),(n==="enable_short_term"||n==="w")&&e.rebuildModel(),!0)}}useStrategy(e,t){return this.strategyHandler.set(e,t),this}clearStrategy(e){return e?this.strategyHandler.delete(e):this.strategyHandler.clear(),this}getScheduler(e,t){return new(this.strategyHandler.get("Scheduler")||this.Scheduler)(e,t,J(xe,this),J(re,this),this.strategyHandler)}repeat(e,t){return this.getScheduler(e,t).preview()}next(e,t,n){const s=this.getScheduler(e,t),i=T.rating(n);if(i===l.Manual)throw new S("Cannot review a manual rating");return s.review(i)}retrievability(e,t){const n=T.card(e);t=t?T.time(t):new Date;const s=n.state!==_.New?Math.max(pe(t,n.last_review,"days"),0):0;return n.state!==_.New?J(xe,this).forgettingCurve(n,s):0}rollback(e,t){const n=T.card(e),s=T.review_log(t);if(s.rating===l.Manual)throw new S("Cannot rollback a manual rating");let i,r,a;switch(s.state){case _.New:i=s.due,r=void 0,a=0;break;case _.Learning:case _.Relearning:case _.Review:i=s.review,r=s.due,a=n.lapses-(s.rating===l.Again&&s.state===_.Review?1:0)}return z(z({},n),{},{due:i,stability:s.stability,difficulty:s.difficulty,scheduled_days:s.scheduled_days,reps:Math.max(0,n.reps-1),lapses:Math.max(0,a),learning_steps:s.learning_steps,state:s.state,last_review:r})}forget(e,t,n=!1){const s=T.card(e);t=T.time(t);const i=s.state===_.New?0:pe(t,s.due,"days"),r={rating:l.Manual,state:s.state,due:s.due,stability:s.stability,difficulty:s.difficulty,scheduled_days:i,learning_steps:s.learning_steps,review:t};return{card:z(z({},s),{},{due:t,stability:0,difficulty:0,scheduled_days:0,reps:n?0:s.reps,lapses:n?0:s.lapses,learning_steps:0,state:_.New,last_review:s.last_review}),log:r}}reschedule(e,t=[],n={}){const{reviewsOrderBy:s,skipManual:i=!0,now:r=new Date,update_memory_state:a=!1}=n;s&&typeof s=="function"&&t.sort(s),i&&(t=t.filter(m=>m.rating!==l.Manual));const o=new Or(this),c=o.reschedule(n.first_card||Ge(),t),u=c.length,d=T.card(e),h=o.calculateManualRecord(d,r,u?c[u-1]:void 0,a);return{collections:c,reschedule_item:h??null}}};const zr=e=>new ns(e||{}),Nr=64,Lr=Object.freeze({coefficients:Object.freeze([-.202,9.14,-.0978,.226,-5.31,-7.44,24.1,-.375,1.81,-22.9,-5.82,22.3,1.72,-1.99,-19.4]),costWeightMin:0,costWeightMax:1024,retentionMin:.3,retentionMax:.995,bounds:Object.freeze({sMin:1e-4,sMax:36500,dMin:1,dMax:10})});N();function jr(e,t,n){const{bounds:s,coefficients:i}=e,r=g(t.stability,s.sMin,s.sMax),a=g(t.difficulty,s.dMin,s.dMax),o=Math.log(s.sMin),c=g((Math.log(r)-o)/(Math.log(s.sMax)-o),0,1),u=g((a-s.dMin)/(s.dMax-s.dMin),0,1),d=g(n,e.costWeightMin,e.costWeightMax),h=Math.log1p(e.costWeightMin),m=g((Math.log1p(d)-h)/(Math.log1p(e.costWeightMax)-h),0,1),R=[1,c,u,c*u,c*c],A=F=>R.reduce((E,$,Y)=>E+i[F+Y]*$,0),v=A(0)-ss(A(5))*m-ss(A(10))*m*m,y=Math.exp(-Math.abs(v)),x=v>=0?1/(1+y):y/(1+y);return g(e.retentionMin+(e.retentionMax-e.retentionMin)*x,e.retentionMin,e.retentionMax)}function ss(e){return e>20?e:e<-20?Math.exp(e):Math.log1p(Math.exp(e))}I(),X();const is=w(e=>{if(!D(e)||!ne(e.coefficients)||e.coefficients.length!==15||e.coefficients.some(n=>n<-64||n>64)||!O(e.costWeightMin)||!O(e.costWeightMax)||e.costWeightMin<0||e.costWeightMax<=e.costWeightMin||Math.log1p(e.costWeightMax)<=Math.log1p(e.costWeightMin)||!O(e.retentionMin)||!O(e.retentionMax)||e.retentionMin<=0||e.retentionMax<=e.retentionMin||e.retentionMax>=1)return{issues:[{message:"Expected valid Cost ADR policy"}]};const{bounds:t}=e;return!D(t)||!O(t.sMin)||!O(t.sMax)||!O(t.dMin)||!O(t.dMax)||t.sMin<=0||t.sMax<=t.sMin||Math.log(t.sMax)<=Math.log(t.sMin)||t.dMax<=t.dMin||!Number.isFinite(t.dMax-t.dMin)?{issues:[{message:"Expected valid Cost ADR bounds"}]}:{value:{coefficients:Array.from(e.coefficients),costWeightMin:e.costWeightMin,costWeightMax:e.costWeightMax,retentionMin:e.retentionMin,retentionMax:e.retentionMax,bounds:{sMin:t.sMin,sMax:t.sMax,dMin:t.dMin,dMax:t.dMax}}}}),rs=w(e=>{if(!D(e)||!O(e.goalCostWeight)||e.goalCostWeight<0||e.goalCostWeight>1024)return{issues:[{message:"Expected finite goalCostWeight in [0, 1024]"}]};const t=is["~standard"].validate(e.costAdrPolicy);return t.issues?t:{value:{costAdrPolicy:t.value,goalCostWeight:e.goalCostWeight}}});I(),pt();const Lt=Symbol("ts-fsrs.cost-adr.retentions"),Ur={name:Symbol("ts-fsrs.cost-adr"),schema:{config:rs},handlers:{nextInterval(e,t){var n;const{costAdrPolicy:s,goalCostWeight:i}=e.config,r=e.candidate;(n=r[Lt])!==null&&n!==void 0||(r[Lt]={retentions:r.desiredRetention,lastGrade:0});const a=r[Lt];for(const o of te){if(o>e.input.grade)break;o<=a.lastGrade||(a.retentions[o]=jr(s,C(K,r.step(o)),i),a.lastGrade=o)}t()}}};I();const as=w(e=>{if(!D(e))return{issues:[{message:"Expected desiredRetention in (0, 1)"}]};const t=e.desiredRetention,n={};if(typeof t=="number"){const s=Z.safeParse(t);if(!s.success)return{issues:[{message:"Expected desiredRetention in (0, 1)"}]};for(const i of te)n[i]=s.data}else{if(!D(t))return{issues:[{message:"Expected desiredRetention in (0, 1)"}]};for(const s of te){const i=Z.safeParse(t[s]);if(!i.success)return{issues:[{message:"Expected desiredRetention in (0, 1)"}]};n[s]=i.data}}return{value:{desiredRetention:n}}});I();const os=Symbol("ts-fsrs.desired-retention.injected"),cs={name:Symbol("ts-fsrs.desired-retention"),schema:{config:as},handlers:{nextInterval(e,t){const n=e.candidate;if(e.input.desiredRetention===void 0&&!n[os]){for(const s of te)n.desiredRetention[s]=e.config.desiredRetention[s];n[os]=!0}t()}}};function Hr(){const e=globalThis.crypto;if(typeof e?.randomUUID=="function")return e.randomUUID();const t=new Uint8Array(16);if(typeof e?.getRandomValues=="function")e.getRandomValues(t);else for(let s=0;s<t.length;s+=1)t[s]=Math.floor(Math.random()*256);t[6]=t[6]&15|64,t[8]=t[8]&63|128;const n=Array.from(t,s=>s.toString(16).padStart(2,"0")).join("");return`${n.slice(0,8)}-${n.slice(8,12)}-${n.slice(12,16)}-${n.slice(16,20)}-${n.slice(20)}`}I();function jt(e){if(typeof e=="string"&&e.length>0||typeof e=="number"&&Number.isFinite(e))return e}const ls=w(e=>{if(!D(e))return{issues:[{message:"Expected fuzzing config object"}]};const{enableFuzz:t,maximumInterval:n}=e;if(typeof t!="boolean")return{issues:[{message:"Expected enableFuzz boolean"}]};if(typeof n!="number"||!Number.isSafeInteger(n)||n<=0)return{issues:[{message:"Expected positive integer maximumInterval"}]};const s=fe["~standard"].validate(e);return s.issues?s:{value:{enableFuzz:t,maximumInterval:n,fractionalDays:s.value.fractionalDays}}}),ds=w(e=>{if(!D(e))return{issues:[{message:"Expected fuzzing card init input object"}]};if(e.cardId===void 0)return{value:{}};const t=jt(e.cardId);return t===void 0?{issues:[{message:"Expected new card cardId"}]}:{value:{cardId:t}}}),us=w(e=>{if(!D(e))return{issues:[{message:"Expected card cardId"}]};const t=jt(e.cardId);if(t===void 0)return{issues:[{message:"Expected card cardId"}]};const{reps:n}=e;return typeof n!="number"||!Number.isSafeInteger(n)||n<0?{issues:[{message:"Expected non-negative integer reps"}]}:{value:{cardId:t,reps:n}}}),hs=w(e=>{if(!D(e))return{issues:[{message:"Expected revlog cardId"}]};const t=jt(e.cardId);return t===void 0?{issues:[{message:"Expected revlog cardId"}]}:{value:{cardId:t}}});I();const fs=Symbol("ts-fsrs.fuzzing.decorator");function gs(e={}){const{fuzzingRange:t=wt,rng:n=bt}=e;function s(i,r){if(!i.config.enableFuzz)return;const a=i.input.card,o=i.candidate;if(!o[fs]){const c=o.nextInterval,u=`${a.cardId}${r}`;o.nextInterval=(d,h)=>{const m=c(d,h);if(m<2.5)return i.config.fractionalDays?m:Math.round(m);const{minInterval:R,maxInterval:A}=je(m,i.elapsedDays,i.config.maximumInterval,t),v=n(u)();return Math.floor(v*(A-R+1)+R)},o[fs]=!0}}return{name:Symbol("ts-fsrs.fuzzing"),schema:{config:ls,cardInitInput:ds,card:us,revlog:hs},defaultValue:{card(i){var r;return i.operation==="forget"?{cardId:i.input.cardId,reps:i.config.clearStatsOnForget===!1?i.input.reps:0}:{cardId:(r=i.input.cardId)!==null&&r!==void 0?r:Hr(),reps:0}}},handlers:{nextInterval(i,r){s(i,i.input.card.reps+1),i.config.enableFuzz&&(i.scheduledDays=void 0),r()},review(i,r){var a,o,c;const u=i.input.card;if(!i.config.enableFuzz){var d,h;r(),i.result.card.cardId=u.cardId,(h=(d=i.result.card).reps)!==null&&h!==void 0||(d.reps=u.reps+1),i.result.revlog.cardId=u.cardId;return}const m=(a=i.result.card.reps)!==null&&a!==void 0?a:u.reps+1;s(i,m),r(),i.result.card.cardId=u.cardId,(c=(o=i.result.card).reps)!==null&&c!==void 0||(o.reps=m),i.result.revlog.cardId=u.cardId},rollback(i,r){var a,o;r(),i.result.card.cardId=i.input.revlog.cardId,(o=(a=i.result.card).reps)!==null&&o!==void 0||(a.reps=Math.max(0,i.input.card.reps-1))}}}}const ms=gs();I();const kr=1440,Ss=60,vs=Symbol("ts-fsrs.learning-steps.resolved"),ys={name:Symbol("ts-fsrs.learning-steps"),schema:{config:kn,card:Tt,revlog:Tt},defaultValue:{card(){return{learningStep:0}}},handlers:{nextInterval:Wr,review(e,t){const n=e.config.enableShortTerm?_s(e):void 0;t();const{card:s,grade:i}=e.input,{graduatingInterval:r}=e.config,a=e.scheduledDays,o=n?.stepIntervals[i]!==void 0?n.steps[i]:void 0;e.result.revlog.learningStep=s.learningStep,e.result.card.learningStep=0,(i===l.Again&&n?.overridesStep[i]===!0||a!==void 0&&a<r)&&(e.result.card.state=Vr(s.state),e.result.card.scheduleStatus="learning",o&&(e.result.card.learningStep=Math.max(0,o.nextStep)))},rollback(e,t){t(),e.result.card.learningStep=e.input.revlog.learningStep}}};function Wr(e,t){if(!e.config.enableShortTerm){t();return}const n=_s(e);t();const{grade:s}=e.input,i=n.stepIntervals[s];return i!==void 0&&!n.overridesStep[s]&&(e.scheduledDays=i),n}function _s(e){const t=e.candidate,n=t[vs];if(n)return n;const{card:s}=e.input,{config:i}=e,r=s.state===_.Relearning||s.state===_.Review?i.relearningSteps:i.learningSteps,a=It(i,s.state,s.learningStep),o={};for(const d of te){const h=a[d];if(!h)continue;const m=Math.round(Math.max(0,h.scheduledMinutes)*Ss)/Ss;m>0&&(o[d]=m/kr)}const c={steps:a,hasSteps:r.length>0,stepIntervals:o,overridesStep:{}};t[vs]=c;const u=t.nextInterval;return t.nextInterval=(d,h)=>{const m=t.findGrade(d);if(m===void 0)return u(d,h);const R=Gr(c,m,i,()=>u(d,h)),A=c.stepIntervals[m];return c.overridesStep[m]=A!==void 0&&R!==A,R},c}function Gr(e,t,{allowModelOverride:n,graduatingInterval:s},i){const r=e.stepIntervals[t];return t===l.Again?r===void 0?i():n?Math.max(r,Math.min(i(),s)):r:r===void 0?e.hasSteps?Math.max(i(),s):i():n?Math.max(r,i()):r}function Vr(e){return e===_.New?_.Learning:e===_.Review?_.Relearning:e}I();const Br=0,ps=w(e=>{if(!D(e))return{issues:[{message:"Expected leech config object"}]};const t=e.leechThreshold===void 0?0:e.leechThreshold;return typeof t!="number"||!Number.isSafeInteger(t)||t<0?{issues:[{message:"Expected non-negative integer leechThreshold"}]}:{value:{leechThreshold:t}}}),ws=w(e=>{if(!D(e))return{issues:[{message:"Expected leech card fields"}]};const{lapses:t}=e;return typeof t!="number"||!Number.isSafeInteger(t)||t<0?{issues:[{message:"Expected non-negative integer lapses"}]}:{value:{lapses:t}}});I();const Yr={name:Symbol("ts-fsrs.leech"),scheduleStatus:["suspended"],schema:{config:ps,card:ws},defaultValue:{card(e){return{lapses:e.operation==="forget"&&e.config.clearStatsOnForget===!1?e.input.lapses:0}}},handlers:{review(e,t){var n,s;t();const i=e.input.card,r=i.state===_.Review&&e.input.grade===l.Again;(s=(n=e.result.card).lapses)!==null&&s!==void 0||(n.lapses=r?i.lapses+1:i.lapses);const{lapses:a}=e.result.card,{leechThreshold:o}=e.config;r&&o>0&&a%o===0&&(e.result.card.scheduleStatus="suspended")},rollback(e,t){var n,s;t();const i=e.input.card,r=e.input.revlog,a=r.rating===l.Again&&r.state===_.Review;(s=(n=e.result.card).lapses)!==null&&s!==void 0||(n.lapses=Math.max(0,i.lapses-(a?1:0)))}}};I();const Ut=36500,Ht=w(e=>{if(!D(e))return{issues:[{message:"Expected monotonic interval config"}]};const t=e.maximumInterval===void 0?Ut:e.maximumInterval;return typeof t!="number"||!Number.isSafeInteger(t)||t<=0?{issues:[{message:"Expected positive integer maximumInterval"}]}:{value:{maximumInterval:t}}});I();const bs={name:Symbol("ts-fsrs.maximum-interval"),schema:{config:Ht},handlers:{nextInterval(e,t){t(),e.scheduledDays!==void 0&&(e.scheduledDays=Math.min(e.scheduledDays,e.config.maximumInterval))}}};I();const Ms={name:Symbol("ts-fsrs.monotonic-interval"),schema:{config:Ht},handlers:{nextInterval(e,t){const{grade:n}=e.input,s=a=>e.candidate.nextInterval(e.candidate.step(a),C(Z,e.candidate.desiredRetention[a])),i=(...a)=>Zn(a,e.config.maximumInterval);t();const r=e.scheduledDays;switch(n){case l.Again:e.scheduledDays=i(r);break;case l.Hard:e.scheduledDays=i(s(l.Again),r);break;case l.Good:e.scheduledDays=i(s(l.Again),s(l.Hard),r);break;case l.Easy:e.scheduledDays=i(s(l.Again),s(l.Hard),s(l.Good),r)}}}};I();const kt=w(e=>{if(!D(e))return{issues:[{message:"Expected object with scheduledDays"}]};const t=ze.safeParse(e.scheduledDays);return t.success?{value:{scheduledDays:t.data}}:t});I();const Rs={name:Symbol("ts-fsrs.scheduled-days"),schema:{config:fe,card:kt,revlog:kt},defaultValue:{card(){return{scheduledDays:0}}},handlers:{review(e,t){var n;const s=e.input.card.scheduledDays;t();const i=Math.max(0,(n=e.scheduledDays)!==null&&n!==void 0?n:0);e.result.card.scheduledDays=e.config.fractionalDays?i:Math.floor(i),e.result.revlog.scheduledDays=s},rollback(e,t){t(),e.result.card.scheduledDays=e.input.revlog.scheduledDays}}};function Fs(e,t){return b(Math.pow(.9,e/t),8)}var Wt,xs=p((()=>{I(),P(),N(),j(),Wt=class{constructor(e,t){if(this.weights=e,this.bounds=t,M(this,"forgetting_curve",Fs),!Array.isArray(e)||e.length!==13)throw new S(`FSRS3Algorithm requires exactly 13 weights, but received ${e?.length}`)}init_stability(e){const t=this.weights;return g(t[0]+(e-1)*t[1],this.bounds.sMin,this.bounds.sMax)}init_difficulty(e){const t=this.weights;return g(t[2]+(e-3)*t[3],this.bounds.dMin,this.bounds.dMax)}next_interval(e,t){if(!Number.isFinite(t)||t<=0||t>1)throw new S("Desired retention rate should be in the range (0,1]");const n=Math.log(t)/Math.log(.9);return b(Math.max(Math.round(e*n),1),8)}next_difficulty(e,t){const n=this.weights,s=e+n[4]*(t-3);return b(g(this.mean_reversion(n[2],s),this.bounds.dMin,this.bounds.dMax),8)}mean_reversion(e,t){const n=this.weights;return b(n[5]*e+(1-n[5])*t,8)}next_recall_stability(e,t,n){const s=this.weights;return b(g(t*(1+Math.exp(s[6])*(11-e)*Math.pow(t,s[7])*(Math.exp((1-n)*s[8])-1)),this.bounds.sMin,this.bounds.sMax),8)}next_forget_stability(e,t,n){const s=this.weights;return b(g(s[9]*Math.pow(e,s[10])*Math.pow(t,s[11])*Math.exp((1-n)*s[12]),this.bounds.sMin,this.bounds.sMax),8)}next_state(e,t,n,s){const{difficulty:i,stability:r}=e??{difficulty:0,stability:0};if(t<0)throw new S(`Invalid delta_t "${t}"`);if(n<0||n>4)throw new S(`Invalid grade "${n}"`);if(n===l.Manual)return{difficulty:i,stability:r};const a=n;if(i===0&&r===0)return{difficulty:this.init_difficulty(a),stability:this.init_stability(a)};if(i<this.bounds.dMin||r<this.bounds.sMin)throw new S(`Invalid memory state { difficulty: ${i}, stability: ${r} }`);s=typeof s=="number"?s:this.forgetting_curve(t,r);const o=this.next_difficulty(i,a);return{difficulty:o,stability:a===l.Again?this.next_forget_stability(o,r,s):this.next_recall_stability(o,r,s)}}}})),De,Ie,Gt,Vt=p((()=>{De=Object.freeze({sMin:.01,sMax:36500,dMin:1,dMax:10}),Ie=Object.freeze([.9605,1.7234,4.8527,-1.1917,-1.2956,.0573,1.7352,-.1673,1.065,1.8907,-.3832,.5867,1.0721]),Gt=()=>[[.1,10],[.1,5],[De.dMin,De.dMax],[-5,-.1],[-5,-.1],[.05,.5],[0,2],[-.8,-.15],[.01,1.5],[.5,5],[-2,-.01],[.01,.9],[.01,2]]})),Ye,Bt,Yt,qe,Ds=p((()=>{I(),P(),N(),X(),Vt(),Ye=e=>Gt().slice(0,e.length).map(([t,n],s)=>{var i;return g((i=e[s])!==null&&i!==void 0?i:0,t,n)}),Bt=e=>{const t=Ye(Array.from(e));if(!(e.length===Ie.length&&t.every((n,s)=>n===e[s])))throw new S("Expected FSRS3 weights within model bounds.");return e},Yt=e=>!Array.isArray(e)||e.length===0?[...Ie]:e.slice(0,Ie.length),qe=w(e=>D(e)&&ne(e.weights)?{value:{weights:e.weights}}:{issues:[{message:"Expected FSRS3 config"}]})})),qt,Is,qr=p((()=>{I(),Fe(),xs(),Vt(),Ds(),qt=e=>{const t=De,n=new Wt(e.weights,t),s=({memoryState:o,rating:c,elapsedDays:u,retrievability:d})=>n.next_state(o,u,c,d);return{config:e,bounds:t,algorithm:n,step:s,nextInterval:(o,c)=>n.next_interval(o.stability,c),forgettingCurve:(o,c)=>n.forgetting_curve(c,o.stability),forward:({history:o,initialState:c})=>{const u=[];let d=c||null;for(const h of o)d=s({memoryState:d,rating:h.rating,elapsedDays:h.deltaT}),u.push(d);return u}}},Is={name:"fsrs-3",schema:{config:qe,memoryState:K},defaultValue:{memoryState(){return{stability:0,difficulty:0}}},create({config:e,migrate:t=!0,clip:n=!0,check:s=!0,bypass:i=!1}){if(i)return qt(e);let r=t?Yt(e.weights):e.weights;n&&Array.isArray(r)&&(r=Ye(r)),s&&Bt(r);const a=qe.parse({weights:r});return qt(Object.freeze(a))}}})),Zr=ce({FSRS3Algorithm:()=>Wt,FSRS3Model:()=>Is,FSRS3ParameterBounds:()=>Gt,FSRS3_DEFAULT_WEIGHTS:()=>Ie,FSRS3_MODEL_BOUNDS:()=>De,checkFSRS3Parameters:()=>Bt,clipFSRS3Parameters:()=>Ye,forgettingCurve:()=>Fs,fsrs3ConfigSchema:()=>qe,migrateFSRS3Parameters:()=>Yt}),Xr=p((()=>{xs(),Vt(),qr(),Ds()}));function As(e,t){return b(Math.pow(1+e/(9*t),-1),8)}var Zt,Es=p((()=>{I(),P(),N(),j(),Zt=class{constructor(e,t){if(this.weights=e,this.bounds=t,M(this,"forgetting_curve",As),!Array.isArray(e)||e.length!==17)throw new S(`FSRS4Algorithm requires exactly 17 weights, but received ${e?.length}`)}init_stability(e){return g(this.weights[e-1],this.bounds.sMin,this.bounds.sMax)}init_difficulty(e){const t=this.weights,n=t[4]-(e-3)*t[5];return g(b(n,8),this.bounds.dMin,this.bounds.dMax)}next_interval(e,t){if(!Number.isFinite(t)||t<=0||t>1)throw new S("Requested retention rate should be in the range (0,1]");const n=b(9*(1/t-1),8);return Math.max(Math.round(e*n),1)}next_difficulty(e,t){const n=e-this.weights[6]*(t-3);return g(this.mean_reversion(this.weights[4],n),this.bounds.dMin,this.bounds.dMax)}mean_reversion(e,t){const n=this.weights;return b(n[7]*e+(1-n[7])*t,8)}next_recall_stability(e,t,n,s){const i=this.weights,r=l.Hard===s?i[15]:1,a=l.Easy===s?i[16]:1;return b(g(t*(1+Math.exp(i[8])*(11-e)*Math.pow(t,-i[9])*(Math.exp((1-n)*i[10])-1)*r*a),this.bounds.sMin,this.bounds.sMax),8)}next_forget_stability(e,t,n){const s=this.weights;return b(g(s[11]*Math.pow(e,-s[12])*(Math.pow(t+1,s[13])-1)*Math.exp((1-n)*s[14]),this.bounds.sMin,this.bounds.sMax),8)}next_state(e,t,n,s){const{difficulty:i,stability:r}=e??{difficulty:0,stability:0};if(t<0)throw new S(`Invalid delta_t "${t}"`);if(n<0||n>4)throw new S(`Invalid grade "${n}"`);if(n===l.Manual)return{difficulty:i,stability:r};const a=n;if(i===0&&r===0)return{difficulty:this.init_difficulty(a),stability:this.init_stability(a)};if(i<this.bounds.dMin||r<this.bounds.sMin)throw new S(`Invalid memory state { difficulty: ${i}, stability: ${r} }`);s=typeof s=="number"?s:this.forgetting_curve(t,r);const o=a===l.Again?this.next_forget_stability(i,r,s):this.next_recall_stability(i,r,s,a);return{difficulty:this.next_difficulty(i,a),stability:o}}}})),k,Ae,Ts,Xt=p((()=>{k=Object.freeze({sMin:.01,sMax:36500,dMin:1,dMax:10}),Ae=Object.freeze([.4,.9,2.3,10.9,4.93,.94,.86,.01,1.49,.14,.94,2.18,.05,.34,1.26,.29,2.61]),Ts=()=>[[k.sMin,k.sMax],[k.sMin,k.sMax],[k.sMin,k.sMax],[k.sMin,k.sMax],[1,10],[.1,5],[.1,5],[0,.5],[0,3],[.1,.8],[.01,2.5],[.5,5],[.01,.2],[.01,.9],[.01,2],[0,1],[1,4]]})),Ze,Kt,Jt,Xe,Cs=p((()=>{I(),P(),N(),X(),Xt(),Ze=e=>Ts().slice(0,e.length).map(([t,n],s)=>{var i;return g((i=e[s])!==null&&i!==void 0?i:0,t,n)}),Kt=e=>{const t=Ze(Array.from(e));if(!(e.length===Ae.length&&t.every((n,s)=>n===e[s])))throw new S("Expected FSRS4 weights within model bounds.");return e},Jt=e=>!Array.isArray(e)||e.length===0?[...Ae]:e.slice(0,Ae.length),Xe=w(e=>D(e)&&ne(e.weights)?{value:{weights:e.weights}}:{issues:[{message:"Expected FSRS4 config"}]})})),Qt,$s,Kr=p((()=>{I(),Fe(),Es(),Xt(),Cs(),Qt=e=>{const t=k,n=new Zt(e.weights,k),s=({memoryState:o,rating:c,elapsedDays:u,retrievability:d})=>n.next_state(o,u,c,d);return{config:e,bounds:t,algorithm:n,step:s,nextInterval:(o,c)=>n.next_interval(o.stability,c),forgettingCurve:(o,c)=>n.forgetting_curve(c,o.stability),forward:({history:o,initialState:c})=>{const u=[];let d=c||null;for(const h of o)d=s({memoryState:d,rating:h.rating,elapsedDays:h.deltaT}),u.push(d);return u}}},$s={name:"fsrs-4",schema:{config:Xe,memoryState:K},defaultValue:{memoryState(){return{stability:0,difficulty:0}}},create({config:e,migrate:t=!0,clip:n=!0,check:s=!0,bypass:i=!1}){if(i)return Qt(e);let r=t?Jt(e.weights):e.weights;n&&Array.isArray(r)&&(r=Ze(r)),s&&Kt(r);const a=Xe.parse({weights:r});return Qt(Object.freeze(a))}}})),Jr=ce({FSRS4Algorithm:()=>Zt,FSRS4Model:()=>$s,FSRS4_DEFAULT_WEIGHTS:()=>Ae,FSRS4_MODEL_BOUNDS:()=>k,checkFSRS4Parameters:()=>Kt,clipFSRS4Parameters:()=>Ze,forgettingCurve:()=>As,fsrs4ConfigSchema:()=>Xe,migrateFSRS4Parameters:()=>Jt}),Qr=p((()=>{Es(),Xt(),Kr(),Cs()})),Ke,Je,ea,q,Ee,Os,Qe=p((()=>{Ke=.5,Je=19/81,ea=100,q=Object.freeze({sMin:.01,sMax:36500,dMin:1,dMax:10}),Ee=Object.freeze([.4872,1.4003,3.7145,13.8206,5.1618,1.2298,.8975,.031,1.6474,.1367,1.0461,2.1072,.0793,.3246,1.587,.2272,2.8755]),Os=()=>[[q.sMin,100],[q.sMin,100],[q.sMin,100],[q.sMin,100],[0,q.dMax],[.01,5],[.01,5],[0,.8],[0,6],[0,.8],[.01,5],[.2,6],[.01,.4],[.01,.9],[.01,4],[0,1],[1,10]]}));function Ps(e,t){return b(Math.pow(1+Je*e/t,-Ke),8)}var en,zs=p((()=>{I(),P(),N(),Qe(),j(),en=class{constructor(e,t){if(this.weights=e,this.bounds=t,M(this,"forgetting_curve",Ps),!Array.isArray(e)||e.length!==17)throw new S(`FSRS4Dot5Algorithm requires exactly 17 weights, but received ${e?.length}`)}init_stability(e){return g(this.weights[e-1],this.bounds.sMin,this.bounds.sMax)}init_difficulty(e){const t=this.weights,n=t[4]-(e-3)*t[5];return g(b(n,8),this.bounds.dMin,this.bounds.dMax)}next_interval(e,t){if(!Number.isFinite(t)||t<=0||t>1)throw new S("Desired retention rate should be in the range (0,1]");const n=b((Math.pow(t,1/-Ke)-1)/Je,8);return Math.max(Math.round(e*n),1)}next_difficulty(e,t){const n=e-this.weights[6]*(t-3);return g(this.mean_reversion(this.weights[4],n),this.bounds.dMin,this.bounds.dMax)}mean_reversion(e,t){const n=this.weights;return b(n[7]*e+(1-n[7])*t,8)}next_recall_stability(e,t,n,s){const i=this.weights,r=l.Hard===s?i[15]:1,a=l.Easy===s?i[16]:1;return b(g(t*(1+Math.exp(i[8])*(11-e)*Math.pow(t,-i[9])*(Math.exp((1-n)*i[10])-1)*r*a),this.bounds.sMin,this.bounds.sMax),8)}next_forget_stability(e,t,n){const s=this.weights,i=s[11]*Math.pow(e,-s[12])*(Math.pow(t+1,s[13])-1)*Math.exp((1-n)*s[14]);return b(g(Math.min(i,t),this.bounds.sMin,this.bounds.sMax),8)}next_state(e,t,n,s){const{difficulty:i,stability:r}=e??{difficulty:0,stability:0};if(t<0)throw new S(`Invalid delta_t "${t}"`);if(n<0||n>4)throw new S(`Invalid grade "${n}"`);if(n===l.Manual)return{difficulty:i,stability:r};const a=n;if(i===0&&r===0)return{difficulty:this.init_difficulty(a),stability:this.init_stability(a)};if(i<this.bounds.dMin||r<this.bounds.sMin)throw new S(`Invalid memory state { difficulty: ${i}, stability: ${r} }`);s=typeof s=="number"?s:this.forgetting_curve(t,r);const o=n===l.Again?this.next_forget_stability(i,r,s):this.next_recall_stability(i,r,s,a);return{difficulty:this.next_difficulty(i,a),stability:o}}}})),et,tn,nn,tt,Ns=p((()=>{I(),P(),N(),X(),Qe(),et=e=>Os().slice(0,e.length).map(([t,n],s)=>g(e[s]||0,t,n)),tn=e=>{const t=et(Array.from(e));if(!(e.length===Ee.length&&t.every((n,s)=>n===e[s])))throw new S("Expected FSRS4.5 weights within model bounds.");return e},nn=e=>!Array.isArray(e)||e.length===0?[...Ee]:e.slice(0,Ee.length),tt=w(e=>D(e)&&ne(e.weights)?{value:{weights:e.weights}}:{issues:[{message:"Expected FSRS4.5 config"}]})})),sn,Ls,ta=p((()=>{I(),Fe(),zs(),Qe(),Ns(),sn=e=>{const t=q,n=new en(e.weights,q),s=({memoryState:o,rating:c,elapsedDays:u,retrievability:d})=>n.next_state(o,u,c,d);return{config:e,bounds:t,algorithm:n,step:s,nextInterval:(o,c)=>n.next_interval(o.stability,c),forgettingCurve:(o,c)=>n.forgetting_curve(c,o.stability),forward:({history:o,initialState:c})=>{const u=[];let d=c||null;for(const h of o)d=s({memoryState:d,rating:h.rating,elapsedDays:h.deltaT}),u.push(d);return u}}},Ls={name:"fsrs-4dot5",schema:{config:tt,memoryState:K},defaultValue:{memoryState(){return{stability:0,difficulty:0}}},create({config:e,migrate:t=!0,clip:n=!0,check:s=!0,bypass:i=!1}){if(i)return sn(e);let r=t?nn(e.weights):e.weights;n&&Array.isArray(r)&&(r=et(r)),s&&tn(r);const a=tt.parse({weights:r});return sn(Object.freeze(a))}}})),na=ce({FSRS4Dot5Algorithm:()=>en,FSRS4Dot5Model:()=>Ls,FSRS4Dot5_DECAY:()=>Ke,FSRS4Dot5_DEFAULT_WEIGHTS:()=>Ee,FSRS4Dot5_FACTOR:()=>Je,FSRS4Dot5_MODEL_BOUNDS:()=>q,checkFSRS4Dot5Parameters:()=>tn,clipFSRS4Dot5Parameters:()=>et,forgettingCurve:()=>Ps,fsrs4Dot5ConfigSchema:()=>tt,migrateFSRS4Dot5Parameters:()=>nn}),sa=p((()=>{zs(),Qe(),ta(),Ns()}));function js(e,t){return b(Math.pow(1+Ue*e/t,-se),8)}var rn,Us=p((()=>{I(),P(),N(),ie(),j(),rn=class{constructor(e,t,n){if(this.weights=e,this.enableShortTerm=t,this.bounds=n,M(this,"forgetting_curve",js),!Array.isArray(e)||e.length!==19)throw new S(`FSRS5Algorithm requires exactly 19 weights, but received ${e?.length}`)}init_stability(e){return g(this.weights[e-1],this.bounds.sMin,this.bounds.sMax)}init_difficulty(e){const t=this.weights,n=t[4]-Math.exp((e-1)*t[5])+1;return g(b(n,8),this.bounds.dMin,this.bounds.dMax)}next_interval(e,t){if(!Number.isFinite(t)||t<=0||t>1)throw new S("Requested retention rate should be in the range (0,1]");const n=b((Math.pow(t,1/-se)-1)/Ue,8);return Math.max(Math.round(e*n),1)}linear_damping(e,t){return b(e*(10-t)/9,8)}next_difficulty(e,t){const n=-this.weights[6]*(t-3),s=e+this.linear_damping(n,e);return g(this.mean_reversion(this.init_difficulty(l.Easy),s),this.bounds.dMin,this.bounds.dMax)}mean_reversion(e,t){const n=this.weights;return b(n[7]*e+(1-n[7])*t,8)}next_recall_stability(e,t,n,s){const i=this.weights,r=l.Hard===s?i[15]:1,a=l.Easy===s?i[16]:1;return b(g(t*(1+Math.exp(i[8])*(11-e)*Math.pow(t,-i[9])*(Math.exp((1-n)*i[10])-1)*r*a),this.bounds.sMin,this.bounds.sMax),8)}next_forget_stability(e,t,n){const s=this.weights;return b(g(s[11]*Math.pow(e,-s[12])*(Math.pow(t+1,s[13])-1)*Math.exp((1-n)*s[14]),this.bounds.sMin,this.bounds.sMax),8)}next_short_term_stability(e,t){const n=this.weights;return b(g(e*Math.exp(n[17]*(t-3+n[18])),this.bounds.sMin,this.bounds.sMax),8)}next_state(e,t,n,s){const{difficulty:i,stability:r}=e??{difficulty:0,stability:0};if(t<0)throw new S(`Invalid delta_t "${t}"`);if(n<0||n>4)throw new S(`Invalid grade "${n}"`);if(n===l.Manual)return{difficulty:i,stability:r};const a=n;if(i===0&&r===0)return{difficulty:this.init_difficulty(a),stability:this.init_stability(a)};if(i<this.bounds.dMin||r<this.bounds.sMin)throw new S(`Invalid memory state { difficulty: ${i}, stability: ${r} }`);s=typeof s=="number"?s:this.forgetting_curve(t,r);let o;if(t===0&&this.enableShortTerm)o=this.next_short_term_stability(r,a);else if(n===l.Again){const c=this.next_forget_stability(i,r,s);let[u,d]=[0,0];this.enableShortTerm&&(u=this.weights[17],d=this.weights[18]);const h=r/Math.exp(u*d);o=g(b(h,8),this.bounds.sMin,c)}else o=this.next_recall_stability(i,r,s,a);return{difficulty:this.next_difficulty(i,a),stability:o}}}})),nt,an,on,st,Hs=p((()=>{I(),P(),N(),X(),ie(),nt=e=>Un().slice(0,e.length).map(([t,n],s)=>g(e[s]||0,t,n)),an=e=>{const t=nt(Array.from(e));if(!(e.length===He.length&&t.every((n,s)=>n===e[s])))throw new S("Expected FSRS5 weights within model bounds.");return e},on=e=>{if(!Array.isArray(e)||e.length===0)return[...He];if(e.length>19)return e.slice(0,19);switch(e.length){case 19:return Array.from(e);case 17:{const t=Array.from(e);return t[4]=b(t[5]*2+t[4],8),t[5]=b(Math.log(t[5]*3+1)/3,8),t[6]=b(t[6]+.5,8),t.concat([0,0])}default:throw new S(`Invalid parameters length "${e.length}", expected 17 or 19.`)}},st=w(e=>D(e)&&ne(e.weights)&&typeof e.enableShortTerm=="boolean"?{value:{weights:e.weights,enableShortTerm:e.enableShortTerm}}:{issues:[{message:"Expected FSRS5 config"}]})})),cn,ks,ia=p((()=>{I(),Fe(),Us(),ie(),Hs(),cn=e=>{const t=B,n=new rn(e.weights,e.enableShortTerm,B),s=({memoryState:o,rating:c,elapsedDays:u,retrievability:d})=>n.next_state(o,u,c,d);return{config:e,bounds:t,algorithm:n,step:s,nextInterval:(o,c)=>n.next_interval(o.stability,c),forgettingCurve:(o,c)=>n.forgetting_curve(c,o.stability),forward:({history:o,initialState:c})=>{const u=[];let d=c||null;for(const h of o)d=s({memoryState:d,rating:h.rating,elapsedDays:h.deltaT}),u.push(d);return u}}},ks={name:"fsrs-5",schema:{config:st,memoryState:K},defaultValue:{memoryState(){return{stability:0,difficulty:0}}},create({config:e,migrate:t=!0,clip:n=!0,check:s=!0,bypass:i=!1}){if(i)return cn(e);let r=t?on(e.weights):e.weights;n&&Array.isArray(r)&&(r=nt(r)),s&&an(r);const a=st.parse({weights:r,enableShortTerm:e.enableShortTerm});return cn(Object.freeze(a))}}})),ra=ce({FSRS5Algorithm:()=>rn,FSRS5Model:()=>ks,FSRS5_DECAY:()=>se,FSRS5_DEFAULT_WEIGHTS:()=>He,FSRS5_FACTOR:()=>Ue,FSRS5_MODEL_BOUNDS:()=>B,FSRS5_W17_W18_CEILING:()=>2,checkFSRS5Parameters:()=>an,clipFSRS5Parameters:()=>nt,forgettingCurve:()=>js,fsrs5ConfigSchema:()=>st,migrateFSRS5Parameters:()=>on}),aa=p((()=>{Us(),ie(),ia(),Hs()})),oa,Te,Ce,Ws,Gs,ln,Q,dn,Vs,Bs,Ys,$e=p((()=>{oa=100,Te=Object.freeze({sMin:1e-4,sMax:36500,stabilityFastMin:1e-4,stabilityFastMax:36500,dMin:1,dMax:10}),{sMin:Ce,dMin:Ws,dMax:Gs}=Te,ln=()=>[[Ce,100/2],[Ce,100],[Ce,100],[Ce,100],[Ws,Gs],[.001,4],[.1,4],[0,4],[0,1.2],[.3,3],[.01,1.5],[.1,1],[0,3.5],[0,1],[1,7],[0,4],[0,2],[.5,6],[.001,1.5],[.001,1],[0,5],[0,1],[1,7],[.01,.25],[.01,.95],[.2,.85],[.5,.99],[.01,1],[.1,1],[0,.9],[.1,1.1],[0,1],[0,.6],[0,.6]],Q=Object.freeze([.1104,2.2395,3.9221,11.7841,6.1686,.6457,3.6807,1.9795,0,1.3826,.7024,.5999,.8146,.6398,1,1.3207,.6707,3.8668,.4416,.0934,1.8631,.6162,1.0869,.1567,.0801,.2421,.9464,.1433,.7145,0,.5667,.3734,.5333,.3048]),dn=1/86400,Vs=Math.log(dn),Bs=1e-4,Ys=.9999}));function qs(e,t){const n=-g(e[23]*Math.pow(t,e[33]-.3),.01,.95);return{decay:n,scale:(Math.exp(Math.min(Math.log(e[25])/n,60))-1)/t}}function Zs(e,t){const n=Math.max(e,0),{decay:s,scale:i}=t,r=1+i*n;return{recall:Math.pow(r,s),derivative:s*Math.pow(r,s-1)*i}}function it(e,t,n){const{sMin:s,sMax:i,stabilityFastMin:r,stabilityFastMax:a,dMin:o,dMax:c}=n,u=g(t.stability,s,i),d=g(t.stabilityFast,r,a),h=g(t.difficulty,o,c),m=qs(e,d),R=-g(e[24],.01,.95),A=(Math.pow(e[26],1/R)-1)*Math.exp((h-5)*(e[32]-.3))/u,v=e[27]*Math.pow(d,-e[29]),y=e[28]*Math.pow(u,e[30])*Math.exp((h-5)*(e[31]-.5));return{fast:m,decay:R,scale:A,weight1:v,weight2:y,total:v+y}}function ae(e,t){const{decay:n,scale:s,weight1:i,weight2:r,total:a}=t,o=Math.max(e,0),c=Zs(o,t.fast),u=1+s*o,d=Math.pow(u,n),h=n*Math.pow(u,n-1)*s;return{retrievability:(i*c.recall+r*d)/a*.99998+1e-5,derivative:(i*c.derivative+r*h)/a*.99998,fast:c.recall,slow:d,fastWeight:i,slowWeight:r,total:a}}function ca(e,t,n){return ae(t,it(e,n,Te))}var un,Xs=p((()=>{I(),P(),N(),$e(),j(),un=class{constructor(e,t){if(this.weights=e,this.bounds=t,M(this,"logSMax",void 0),!Array.isArray(e)||e.length!==34||!e.every(Number.isFinite))throw new S("FSRS7Algorithm requires exactly 34 finite weights");this.logSMax=Math.log(t.sMax)}init_stability(e){return g(this.weights[e-1],this.bounds.sMin,this.bounds.sMax)}init_difficulty(e){const t=this.weights;return t[4]-Math.exp(t[5]*(e-1))+1}curve(e,t){return ae(e,it(this.weights,t,this.bounds))}next_interval(e,t){const{sMin:n,sMax:s,stabilityFastMin:i,stabilityFastMax:r}=this.bounds;if(!Number.isFinite(t)||t<=0||t>=1)throw new S("Desired retention rate should be in the range (0,1)");const a=g(t,Bs,Ys);if(a>=.9999)return 0;const o=g(e.stability,n,s),c=g(e.stabilityFast,i,r),u=Math.max(o,c),d=it(this.weights,e,this.bounds);let h=Math.log(u);for(let v=0;v<7;v++){h=g(h,Vs,this.logSMax);const y=g(Math.exp(h),dn,s),{retrievability:x,derivative:F}=ae(y,d);if(h-=g((x-a)/Math.min(F*y,-1e-12),-4,4),!Number.isFinite(h))break}const m=g(Math.exp(h),0,s);if(Math.abs(ae(m,d).retrievability-a)<=.001)return m;let R=0,A=Math.min(Math.max(u,1),s);for(;ae(A,d).retrievability>a&&A<s;)A=Math.min(A*2,s);for(let v=0;v<50;v++){const y=(R+A)/2;ae(y,d).retrievability>a?R=y:A=y}return(R+A)/2}next_stability(e,t,n,s,i){const r=this.weights,a=r[i+3]*(Math.pow(e+1,r[i+4])-1)*Math.exp((1-n)*r[i+5]),o=Math.min(e,a);if(s===l.Again)return o;const c=s===l.Hard?r[i+6]:1,u=s===l.Easy?r[i+7]:1,d=Math.exp(r[i]-1.5)*(11-t)*Math.pow(e,-r[i+1])*(Math.exp((1-n)*r[i+2])-1)*c*u+1;return Math.max(o,e*d)}next_state(e,t,n,s){const{sMin:i,sMax:r,stabilityFastMin:a,stabilityFastMax:o,dMin:c,dMax:u}=this.bounds;if(!Number.isSafeInteger(n)||n<l.Manual||n>l.Easy)throw new S(`Invalid grade "${n}"`);const d=e===null?{stability:0,stabilityFast:0,difficulty:0}:e;if(n===l.Manual)return{stability:d.stability,stabilityFast:d.stabilityFast,difficulty:d.difficulty};const h=n;if(d.stability===0&&d.stabilityFast===0&&d.difficulty===0){const $=this.init_stability(h);return{stability:g(b($,8),i,r),stabilityFast:g(b($*.8,8),a,o),difficulty:g(b(this.init_difficulty(h),8),c,u)}}if(d.stability<=0||d.stabilityFast<=0)throw new S("Invalid FSRS7 memory state: both stabilities must be positive");if(s!==void 0&&(!Number.isFinite(s)||s<=0||s>=1))throw new S("Retrievability should be in the range (0,1)");const m=g(d.stability,i,r),R=g(d.stabilityFast,a,o),A=g(d.difficulty,c,u),v=s??ae(t,it(this.weights,d,this.bounds)).retrievability,y=this.next_stability(m,A,v,h,7);let x=this.next_stability(R,A,Zs(t,qs(this.weights,R)).recall,h,15);h===l.Again&&(x=Math.min(x,y*.8));let F=-this.weights[6]*(h-3);h===l.Again&&(F*=v+.1);const E=.01*this.init_difficulty(l.Easy)+.99*(A+(10-A)*F/9);return{stability:g(b(y,8),i,r),stabilityFast:g(b(x,8),a,o),difficulty:g(b(E,8),c,u)}}}}));function hn(e){const t=Array.from(e);if(t.length<Q.length)return t;for(const[n,[s,i]]of ln().entries()){const r=n>0&&n<4?Math.max(s,t[n-1]):n===26?Math.max(s,t[25]):s;t[n]=g(Number.isFinite(t[n])?t[n]:r,r,i)}return t}function Ks(e){if(e.length!==Q.length||!hn(e).every((t,n)=>t===e[n]))throw new S("Expected FSRS7 weights within model bounds.");return e}function Js(e){if(!e||e.length===0)return[...Q];if(e.length!==Q.length)throw new S(`Invalid parameters length "${e.length}", expected 34. FSRS-7 requires its own weights; replay review history to migrate memory states.`);return Array.from(e)}var Qs=p((()=>{P(),N(),$e()})),ei,rt,fn,ti=p((()=>{I(),X(),$e(),ei=w(e=>O(e)&&e>=.01&&e<=.95?{value:e}:{issues:[{message:"Expected finite decay in the range [0.01, 0.95]"}]}),rt=w(e=>D(e)&&ne(e.weights)&&e.weights.length===Q.length?{value:{weights:e.weights}}:{issues:[{message:`Expected FSRS7 config with exactly ${Q.length} finite weights`}]}),fn=w(e=>D(e)&&O(e.stability)&&O(e.stabilityFast)&&O(e.difficulty)?{value:{stability:e.stability,stabilityFast:e.stabilityFast,difficulty:e.difficulty}}:{issues:[{message:"Expected FSRS7 memory state with finite stability, stabilityFast and difficulty"}]})}));function ni(e){const t=Te,n=new un(e.weights,t);return{config:e,bounds:t,algorithm:n,step:({memoryState:s,elapsedDays:i,rating:r,retrievability:a})=>n.next_state(s,i,r,a),nextInterval:(s,i)=>n.next_interval(s,i),forgettingCurve:(s,i)=>n.curve(i,s).retrievability,forward({history:s,initialState:i}){const r=[];let a=i??null;for(const{rating:o,deltaT:c}of s)a=n.next_state(a,c,o),r.push(a);return r}}}var si,la=p((()=>{I(),Xs(),$e(),Qs(),ti(),si={name:"fsrs-7",schema:{config:rt,memoryState:fn},defaultValue:{memoryState(){return{stability:0,stabilityFast:0,difficulty:0}}},create({config:e,migrate:t=!0,clip:n=!0,check:s=!0,bypass:i=!1}){if(i)return ni(e);let r=t?Js(e.weights):e.weights;return n&&Array.isArray(r)&&(r=hn(r)),s&&Ks(r),ni(Object.freeze(rt.parse({weights:r})))}}})),da=ce({FSRS7Algorithm:()=>un,FSRS7MemoryStateSchema:()=>fn,FSRS7Model:()=>si,FSRS7ParameterBounds:()=>ln,FSRS7_DEFAULT_WEIGHTS:()=>Q,FSRS7_MODEL_BOUNDS:()=>Te,checkFSRS7Parameters:()=>Ks,clipFSRS7Parameters:()=>hn,curve:()=>ca,decaySchema:()=>ei,fsrs7ConfigSchema:()=>rt,migrateFSRS7Parameters:()=>Js}),ua=p((()=>{Xs(),$e(),la(),Qs(),ti()}));I(),P();const ha=[cs,ms,ht,Rs,ys,bs,Ms];function fa(e){return xn({model:e,chrono:Pn}).use(...ha)}const ii={"FSRS-3":async()=>{const{FSRS3Model:e,migrateFSRS3Parameters:t}=await Promise.resolve().then(()=>(Xr(),Zr));return{model:e,migrateParameters:t}},"FSRS-4":async()=>{const{FSRS4Model:e,migrateFSRS4Parameters:t}=await Promise.resolve().then(()=>(Qr(),Jr));return{model:e,migrateParameters:t}},"FSRS-4.5":async()=>{const{FSRS4Dot5Model:e,migrateFSRS4Dot5Parameters:t}=await Promise.resolve().then(()=>(sa(),na));return{model:e,migrateParameters:t}},"FSRS-5":async()=>{const{FSRS5Model:e,migrateFSRS5Parameters:t}=await Promise.resolve().then(()=>(aa(),ra));return{model:e,migrateParameters:t}},"FSRS-6":async()=>{const{FSRS6Model:e,migrateFSRS6Parameters:t}=await Promise.resolve().then(()=>(Yn(),Cr));return{model:e,migrateParameters:t}},"FSRS-7":async()=>{const{FSRS7Model:e,migrateFSRS7Parameters:t}=await Promise.resolve().then(()=>(ua(),da));return{model:e,migrateParameters:t}}},ri=new Map;async function ga(e){const t=e??"FSRS-7";if(!Object.hasOwn(ii,t))throw new S(`Unsupported FSRS version "${e}"`);let n=ri.get(t);return n||(n=ii[t]().then(({model:s,migrateParameters:i})=>({definition:fa(s),migrateParameters:i})),ri.set(t,n)),n}async function ma(e={}){var t;const n=(t=e.version)!==null&&t!==void 0?t:"FSRS-7",s=n==="FSRS-7",i=await ga(n),{weights:r,enableShortTerm:a=!0,desiredRetention:o=.9,learningSteps:c=At,relearningSteps:u=Et,allowModelOverride:d=s,enableFuzz:h=!1,maximumInterval:m=Ut}=e,R=i.migrateParameters(r?Array.from(r):void 0,u.length,a);return i.definition.create({config:{fractionalDays:s,weights:R,enableShortTerm:a,numRelearningSteps:u.length,desiredRetention:o,learningSteps:Array.from(c),relearningSteps:Array.from(u),graduatingInterval:e.graduatingInterval,allowModelOverride:d,enableFuzz:h,maximumInterval:m,clearStatsOnForget:e.clearStatsOnForget}})}I(),N(),pt(),V(),me(),U(),bn(),$n(),ie(),Me(),f.AbstractScheduler=xt,f.CLAMP_PARAMETERS=xr,f.COST_ADR_DEFAULT_GOAL_COST_WEIGHT=Nr,f.COST_ADR_DEFAULT_POLICY=Lr,f.ConvertStepUnitToMinutes=le,f.DEFAULT_LEECH_THRESHOLD=Br,f.DEFAULT_MAXIMUM_INTERVAL=Ut,f.DefaultScheduler=ma,f.FSRS=ns,f.FSRS5_DEFAULT_DECAY=se,f.FSRS6_DEFAULT_DECAY=ke,f.FSRSMemoryStateSchema=K,f.FSRSVersion=pr,f.FUZZ_RANGES=wt,f.Grades=Ln,f.INIT_S_MAX=Mr,f.Rating=l,f.S_MAX=br,f.S_MIN=wr,f.State=_,f.StrategyMode=$r,f.TypeConvert=T,f.W17_W18_Ceiling=Fr,f.calculateLearningSteps=It,f.calculateScheduleDay=Zn,f.calculateScheduleDays=Nt,f.checkParameters=Er,f.clamp=g,f.costAdrConfigSchema=rs,f.costAdrPolicySchema=is,f.createEmptyCard=Ge,f.createSchedulerFuzzingMiddleware=gs,f.dateChrono=Pn,f.dateDiffInDays=jn,f.date_diff=pe,f.date_scheduler=W,f.defaultGraduatingInterval=Ir,f.defaultLearningSteps=At,f.defaultRelearningSteps=Et,f.default_enable_fuzz=yr,f.default_enable_short_term=_r,f.default_maximum_interval=vr,f.default_request_retention=Sr,f.default_w=Rr,f.defineChrono=Ne,f.defineMiddleware=bi,f.defineModel=Mi,f.defineScheduler=xn,f.desiredRetentionConfigSchema=as,f.desiredRetentionSchema=Z,f.elapsedDaysSchema=Pe,f.fnv1aMulberry32Rng=bt,f.formatDate=lr,f.fsrs=zr,f.fuzzingCardFieldsSchema=us,f.fuzzingCardInitInputSchema=ds,f.fuzzingConfigSchema=ls,f.fuzzingRevlogFieldsSchema=hs,f.generatorParameters=Gn,f.getFuzzRange=je,f.get_fuzz_range=ur,f.gradeSchema=Se,f.learningStepFieldsSchema=Tt,f.learningStepsConfigSchema=kn,f.leechCardFieldsSchema=ws,f.leechConfigSchema=ps,f.monotonicIntervalConfigSchema=Ht,f.numericChrono=Hi,f.ratingSchema=wn,f.roundTo=b,f.scheduledDaysFieldsSchema=kt,f.scheduledDaysSchema=ze,f.schedulerCostAdrMiddleware=Ur,f.schedulerDesiredRetentionMiddleware=cs,f.schedulerFuzzingMiddleware=ms,f.schedulerLearningStepsMiddleware=ys,f.schedulerLeechMiddleware=Yr,f.schedulerMaximumIntervalMiddleware=bs,f.schedulerMonotonicIntervalMiddleware=Ms,f.schedulerScheduledDaysMiddleware=Rs,f.schedulerStatsMiddleware=ht,f.show_diff_message=dr,f.stateSchema=lt,f.statsConfigSchema=dt,f.statsFieldsSchema=ut,f.temporalInstantChrono=er,f.withFuzzing=Mt});
 </script>
@@ -2095,22 +1939,12 @@ function dayStr(t){
   var d = new Date(t || Date.now());
   return d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2);
 }
-/* 快捷键绑定（settings.keys，值为 KeyboardEvent.code）：8 个可改绑动作，只存本机 */
-var KEY_DEFAULTS = {boss:'Escape', mode:'F2', play:'KeyP', reveal:'Space', know:'Digit1', dontknow:'Digit2', prev:'ArrowUp', next:'ArrowDown'};
-function normalizeKeys(k){
-  function pick(v, dft){ v = (typeof v === 'string') ? v.trim() : ''; return (v && v.length <= 40) ? v : dft; }
-  k = (k && typeof k === 'object') ? k : {};
-  var out = {};
-  Object.keys(KEY_DEFAULTS).forEach(function(a){ out[a] = pick(k[a], KEY_DEFAULTS[a]); });
-  return out;
-}
 function defaultStore(){
   return { cards:{}, learned:false,
     streak:{lastDay:'', count:0}, streakFreeze:{week:'', used:false, lastUsed:''}, badges:{}, sceneStats:{},
     wordStats:{}, unitTests:{}, customWords:{}, cultureOwned:[], cultureSeen:true,
     stats:{answered:0, correct:0}, today:{day:dayStr(), done:0},
-    settings:{sound:false, slowTts:false, testMode:false, wordMute:false,
-      keys:{boss:'Escape', mode:'F2', play:'KeyP', reveal:'Space', know:'Digit1', dontknow:'Digit2', prev:'ArrowUp', next:'ArrowDown'}} };
+    settings:{sound:false, slowTts:false, testMode:false} };
 }
 function migrate(s){
   var d = defaultStore();
@@ -2141,9 +1975,7 @@ function migrate(s){
   }
   if(s.stats) d.stats = {answered:(s.stats.answered | 0), correct:(s.stats.correct | 0)};
   if(s.today && s.today.day) d.today = {day:String(s.today.day), done:(s.today.done | 0)};
-  if(s.settings) d.settings = {sound:!!s.settings.sound, slowTts:!!s.settings.slowTts,
-    testMode:!!s.settings.testMode, wordMute:!!s.settings.wordMute,
-    keys:normalizeKeys(s.settings.keys)};
+  if(s.settings) d.settings = {sound:!!s.settings.sound, slowTts:!!s.settings.slowTts, testMode:!!s.settings.testMode};
   /* v3.16 文化卡收藏：旧存档按已完成场景回填 cultureOwned（完成即收集），不让老用户丢收藏 */
   if(Array.isArray(s.cultureOwned)){
     var seenCO = {};
@@ -2700,768 +2532,13 @@ document.getElementById('btnSyncNow').addEventListener('click', function(){
 
 
 
-/* ===== 桌面层：背词模式（Excel / Word / Python 三张脸）+ 模式下拉 + 快捷键页 + 老板键 =====
-   桌面 = 宽屏 ≥1024px（且有精细指针）；手机上这一层完全不存在：不建顶栏 DOM、
-   handleGlobalKey 在桌面判定之前不处理任何模式键。模式与按键只存本机 settings。 */
-var MODE_TITLES = {excel:'产品术语对照表_2026.xlsx - Excel', word:'产品术语表.docx - Word', python:'term_glossary.py - Visual Studio Code'};
-var MODE_LABELS = {scene:'场景学习', excel:'Excel 背词', word:'Word 背词', python:'Python 背词'};
-var MODE_FAVICONS = {
-  excel: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#217346"/><path d="M10 10l12 12M22 10L10 22" stroke="#fff" stroke-width="3.6" stroke-linecap="round"/></svg>',
-  word: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#2B579A"/><path d="M6.5 8l3.6 15L14 11.5 17.9 23 21.5 8" fill="#2B579A" stroke="#fff" stroke-width="2.8" stroke-linejoin="round" stroke-linecap="round"/></svg>',
-  python: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#007ACC"/><path d="M12 10l-6 6 6 6M20 10l6 6-6 6" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>'
-};
-var DEFAULT_TITLE = '情景英语';
-var DEFAULT_FAVICON = 'icon-192.png';
 var curView = 'home';
-var curMode = 'scene';
-var wmActive = false;
-var deskLive = false, deskBuilt = false;
-var deskRefs = {};
-function keyLabel(k){
-  if(!k) return '';
-  if(k === 'Escape') return 'Esc';
-  if(k === 'Space') return '空格';
-  if(k.indexOf('Digit') === 0) return k.slice(5);
-  if(k.indexOf('Numpad') === 0) return k.slice(6);
-  if(k.indexOf('Key') === 0) return k.slice(3);
-  if(k === 'ArrowUp') return '↑';
-  if(k === 'ArrowDown') return '↓';
-  if(k === 'ArrowLeft') return '←';
-  if(k === 'ArrowRight') return '→';
-  return k;
-}
-/* 键事件 → code：优先 e.code；旧式只有 e.key 时映射（F2/空格/数字/字母/方向键） */
-function codeOfEvent(e){
-  if(!e) return '';
-  if(e.code) return e.code;
-  var k = e.key || '';
-  if(k === ' ') return 'Space';
-  if(k === 'Escape' || k === 'Esc') return 'Escape';
-  if(/^F\d{1,2}$/.test(k)) return k;
-  if(/^[0-9]$/.test(k)) return 'Digit' + k;
-  if(/^[a-zA-Z]$/.test(k)) return 'Key' + k.toUpperCase();
-  if(k.indexOf('Arrow') === 0) return k;
-  return k;
-}
-function setFavicon(href){ var l = document.getElementById('faviconLink'); if(l) l.setAttribute('href', href); }
-function isDesktop(){
-  try{
-    if(!window.matchMedia) return false;
-    if(!window.matchMedia('(min-width: 1024px)').matches) return false;
-    var pf = window.matchMedia('(pointer: fine)');
-    if(pf && pf.media && pf.media !== 'not all' && !pf.matches) return false;
-    return true;
-  }catch(e){ return false; }
-}
-function applyModeChrome(){
-  if(curMode !== 'scene' && MODE_TITLES[curMode]){
-    document.title = MODE_TITLES[curMode];
-    setFavicon('data:image/svg+xml;charset=utf-8,' + encodeURIComponent(MODE_FAVICONS[curMode]));
-  } else {
-    document.title = DEFAULT_TITLE;
-    setFavicon(DEFAULT_FAVICON);
-  }
-}
-function refreshModeUI(){
-  if(!deskBuilt) return;
-  if(deskRefs.btnLabel) deskRefs.btnLabel.textContent = '模式：' + (MODE_LABELS[curMode] || '场景学习');
-  if(deskRefs.muteItem) deskRefs.muteItem.textContent = '静音：' + (store.settings && store.settings.wordMute ? '开' : '关');
-  if(deskRefs.hint) deskRefs.hint.textContent = keyLabel(((store.settings && store.settings.keys) || KEY_DEFAULTS).mode) + ' 切换模式';
-  /* v3.15：书本页眉槽位里的下拉与顶栏下拉同步文案 */
-  if(bookRefs.btnLabel) bookRefs.btnLabel.textContent = '模式：' + (MODE_LABELS[curMode] || '场景学习');
-  if(bookRefs.muteItem) bookRefs.muteItem.textContent = '静音：' + (store.settings && store.settings.wordMute ? '开' : '关');
-}
-/* —— 桌面顶栏（模式下拉）：桌面才建，手机上不存在 —— */
-function buildDeskBar(){
-  if(deskBuilt) return;
-  deskBuilt = true;
-  var bar = document.createElement('div');
-  bar.id = 'deskBar'; bar.className = 'desk-bar';
-  var btn = document.createElement('button');
-  btn.type = 'button'; btn.className = 'db-btn'; btn.id = 'modeBtn';
-  var lab = document.createElement('span'); lab.id = 'modeBtnLabel'; lab.textContent = '模式：场景学习';
-  var caret = document.createElement('span'); caret.className = 'db-caret'; caret.textContent = '▾';
-  btn.appendChild(lab); btn.appendChild(caret);
-  var hint = document.createElement('span'); hint.className = 'db-hint'; hint.id = 'deskHint';
-  var menu = document.createElement('div'); menu.className = 'db-menu'; menu.id = 'modeMenu'; menu.classList.add('hidden');
-  [['scene', '场景学习'], ['excel', 'Excel 背词'], ['word', 'Word 背词'], ['python', 'Python 背词']].forEach(function(pair){
-    var it = document.createElement('button');
-    it.type = 'button'; it.className = 'db-item'; it.setAttribute('data-mode', pair[0]); it.textContent = pair[1];
-    it.addEventListener('click', function(){ closeModeMenu(); enterMode(pair[0]); });
-    menu.appendChild(it);
-  });
-  var sep = document.createElement('div'); sep.className = 'db-sep'; menu.appendChild(sep);
-  var ki = document.createElement('button');
-  ki.type = 'button'; ki.className = 'db-item'; ki.id = 'modeKeysItem'; ki.textContent = '快捷键设置…';
-  ki.addEventListener('click', function(){ closeModeMenu(); openShortcuts(); });
-  menu.appendChild(ki);
-  var mu = document.createElement('button');
-  mu.type = 'button'; mu.className = 'db-item'; mu.id = 'modeMuteItem'; mu.textContent = '静音：关';
-  mu.addEventListener('click', function(){ toggleWordMute(); });
-  menu.appendChild(mu);
-  btn.addEventListener('click', function(ev){
-    if(ev && ev.stopPropagation) ev.stopPropagation();
-    menu.classList.toggle('hidden');
-  });
-  bar.appendChild(btn); bar.appendChild(hint); bar.appendChild(menu);
-  document.body.appendChild(bar);
-  document.body.classList.add('desk-on');
-  deskRefs = {bar:bar, btnLabel:lab, muteItem:mu, hint:hint, menu:menu};
-  refreshModeUI();
-}
-function closeModeMenu(){
-  if(deskRefs.menu) deskRefs.menu.classList.add('hidden');
-  closeBookModeMenu();
-}
-if(document.addEventListener) document.addEventListener('click', function(ev){
-  var t = ev && ev.target;
-  if(deskRefs.menu && !deskRefs.menu.classList.contains('hidden')){
-    if(!(t && t.closest && t.closest('#deskBar'))) closeModeMenu();
-  }
-  if(bookRefs.menu && !bookRefs.menu.classList.contains('hidden')){
-    if(!(t && t.closest && t.closest('#bookModeSlot'))) closeBookModeMenu();
-  }
-});
-function enterMode(m){
-  closeModeMenu();
-  curMode = m;
-  applyModeChrome();
-  if(m === 'scene'){
-    wmActive = false;
-    show('home');
-    refreshModeUI();
-    return;
-  }
-  wmActive = true;
-  show('wordmode');
-  startOrResumeWordMode(m);
-  refreshModeUI();
-}
-function cycleMode(){
-  var order = ['scene', 'excel', 'word', 'python'];
-  var i = order.indexOf(curMode);
-  enterMode(order[(i + 1) % order.length]);
-}
-function openShortcuts(){
-  renderShortcuts();
-  show('shortcuts');
-}
-function toggleWordMute(){
-  if(!store.settings) store.settings = defaultStore().settings;
-  store.settings.wordMute = !store.settings.wordMute;
-  saveStore();
-  refreshModeUI();
-  if(wm && !wm.pageDone){
-    wm.entries.forEach(function(e){
-      if(e.state === 'new'){
-        var pool = wmTypePool(e);
-        if(pool.indexOf(e.type) < 0) e.type = pool[Math.floor(Math.random() * pool.length)];
-      }
-    });
-    renderWordMode();
-    saveSession();
-  }
-}
-/* 老板键：静态假屏覆盖一切，app 原样留在底下，再按一次恢复 */
-var bossOn = false;
-function setBoss(on){
-  bossOn = !!on;
-  var el = document.getElementById('bossScreen');
-  if(el){ el.classList.toggle('show', bossOn); el.style.display = bossOn ? 'block' : 'none'; }
-  document.body.classList.toggle('boss-on', bossOn);
-  if(bossOn){
-    closeModeMenu();
-    makeFeedbackManual();
-    speakStop();
-    stopRecognition();
-  }
-}
-/* —— 快捷键页（桌面，从模式下拉进入；我的页不再放改键入口） —— */
-var keyCapture = null;
-var KEY_ACTIONS = [
-  {id:'boss', name:'老板键', desc:'立刻切到静态报价表，再按一次恢复'},
-  {id:'mode', name:'切换模式', desc:'在场景 / Excel / Word / Python 之间轮换'},
-  {id:'play', name:'播放', desc:'播放当前词的发音（背词模式）'},
-  {id:'reveal', name:'显示', desc:'显示当前词的释义和音标（背词模式）'},
-  {id:'know', name:'会', desc:'当前词标为「会」（背词模式）'},
-  {id:'dontknow', name:'不会', desc:'当前词标为「不会」（背词模式）'},
-  {id:'prev', name:'上一个词', desc:'移到上一个词（背词模式）'},
-  {id:'next', name:'下一个词', desc:'移到下一个词（背词模式）'}
-];
-function toggleCapture(action){
-  keyCapture = (keyCapture && keyCapture.action === action) ? null : {action:action};
-  if(curView === 'shortcuts') renderShortcuts();
-}
-function setKeyBinding(action, code){
-  if(!store.settings) store.settings = defaultStore().settings;
-  if(!store.settings.keys) store.settings.keys = normalizeKeys(null);
-  store.settings.keys[action] = code;
-  saveStore();
-}
-function renderShortcuts(){
-  var box = document.getElementById('keysList');
-  if(!box) return;
-  box.innerHTML = '';
-  var keys = (store.settings && store.settings.keys) || KEY_DEFAULTS;
-  KEY_ACTIONS.forEach(function(a){
-    var row = document.createElement('div'); row.className = 'set-row';
-    var main = document.createElement('div'); main.className = 'sr-main';
-    var nm = document.createElement('div'); nm.className = 'sr-name'; nm.textContent = a.name;
-    var ds = document.createElement('div'); ds.className = 'sr-desc'; ds.textContent = a.desc;
-    main.appendChild(nm); main.appendChild(ds);
-    var b = document.createElement('button');
-    b.type = 'button'; b.className = 'chip key-bind'; b.setAttribute('data-key-action', a.id);
-    b.textContent = (keyCapture && keyCapture.action === a.id) ? '按下新键…' : keyLabel(keys[a.id]);
-    b.addEventListener('click', function(){ toggleCapture(a.id); });
-    row.appendChild(main); row.appendChild(b);
-    box.appendChild(row);
-  });
-}
-document.getElementById('keysBack').addEventListener('click', function(){
-  keyCapture = null;
-  if(curMode !== 'scene'){ enterMode(curMode); return; }
-  show('home');
-});
-/* 按压回馈：键盘答题时让对应按钮「真的被按了一下」 */
+/* 按压回馈：让按钮「真的被按了一下」（指针按下时由全局 pointerdown 处理调用） */
 function flashPress(el){
   if(!el || !el.classList) return;
   el.classList.add('pressed');
   setTimeout(function(){ try{ el.classList.remove('pressed'); }catch(e){} }, 160);
 }
-/* 数字键作答：点当前题第 n 个可见控件（选项 .opt 优先，其次拼句词块），走原有点击处理 */
-function answerByNumber(n){
-  var box = null;
-  if(curView === 'practice') box = document.getElementById('practiceBox');
-  else if(curView === 'reviewrun') box = document.getElementById('reviewBox');
-  if(!box || !box.querySelectorAll) return false;
-  var pool = box.querySelectorAll('.opt').filter(function(b){ return !b.disabled && !b.classList.contains('hidden'); });
-  if(!pool.length){
-    var grids = box.querySelectorAll('.chips');
-    if(grids.length) pool = grids[0].children.filter(function(b){ return !b.disabled && !b.classList.contains('used') && !b.classList.contains('hidden'); });
-  }
-  var btn = pool[n - 1];
-  if(!btn) return false;
-  flashPress(btn);
-  btn.click();
-  return true;
-}
-function isTypingTarget(t){
-  if(!t) return false;
-  var tag = (t.tagName || '').toUpperCase();
-  if(tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return true;
-  if(t.isContentEditable) return true;
-  return false;
-}
-function handleGlobalKey(e){
-  if(!e) return;
-  if(e.isComposing || e.keyCode === 229) return;
-  var code = codeOfEvent(e);
-  if(!code) return;
-  var keys = (store.settings && store.settings.keys) || KEY_DEFAULTS;
-  if(keyCapture){
-    if(e.ctrlKey || e.metaKey) return;
-    if(e.preventDefault) e.preventDefault();
-    setKeyBinding(keyCapture.action, code);
-    keyCapture = null;
-    if(curView === 'shortcuts') renderShortcuts();
-    refreshModeUI();
-    return;
-  }
-  if(bossOn){
-    if(e.preventDefault) e.preventDefault();
-    if(code === keys.boss) setBoss(false);
-    return;
-  }
-  if(!isDesktop()) return;
-  if(isTypingTarget(e.target)) return;
-  if(e.ctrlKey || e.metaKey || e.altKey) return;
-  if(code === keys.boss){ if(e.preventDefault) e.preventDefault(); setBoss(true); return; }
-  if(curView === 'wordmode' && wm){
-    if(code === keys.play){ if(e.preventDefault) e.preventDefault(); wmPlayCurrent(); return; }
-    if(code === keys.reveal){ if(e.preventDefault) e.preventDefault(); wmRevealCurrent(); return; }
-    if(code === keys.know){ wmGradeCurrent(true); return; }
-    if(code === keys.dontknow){ wmGradeCurrent(false); return; }
-    if(code === keys.prev){ wmMove(-1); return; }
-    if(code === keys.next){ wmMove(1); return; }
-  }
-  if(code === keys.mode){ if(e.preventDefault) e.preventDefault(); cycleMode(); return; }
-  if(/^(Digit|Numpad)[1-9]$/.test(code)) answerByNumber(parseInt(code.slice(-1), 10));
-}
-/* —— 桌面层初始化与宽窄切换 —— */
-function initDesktopLayer(){
-  deskLive = isDesktop();
-  if(deskLive){ buildDeskBar(); refreshModeUI(); }
-  watchDesktop();
-}
-function watchDesktop(){
-  try{
-    if(!window.matchMedia) return;
-    var mq = window.matchMedia('(min-width: 1024px)');
-    var h = function(){ checkDesktopCrossing(); };
-    if(mq.addEventListener) mq.addEventListener('change', h);
-    else if(mq.addListener) mq.addListener(h);
-    if(window.addEventListener) window.addEventListener('resize', h);
-  }catch(e){}
-}
-function checkDesktopCrossing(){
-  var d = isDesktop();
-  if(d === deskLive) return;
-  deskLive = d;
-  if(d){
-    buildDeskBar();
-    if(deskRefs.bar) deskRefs.bar.style.display = '';
-    document.body.classList.add('desk-on');
-    refreshModeUI();
-    if(curView === 'home') renderBookModeSlot();
-  } else {
-    if(curMode !== 'scene'){ curMode = 'scene'; applyModeChrome(); }
-    wmActive = false;
-    if(curView === 'wordmode' || curView === 'shortcuts') show('home');
-    if(deskRefs.bar) deskRefs.bar.style.display = 'none';
-    document.body.classList.remove('desk-on');
-  }
-}
-
-/* ===== 背词模式引擎（一套引擎，三张脸：Excel / Word / Python） =====
-   队列：到期 W_ 卡 → 弱词 → 词书词频序（无卡）→ 导入词（无卡）。一页 20 词，
-   每词随机一种题型；标会/不会立刻写 FSRS 卡与弱词账（半页也算数）；
-   整页完成才记 stats、连胜并出本页小结。背词模式从不自动出声。 */
-var WM_PAGE_SIZE = 20;
-var WM_TYPE_LABELS = {recallEn:'英→中', recallCn:'中→英', listen:'听音', cloze:'填空', spell:'拼写', dictation:'听写'};
-var wm = null;
-var wmInputEl = null;
-var WM_BOOK_MAP = null;
-function wordInfoOf(w){
-  if(!WM_BOOK_MAP){
-    WM_BOOK_MAP = {};
-    WORDBOOK.forEach(function(e){ WM_BOOK_MAP[e[0]] = {phon:e[1] || '', mean:e[2] || ''}; });
-  }
-  if(WM_BOOK_MAP[w]) return {w:w, phon:WM_BOOK_MAP[w].phon, mean:WM_BOOK_MAP[w].mean};
-  var wd = wordOf(w);
-  if(wd) return {w:w, phon:wd.ipa || '', mean:wd.cn || ''};
-  var cw = store.customWords[w];
-  if(cw) return {w:w, phon:cw.phon || '', mean:cw.mean || ''};
-  return {w:w, phon:'', mean:''};
-}
-function buildWordQueue(){
-  var out = [], seen = {};
-  function push(w){ if(w && !seen[w]){ seen[w] = 1; out.push(w); } }
-  var now = Date.now();
-  var dueW = Object.keys(store.cards).filter(function(k){
-    return k.indexOf('W_') === 0 && new Date(store.cards[k].due).getTime() <= now;
-  });
-  dueW.sort(function(a, b){ return new Date(store.cards[a].due).getTime() - new Date(store.cards[b].due).getTime(); });
-  dueW.forEach(function(k){ push(k.slice(2)); });
-  Object.keys(store.wordStats).forEach(function(w){ if(isWeakWord(w)) push(w); });
-  WORDBOOK.forEach(function(e){ if(!store.cards['W_' + e[0]]) push(e[0]); });
-  Object.keys(store.customWords).sort(function(a, b){ return (store.customWords[a].ts || 0) - (store.customWords[b].ts || 0); })
-    .forEach(function(w){ if(!store.cards['W_' + w]) push(w); });
-  return out;
-}
-function wmClozeFor(w){
-  var ex = exampleOf(w);
-  if(!ex) return null;
-  var L = ex.scene.lines[ex.idx];
-  return {sceneId:ex.scene.id, line:ex.idx, en:L.en, cn:L.cn};
-}
-function wmTypePool(e){
-  var pool = ['recallEn', 'recallCn', 'spell'];
-  if(!(store.settings && store.settings.wordMute)) pool.push('listen', 'dictation');
-  if(e.cloze) pool.push('cloze');
-  return pool;
-}
-function wmMakeEntry(w, requeued){
-  var info = wordInfoOf(w);
-  var e = {w:w, phon:info.phon, mean:info.mean, type:'recallEn', cloze:wmClozeFor(w), state:'new', requeued:!!requeued};
-  var pool = wmTypePool(e);
-  e.type = pool[Math.floor(Math.random() * pool.length)];
-  return e;
-}
-function startOrResumeWordMode(face){
-  if(wm){ wm.face = face; renderWordMode(); saveSession(); return; }
-  var raw = null;
-  try{ raw = localStorage.getItem(SESSION_KEY); }catch(e){}
-  if(raw){
-    try{
-      var d = JSON.parse(raw);
-      if(d && d.kind === 'wordmode' && d.entries && d.entries.length){
-        wm = {face:face, entries:d.entries.map(function(e){
-          return {w:e.w, phon:e.phon || '', mean:e.mean || '', type:e.type || 'recallEn', state:e.state || 'new', requeued:!!e.requeued, cloze:e.cloze || null};
-        }), idx:d.idx || 0, startedAt:d.startedAt || Date.now(), okCount:d.okCount || 0, errCount:d.errCount || 0, pageDone:false, summary:''};
-        renderWordMode();
-        saveSession();
-        return;
-      }
-    }catch(e){}
-  }
-  wmNewPage(face);
-}
-function wmNewPage(face){
-  var words = buildWordQueue().slice(0, WM_PAGE_SIZE);
-  wm = {face:face || (wm ? wm.face : 'excel'),
-    entries:words.map(function(w){ return wmMakeEntry(w, false); }),
-    idx:0, startedAt:Date.now(), okCount:0, errCount:0, pageDone:false, summary:''};
-  if(!wm.entries.length) wm.pageDone = true;
-  renderWordMode();
-  saveSession();
-}
-function wmCur(){ return wm ? wm.entries[wm.idx] : null; }
-function wmIsTyped(e){ return !!e && (e.type === 'spell' || e.type === 'dictation'); }
-function wmResolved(e){ return e.state === 'known' || e.state === 'unknown' || e.state === 'testskip'; }
-function wmPromptOf(e){
-  switch(e.type){
-    case 'recallEn': return e.w;
-    case 'recallCn': return e.mean;
-    case 'listen': return '（听音辨词）';
-    case 'cloze': return e.cloze ? e.cloze.en.replace(new RegExp('\\b' + e.w + '\\b', 'i'), '______') : e.w;
-    case 'spell': return e.mean;
-    case 'dictation': return '（听写）';
-  }
-  return e.w;
-}
-function wmAnswerOf(e){
-  switch(e.type){
-    case 'recallEn': return '/' + e.phon + '/ ' + e.mean;
-    case 'recallCn': return e.w + ' /' + e.phon + '/';
-    case 'listen': return e.w + ' /' + e.phon + '/ ' + e.mean;
-    case 'cloze': return e.w + ' /' + e.phon + '/';
-    default: return e.w + ' /' + e.phon + '/ ' + e.mean;
-  }
-}
-function wmAnswerShown(e){ return e.state === 'revealed' || wmResolved(e); }
-function wmStatusOf(e){
-  if(e.state === 'known') return '已掌握';
-  if(e.state === 'unknown') return '待复习';
-  if(e.state === 'testskip') return '已跳过';
-  return '';
-}
-function wmPlayCurrent(){
-  if(!wm || (store.settings && store.settings.wordMute)) return;
-  var e = wmCur();
-  if(!e) return;
-  speak(e.w);
-}
-function wmRevealCurrent(){
-  if(!wm) return;
-  var e = wmCur();
-  if(!e || wmResolved(e)) return;
-  if(wmIsTyped(e)){ wmApplyGrade(e, false); return; }
-  if(e.state === 'new'){ e.state = 'revealed'; renderWordMode(); saveSession(); }
-}
-function wmGradeCurrent(ok){
-  if(!wm) return;
-  var e = wmCur();
-  if(!e || wmResolved(e) || wmIsTyped(e)) return;
-  wmApplyGrade(e, ok);
-}
-function wmGradeWordCard(w, ok){
-  if(!store.cards['W_' + w]){
-    store.cards['W_' + w] = dumpCard(FSRS.createEmptyCard(new Date()));
-    saveStore();
-  }
-  rateCard('W_' + w, ok ? FSRS.Rating.Good : FSRS.Rating.Again);
-  recordWordStat(w, ok);
-}
-function wmApplyGrade(e, ok){
-  if(!wm || wmResolved(e)) return;
-  e.state = ok ? 'known' : 'unknown';
-  if(ok) wm.okCount++; else wm.errCount++;
-  buzz(ok ? 10 : [20, 40, 20]);
-  wmGradeWordCard(e.w, ok);
-  if(!ok && !e.requeued){
-    var c = wmMakeEntry(e.w, true);
-    c.type = e.type;
-    wm.entries.push(c);
-  }
-  wmAdvanceCursor();
-  renderWordMode();
-  saveSession();
-  wmCheckComplete();
-}
-function wmAdvanceCursor(){
-  if(!wm) return;
-  var n = wm.entries.length;
-  for(var k = 1; k <= n; k++){
-    var i = (wm.idx + k) % n;
-    if(!wmResolved(wm.entries[i])){ wm.idx = i; return; }
-  }
-}
-function wmCheckComplete(){
-  if(!wm || wm.pageDone || !wm.entries.length) return;
-  if(!wm.entries.every(wmResolved)) return;
-  wm.pageDone = true;
-  var secs = Math.max(0, Math.round((Date.now() - wm.startedAt) / 1000));
-  wm.summary = '本页：会 ' + wm.okCount + ' · 不会 ' + wm.errCount + ' · 用时 ' + Math.floor(secs / 60) + ':' + ('0' + (secs % 60)).slice(-2);
-  store.stats.answered += (wm.okCount + wm.errCount);
-  store.stats.correct += wm.okCount;
-  saveStore();
-  touchStreak();
-  scheduleSync();
-  clearSession();
-  renderWordMode();
-}
-function wmMove(d){
-  if(!wm || !wm.entries.length) return;
-  var i = wm.idx + d;
-  if(i < 0) i = 0;
-  if(i >= wm.entries.length) i = wm.entries.length - 1;
-  if(i !== wm.idx){ wm.idx = i; renderWordMode(); saveSession(); }
-}
-function wmTestSkip(){
-  if(!wm) return;
-  var e = wmCur();
-  if(!e || wmResolved(e)) return;
-  e.state = 'testskip';
-  wmAdvanceCursor();
-  renderWordMode();
-  saveSession();
-  wmCheckComplete();
-}
-function wmSubmitTyped(){
-  if(!wm) return;
-  var e = wmCur();
-  if(!e || !wmIsTyped(e) || wmResolved(e)) return;
-  if(!wmInputEl) return;
-  var v = String(wmInputEl.value || '').trim().toLowerCase();
-  if(!v) return;
-  wmApplyGrade(e, v === e.w.toLowerCase());
-}
-function wmProgressText(){
-  if(!wm) return '';
-  var done = wm.entries.filter(wmResolved).length;
-  return '本页 ' + done + '/' + wm.entries.length + ' · 会 ' + wm.okCount + ' · 不会 ' + wm.errCount;
-}
-function wmMakeInput(){
-  var inp = document.createElement('input');
-  inp.type = 'text'; inp.className = 'wm-input'; inp.id = 'wmInput';
-  inp.setAttribute('autocomplete', 'off');
-  inp.setAttribute('autocapitalize', 'off');
-  inp.addEventListener('keydown', function(ev){
-    if(ev && (ev.key === 'Enter' || ev.keyCode === 13)){
-      if(ev.preventDefault) ev.preventDefault();
-      wmSubmitTyped();
-    }
-  });
-  inp.addEventListener('click', function(ev){ if(ev && ev.stopPropagation) ev.stopPropagation(); });
-  wmInputEl = inp;
-  return inp;
-}
-function wmActionsBuild(){
-  var bar = document.createElement('div');
-  bar.className = 'wm-actions';
-  function mk(label, id, fn, primary){
-    var b = document.createElement('button');
-    b.type = 'button'; b.className = 'wm-act' + (primary ? ' primary' : ''); b.id = id; b.textContent = label;
-    b.addEventListener('mousedown', function(ev){ if(ev && ev.preventDefault) ev.preventDefault(); });
-    b.addEventListener('click', fn);
-    bar.appendChild(b);
-    return b;
-  }
-  var e = wmCur();
-  mk('播放', 'wmBtnPlay', function(){ wmPlayCurrent(); });
-  if(wm && wm.pageDone){
-    if(wm.entries.length) mk('下一页', 'wmBtnNextPage', function(){ wmNewPage(wm.face); }, true);
-  } else if(e && wmIsTyped(e) && !wmResolved(e)){
-    mk('显示', 'wmBtnReveal', function(){ wmRevealCurrent(); });
-    mk('提交', 'wmBtnSubmit', function(){ wmSubmitTyped(); }, true);
-  } else if(e){
-    mk('显示', 'wmBtnReveal', function(){ wmRevealCurrent(); });
-    mk('会', 'wmBtnKnow', function(){ wmGradeCurrent(true); }, true);
-    mk('不会', 'wmBtnDont', function(){ wmGradeCurrent(false); });
-  }
-  mk('上一个', 'wmBtnPrev', function(){ wmMove(-1); });
-  mk('下一个', 'wmBtnNext', function(){ wmMove(1); });
-  if(testModeOn() && wm && !wm.pageDone) mk('跳过（测试）', 'wmBtnTestSkip', function(){ wmTestSkip(); });
-  return bar;
-}
-function wmRowClick(i){
-  return function(){
-    if(!wm || wm.idx === i) return;
-    wm.idx = i;
-    renderWordMode();
-    saveSession();
-  };
-}
-function renderWordMode(){
-  var box = document.getElementById('wordmodeBox');
-  if(!box || !wm) return;
-  var keptVal = wmInputEl ? wmInputEl.value : null;
-  var keptFocus = false;
-  try{ keptFocus = !!(wmInputEl && document.activeElement === wmInputEl); }catch(e){}
-  wmInputEl = null;
-  box.innerHTML = '';
-  if(wm.face === 'word') buildWordFace(box);
-  else if(wm.face === 'python') buildPyFace(box);
-  else buildExcelFace(box);
-  if(wmInputEl && keptVal !== null){
-    wmInputEl.value = keptVal;
-    if(keptFocus && wmInputEl.focus) wmInputEl.focus();
-  }
-}
-function buildExcelFace(box){
-  var root = document.createElement('div');
-  root.className = 'wmface wm-xl';
-  var rib = document.createElement('div'); rib.className = 'wm-ribbon';
-  rib.innerHTML = '<div class="wm-rtabs"><span class="wm-rtab file">文件</span><span class="wm-rtab on">开始</span><span class="wm-rtab">插入</span><span class="wm-rtab">公式</span><span class="wm-rtab">数据</span><span class="wm-rtab">审阅</span><span class="wm-rtab">视图</span></div>' +
-    '<div class="wm-rgroups"><span class="wm-rgroup">剪贴板</span><span class="wm-rgroup">字体</span><span class="wm-rgroup">对齐方式</span><span class="wm-rgroup">数字</span><span class="wm-rgroup">样式</span><span class="wm-rgroup">单元格</span><span class="wm-rgroup">编辑</span></div>';
-  root.appendChild(rib);
-  var fr = document.createElement('div'); fr.className = 'wm-formrow';
-  var nb = document.createElement('div'); nb.className = 'wm-namebox'; nb.id = 'wmNameBox';
-  nb.textContent = 'B' + (wm.idx + 2);
-  var fx = document.createElement('div'); fx.className = 'wm-fx'; fx.innerHTML = '<i>fx</i>';
-  var fm = document.createElement('div'); fm.className = 'wm-formula'; fm.id = 'wmFormula';
-  var cur0 = wmCur();
-  fm.textContent = cur0 ? (wmPromptOf(cur0) + (wmAnswerShown(cur0) ? '  →  ' + wmAnswerOf(cur0) : '')) : '';
-  fr.appendChild(nb); fr.appendChild(fx); fr.appendChild(fm);
-  root.appendChild(fr);
-  var ch = document.createElement('div'); ch.className = 'wm-colhead';
-  ch.innerHTML = '<span class="g"></span><span>A</span><span>B</span><span>C</span><span>D</span><span>E</span>';
-  root.appendChild(ch);
-  var table = document.createElement('table'); table.className = 'wm-sheet';
-  var hr = document.createElement('tr'); hr.className = 'wm-hrow';
-  ['', '编号', '词条', '音标 / 释义', '掌握', '备注'].forEach(function(t){
-    var td = document.createElement('td'); td.textContent = t; hr.appendChild(td);
-  });
-  table.appendChild(hr);
-  wm.entries.forEach(function(e, i){
-    var tr = document.createElement('tr');
-    tr.className = 'wm-row' + (i === wm.idx ? ' cur' : '') + (wmResolved(e) ? ' done' : '');
-    tr.setAttribute('data-w', e.w);
-    var c0 = document.createElement('td'); c0.className = 'wm-rnum'; c0.textContent = String(i + 2);
-    var c1 = document.createElement('td'); c1.className = 'wm-code'; c1.textContent = 'T-' + (1001 + i);
-    var c2 = document.createElement('td'); c2.className = 'wm-prompt'; c2.textContent = wmPromptOf(e);
-    var c3 = document.createElement('td'); c3.className = 'wm-ans';
-    if(wmIsTyped(e) && i === wm.idx && !wmResolved(e)) c3.appendChild(wmMakeInput());
-    else c3.textContent = wmAnswerShown(e) ? wmAnswerOf(e) : '—';
-    var c4 = document.createElement('td'); c4.className = 'wm-status'; c4.textContent = wmStatusOf(e);
-    var c5 = document.createElement('td'); c5.className = 'wm-note';
-    c5.textContent = WM_TYPE_LABELS[e.type] + (e.state === 'revealed' ? ' · 已显示' : '');
-    tr.appendChild(c0); tr.appendChild(c1); tr.appendChild(c2); tr.appendChild(c3); tr.appendChild(c4); tr.appendChild(c5);
-    tr.addEventListener('click', wmRowClick(i));
-    table.appendChild(tr);
-  });
-  if(!wm.entries.length){
-    var er = document.createElement('tr');
-    var etd = document.createElement('td'); etd.setAttribute('colspan', '6'); etd.textContent = '暂无待背单词';
-    er.appendChild(etd);
-    table.appendChild(er);
-  }
-  root.appendChild(table);
-  root.appendChild(wmActionsBuild());
-  var sb = document.createElement('div'); sb.className = 'wm-sheetbar';
-  sb.innerHTML = '<span class="wm-stab on">术语对照</span><span class="wm-stab">Sheet1</span>';
-  root.appendChild(sb);
-  var st = document.createElement('div'); st.className = 'wm-statusbar';
-  var sl = document.createElement('span'); sl.id = 'wmStatusL';
-  sl.textContent = (wm.pageDone && wm.summary) ? wm.summary : '就绪';
-  var sr = document.createElement('span'); sr.id = 'wmStatusR'; sr.textContent = wmProgressText();
-  st.appendChild(sl); st.appendChild(sr);
-  root.appendChild(st);
-  box.appendChild(root);
-}
-function buildWordFace(box){
-  var root = document.createElement('div');
-  root.className = 'wmface wm-wd';
-  var rib = document.createElement('div'); rib.className = 'wm-ribbon wd';
-  rib.innerHTML = '<div class="wm-rtabs"><span class="wm-rtab file">文件</span><span class="wm-rtab on">开始</span><span class="wm-rtab">插入</span><span class="wm-rtab">引用</span><span class="wm-rtab">审阅</span><span class="wm-rtab">视图</span></div>' +
-    '<div class="wm-rgroups"><span class="wm-rgroup">剪贴板</span><span class="wm-rgroup">字体</span><span class="wm-rgroup">段落</span><span class="wm-rgroup">样式</span><span class="wm-rgroup">编辑</span></div>' +
-    '<div class="wm-ruler"><span class="wm-ruler-in"></span></div>';
-  root.appendChild(rib);
-  var page = document.createElement('div'); page.className = 'wm-page';
-  var h = document.createElement('div'); h.className = 'wm-wd-head';
-  h.innerHTML = '<div class="wm-wd-title">产品术语表</div><div class="wm-wd-sub">中英对照 · 内部沟通用</div>';
-  page.appendChild(h);
-  wm.entries.forEach(function(e, i){
-    var en = document.createElement('div');
-    en.className = 'wm-wd-entry' + (i === wm.idx ? ' cur' : '');
-    en.setAttribute('data-w', e.w);
-    var num = document.createElement('span'); num.className = 'wm-wd-num'; num.textContent = (i + 1) + '.';
-    var pr = document.createElement('span'); pr.className = 'wm-wd-prompt'; pr.textContent = wmPromptOf(e);
-    var ans = document.createElement('span'); ans.className = 'wm-wd-ans';
-    if(wmIsTyped(e) && i === wm.idx && !wmResolved(e)) ans.appendChild(wmMakeInput());
-    else ans.textContent = wmAnswerShown(e) ? wmAnswerOf(e) : '…………';
-    var tg = document.createElement('span'); tg.className = 'wm-wd-tag'; tg.textContent = wmStatusOf(e);
-    en.appendChild(num); en.appendChild(pr); en.appendChild(ans); en.appendChild(tg);
-    en.addEventListener('click', wmRowClick(i));
-    page.appendChild(en);
-  });
-  if(!wm.entries.length){
-    var none = document.createElement('p'); none.className = 'wm-wd-entry'; none.textContent = '暂无待背单词';
-    page.appendChild(none);
-  }
-  var ft = document.createElement('div'); ft.className = 'wm-wd-foot'; ft.id = 'wmStatusR';
-  ft.textContent = (wm.pageDone && wm.summary) ? wm.summary : wmProgressText();
-  page.appendChild(ft);
-  root.appendChild(page);
-  root.appendChild(wmActionsBuild());
-  box.appendChild(root);
-}
-function wmPyTextOf(e){
-  var shown = wmAnswerShown(e);
-  switch(e.type){
-    case 'recallEn': return '{"en": "' + e.w + '", "phonetic": "' + (shown ? e.phon : '***') + '", "cn": "' + (shown ? e.mean : '***') + '"}';
-    case 'recallCn': return '{"cn": "' + e.mean + '", "en": "' + (shown ? e.w : '***') + '", "phonetic": "' + (shown ? e.phon : '***') + '"}';
-    case 'listen': return '{"audio": "term_' + e.w + '", "en": "' + (shown ? e.w : '***') + '", "cn": "' + (shown ? e.mean : '***') + '"}';
-    case 'cloze': return '{"sentence": "' + (e.cloze ? e.cloze.en.replace(new RegExp('\\b' + e.w + '\\b', 'i'), '______') : '') + '", "answer": "' + (shown ? e.w : '***') + '"}';
-    case 'spell': return '{"cn": "' + e.mean + '", "en": "' + (shown ? e.w : '***') + '"}';
-    case 'dictation': return '{"audio": "term_' + e.w + '", "en": "' + (shown ? e.w : '***') + '"}';
-  }
-  return '{"en": "' + e.w + '"}';
-}
-function buildPyFace(box){
-  var root = document.createElement('div');
-  root.className = 'wmface wm-py';
-  var top = document.createElement('div'); top.className = 'wm-py-top';
-  top.innerHTML = '<div class="wm-py-tabs"><span class="wm-py-tab on">term_glossary.py</span><span class="wm-py-tab">notes.md</span></div>' +
-    '<div class="wm-py-crumbs">glossary&nbsp;&nbsp;›&nbsp;&nbsp;term_glossary.py</div>';
-  root.appendChild(top);
-  var tree = document.createElement('div'); tree.className = 'wm-py-tree';
-  tree.innerHTML = '<div class="wm-py-tree-head">资源管理器</div><div class="wm-py-file on">term_glossary.py</div><div class="wm-py-file">notes.md</div>';
-  root.appendChild(tree);
-  var code = document.createElement('div'); code.className = 'wm-py-code';
-  var head = document.createElement('div'); head.className = 'wm-py-line comment';
-  head.textContent = '# term_glossary.py — 产品术语（自动生成，请勿手改）';
-  code.appendChild(head);
-  var open = document.createElement('div'); open.className = 'wm-py-line';
-  open.textContent = 'glossary = [';
-  code.appendChild(open);
-  wm.entries.forEach(function(e, i){
-    var ln = document.createElement('div');
-    ln.className = 'wm-py-line' + (i === wm.idx ? ' cur' : '');
-    ln.setAttribute('data-w', e.w);
-    var num = document.createElement('span'); num.className = 'wm-py-num'; num.textContent = String(i + 3);
-    ln.appendChild(num);
-    if(wmIsTyped(e) && i === wm.idx && !wmResolved(e)){
-      var pre = document.createElement('span'); pre.className = 'wm-py-txt';
-      pre.textContent = e.type === 'spell' ? ('{"cn": "' + e.mean + '", "en": "') : ('{"audio": "term_' + e.w + '", "en": "');
-      var post = document.createElement('span'); post.className = 'wm-py-txt'; post.textContent = '"}';
-      ln.appendChild(pre); ln.appendChild(wmMakeInput()); ln.appendChild(post);
-    } else {
-      var tx = document.createElement('span'); tx.className = 'wm-py-txt'; tx.textContent = wmPyTextOf(e) + ',';
-      ln.appendChild(tx);
-    }
-    var st = wmStatusOf(e);
-    if(st){
-      var cm = document.createElement('span'); cm.className = 'wm-py-status'; cm.textContent = '# ' + st;
-      ln.appendChild(cm);
-    }
-    ln.addEventListener('click', wmRowClick(i));
-    code.appendChild(ln);
-  });
-  if(!wm.entries.length){
-    var nl = document.createElement('div'); nl.className = 'wm-py-line comment'; nl.textContent = '# 暂无待背单词';
-    code.appendChild(nl);
-  }
-  var close = document.createElement('div'); close.className = 'wm-py-line'; close.textContent = ']';
-  code.appendChild(close);
-  root.appendChild(code);
-  var con = document.createElement('div'); con.className = 'wm-py-console'; con.id = 'wmStatusR';
-  con.textContent = (wm.pageDone && wm.summary) ? ('# ' + wm.summary) : ('# ' + wmProgressText());
-  root.appendChild(con);
-  root.appendChild(wmActionsBuild());
-  box.appendChild(root);
-}
-
 /* ===== 学习会话存档（杀后台 / 断联后重开 → 直接恢复到退出那一步，不弹窗） =====
    每步变化都写 localStorage；冷启动时 tryRestoreSession 直接回到现场。
    场景课的「学完」口径不变：走到结算屏（finishPractice/finishTest）才清档；
@@ -3484,14 +2561,7 @@ function unscrubQ(c){
 function saveSession(){
   try{
     var d = null;
-    if(wmActive && wm && !wm.pageDone){
-      d = {kind:'wordmode', face:wm.face, idx:wm.idx, startedAt:wm.startedAt,
-        okCount:wm.okCount, errCount:wm.errCount,
-        entries:wm.entries.map(function(e){
-          return {w:e.w, phon:e.phon, mean:e.mean, type:e.type, state:e.state, requeued:!!e.requeued,
-            cloze:e.cloze ? {sceneId:e.cloze.sceneId, line:e.cloze.line, en:e.cloze.en, cn:e.cloze.cn} : null};
-        })};
-    } else if(curView === 'practice' && practice && !practice.finished){
+    if(curView === 'practice' && practice && !practice.finished){
       d = {kind:'practice', mode:practice.mode || '', unit:practice.unit || '', sceneId:practice.scene.id,
         qs:practice.qs.map(scrubQ), idx:practice.idx, right:practice.right, scored:practice.scored,
         errors:practice.errors, missed:practice.missed.map(scrubQ),
@@ -3552,50 +2622,32 @@ function tryRestoreSession(){
     renderReviewQ();
     return true;
   }
-  if(d.kind === 'wordmode'){
-    if(!isDesktop()) return false;
-    wm = {face:(MODE_TITLES[d.face] ? d.face : 'excel'),
-      entries:(d.entries || []).map(function(e){
-        return {w:e.w, phon:e.phon || '', mean:e.mean || '', type:e.type || 'recallEn', state:e.state || 'new',
-          requeued:!!e.requeued, cloze:e.cloze || null};
-      }),
-      idx:d.idx || 0, startedAt:d.startedAt || Date.now(), okCount:d.okCount || 0, errCount:d.errCount || 0,
-      pageDone:false, summary:''};
-    if(!wm.entries.length){ wm = null; clearSession(); return false; }
-    curMode = wm.face;
-    wmActive = true;
-    applyModeChrome();
-    show('wordmode');
-    renderWordMode();
-    refreshModeUI();
-    return true;
-  }
   clearSession();
   return false;
 }
 
 /* ===== 视图切换 ===== */
-var ALL_VIEWS = ['home','scene','practice','settle','words','review','culture','reviewrun','rsettle','my','wordmode','shortcuts'];
-var FLOW_VIEWS = ['scene','practice','settle','reviewrun','rsettle','wordmode','shortcuts','culture'];
+var ALL_VIEWS = ['home','scene','practice','settle','words','review','culture','reviewrun','rsettle','my'];
+var FLOW_VIEWS = ['scene','practice','settle','reviewrun','rsettle','culture'];
 function show(name){
   curView = name;
   ALL_VIEWS.forEach(function(v){
     document.getElementById('view-' + v).classList.toggle('active', v === name);
   });
-  /* v3.15：书本首页藏桌面顶栏（下拉进页眉槽位）；练习/复习一屏锁定不滚页 */
-  document.body.classList.toggle('book-on', name === 'home');
-  document.body.classList.toggle('flow-lock', name === 'practice' || name === 'reviewrun');
   document.getElementById('tabbar').classList.toggle('hidden', FLOW_VIEWS.indexOf(name) >= 0);
   document.querySelectorAll('.tab').forEach(function(t){
     t.classList.toggle('on', t.getAttribute('data-tab') === name);
   });
   window.scrollTo(0, 0);
+  var actView = document.getElementById('view-' + name);
+  if(actView) actView.scrollTop = 0;
+  if(name === 'home'){ var hl0 = document.getElementById('homeList'); if(hl0) hl0.scrollTop = 0; }
   if(name === 'home') renderHome();
   if(name === 'words') renderWords();
   if(name === 'review') renderReviewHome();
   if(name === 'culture') renderCultureBook();
   if(name === 'my') renderMy();
-  document.title = (name === 'my' ? '我的' : (curMode !== 'scene' ? (MODE_TITLES[curMode] || '情景英语') : '情景英语'));
+  document.title = (name === 'my' ? '我的' : '情景英语');
 }
 function goTab(name){ speakStop(); hideFeedback(); show(name); }
 function speakStop(){ try{ speechSynthesis.cancel(); }catch(e){} }
@@ -3637,43 +2689,6 @@ function unitTestRow(unit){
   b.addEventListener('click', function(){ startTest(unit); });
   return b;
 }
-/* ===== 桌面模式下拉（首页页眉槽位版，与顶栏下拉同构；手机端不建） ===== */
-var bookRefs = {};
-function closeBookModeMenu(){ if(bookRefs.menu) bookRefs.menu.classList.add('hidden'); }
-function renderBookModeSlot(){
-  var slot = document.getElementById('bookModeSlot');
-  if(!slot) return;
-  if(!isDesktop()){ slot.innerHTML = ''; bookRefs = {}; return; }
-  slot.innerHTML = '';
-  var btn = document.createElement('button');
-  btn.type = 'button'; btn.className = 'bk-modebtn'; btn.id = 'bookModeBtn';
-  var lab = document.createElement('span'); lab.id = 'bookModeBtnLabel'; lab.textContent = '模式：' + (MODE_LABELS[curMode] || '场景学习');
-  var caret = document.createElement('span'); caret.className = 'db-caret'; caret.textContent = '▾';
-  btn.appendChild(lab); btn.appendChild(caret);
-  var menu = document.createElement('div'); menu.className = 'db-menu'; menu.id = 'bookModeMenu'; menu.classList.add('hidden');
-  [['scene', '场景学习'], ['excel', 'Excel 背词'], ['word', 'Word 背词'], ['python', 'Python 背词']].forEach(function(pair){
-    var it = document.createElement('button');
-    it.type = 'button'; it.className = 'db-item'; it.setAttribute('data-mode', pair[0]); it.textContent = pair[1];
-    it.addEventListener('click', function(){ closeBookModeMenu(); enterMode(pair[0]); });
-    menu.appendChild(it);
-  });
-  var sep = document.createElement('div'); sep.className = 'db-sep'; menu.appendChild(sep);
-  var ki = document.createElement('button');
-  ki.type = 'button'; ki.className = 'db-item'; ki.textContent = '快捷键设置…';
-  ki.addEventListener('click', function(){ closeBookModeMenu(); openShortcuts(); });
-  menu.appendChild(ki);
-  var mu = document.createElement('button');
-  mu.type = 'button'; mu.className = 'db-item'; mu.textContent = '静音：' + (store.settings && store.settings.wordMute ? '开' : '关');
-  mu.addEventListener('click', function(){ toggleWordMute(); });
-  menu.appendChild(mu);
-  btn.addEventListener('click', function(ev){
-    if(ev && ev.stopPropagation) ev.stopPropagation();
-    menu.classList.toggle('hidden');
-  });
-  slot.appendChild(btn); slot.appendChild(menu);
-  bookRefs = {btnLabel:lab, muteItem:mu, menu:menu};
-}
-
 /* ===== ① 列表首页（v3.16：按组分章，章节头吸顶，点行直达开场） ===== */
 function currentSceneIdx(){
   for(var i = 0; i < SCENES.length; i++) if(!sceneCompleted(SCENES[i])) return i;
@@ -3729,7 +2744,6 @@ function renderHome(){
     var nextS = SCENES[i + 1];
     if(!nextS || nextS.unit !== s.unit) list.appendChild(unitTestRow(s.unit));
   });
-  renderBookModeSlot();
   updateTabBadge();
 }
 document.getElementById('dueBanner').addEventListener('click', function(){ goTab('review'); });
@@ -3889,9 +2903,10 @@ function renderScene(){
     var cn = document.createElement('span'); cn.className = 'op-cn'; cn.textContent = L.cn;
     bub.appendChild(en); bub.appendChild(cn);
     rowin.appendChild(bub);
+    var slot = document.createElement('div'); slot.className = 'op-slot';
     var pb = document.createElement('button'); pb.className = 'op-play'; pb.textContent = '▶'; pb.setAttribute('aria-label', '播放这句');
     pb.addEventListener('click', function(){ speak(L.en); });
-    rowin.appendChild(pb);
+    slot.appendChild(pb);
     if(SRC && !sceneMuted){
       var rb = document.createElement('button'); rb.className = 'op-rec'; rb.textContent = '🎤'; rb.setAttribute('aria-label', '跟读这句');
       (function(btn, idx){
@@ -3899,8 +2914,9 @@ function renderScene(){
         btn.addEventListener('click', function(){ shadowLine(idx, btn, noteHolder.el, row); });
         rb._noteHolder = noteHolder;
       })(rb, i);
-      rowin.appendChild(rb);
+      slot.appendChild(rb);
     }
+    rowin.appendChild(slot);
     col.appendChild(rowin);
     var note = document.createElement('div'); note.className = 'op-note';
     col.appendChild(note);
@@ -5634,7 +4650,6 @@ document.getElementById('dueBannerArr').innerHTML = icon('arrow');
 document.getElementById('btnPlayAll').innerHTML = icon('play') + '<span>听完整对话</span>';
 document.getElementById('pracClose').innerHTML = icon('x');
 document.getElementById('rvClose').innerHTML = icon('x');
-document.getElementById('keysBack').innerHTML = icon('back') + '返回';
 document.getElementById('setAccIc').innerHTML = icon('checkc');
 document.getElementById('setTimeIc').innerHTML = icon('clock');
 document.getElementById('setWordsIc').innerHTML = icon('target');
@@ -5645,22 +4660,20 @@ document.getElementById('cultureBack').innerHTML = icon('back') + '<span>返回�
 /* ===== 启动 ===== */
 rollDay(); saveStore();
 updateTabBadge();
-initDesktopLayer();
 if(!tryRestoreSession()) show('home');
 if(document.addEventListener) document.addEventListener('pointerdown', function(ev){
   var t = ev && ev.target;
   if(t && t.closest){
-    var b = t.closest('.opt,.chip,.btn,.playbig,.rate,.wm-act,.iconbtn,.bk-wchip,.bk-line,.toc-row,.bk-modebtn,.bk-chip');
+    var b = t.closest('.opt,.chip,.btn,.playbig,.rate,.iconbtn');
     if(b) flashPress(b);
   }
-  if(fbState.tapSkip && !bossOn){
+  if(fbState.tapSkip){
     fbTapSkipNow();
   }
 }, true);
 if(document.addEventListener) document.addEventListener('visibilitychange', function(){
   if(document.hidden) saveSession();
 });
-if(document.addEventListener) document.addEventListener('keydown', handleGlobalKey);
 setTimeout(maybeSync, 1500);
 setTimeout(function(){ syncNow('boot'); }, 600);
 if('serviceWorker' in navigator){
