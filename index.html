@@ -19,7 +19,14 @@
   --bg:#FFF9F0; --card:#FFFFFF;
   --ink:#1F2937; --ink-2:#6B7280; --line:#F0E7DA;
   --ok:#047857; --ok-bg:#ECFDF5; --err:#B91C1C; --err-bg:#FEF2F2;
-  --shadow:0 2px 10px rgba(31,41,55,.06);
+  --shadow:0 1px 2px rgba(31,41,55,.05),0 4px 14px rgba(31,41,55,.05);
+  /* v3.15 苹果级视觉系统：分层仿真阴影 / 发丝线 / 弹簧曲线 */
+  --shadow-card:0 1px 2px rgba(16,24,40,.05),0 8px 24px rgba(16,24,40,.07);
+  --shadow-pop:0 2px 4px rgba(16,24,40,.06),0 18px 44px rgba(16,24,40,.16);
+  --hair:rgba(16,24,40,.09);
+  --spring:cubic-bezier(.32,1.45,.44,1);
+  --ease-out:cubic-bezier(.22,1,.36,1);
+  --glass:rgba(255,253,248,.82);
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;padding:0}
@@ -158,12 +165,12 @@ header.top h1{font-size:22px;margin:0;color:var(--brand);font-weight:800}
 .rate.r3{color:var(--ok)}
 
 /* ===== 底部反馈条 ===== */
-#feedbackBar{position:fixed;left:0;right:0;bottom:0;z-index:50;transform:translateY(110%);transition:transform .25s ease;padding-bottom:env(safe-area-inset-bottom)}
+#feedbackBar{position:fixed;left:0;right:0;bottom:0;z-index:50;transform:translateY(110%);transition:transform .3s var(--spring);padding-bottom:env(safe-area-inset-bottom);backdrop-filter:blur(18px) saturate(1.6);-webkit-backdrop-filter:blur(18px) saturate(1.6);border-top:.5px solid var(--hair)}
 #feedbackBar.show{transform:translateY(0)}
 #feedbackBar .fb-in{max-width:560px;margin:0 auto;padding:16px;display:flex;gap:12px;align-items:flex-start}
-#feedbackBar.ok{background:var(--ok-bg)}
-#feedbackBar.no{background:var(--err-bg)}
-#feedbackBar.warn{background:#FEF3C7}
+#feedbackBar.ok{background:rgba(236,253,245,.88)}
+#feedbackBar.no{background:rgba(254,242,242,.88)}
+#feedbackBar.warn{background:rgba(254,243,199,.88)}
 #feedbackBar .fb-avatar{width:44px;height:44px;border-radius:50%;object-fit:cover;flex:none;background:#fff}
 #feedbackBar .fb-main{flex:1;min-width:0}
 #feedbackBar .fb-title{font-size:17px;font-weight:800}
@@ -285,7 +292,125 @@ input[type=file]{display:none}
 .word-del{flex:none;color:var(--err);align-self:center}
 .scene-src{flex:none;align-self:center}
 .py-scene-link{display:inline-block;margin-left:10px;color:#4ec9b0;cursor:pointer;font-size:12px;text-decoration:underline}
-.book-import{margin-top:22px}
+/* ===== v3.15 苹果级视觉系统 + 书本首页 + 一屏练习 ===== */
+:root{--padx:16px}
+.view.active{animation:viewIn .26s var(--ease-out)}
+.btn,.opt,.chip,.iconbtn,.bk-wchip,.bk-line,.toc-row,.tab,.rate,.playbig,.word-chip,.scene-card,.due-banner{transition:transform .22s var(--spring),box-shadow .22s var(--spring),background-color .16s ease,border-color .16s ease}
+.card{box-shadow:var(--shadow-card);border:.5px solid var(--hair)}
+.tnum{font-variant-numeric:tabular-nums}
+.iconbtn{width:44px;height:44px;flex:none;border-radius:13px;background:#fff;box-shadow:var(--shadow);border:.5px solid var(--hair);display:flex;align-items:center;justify-content:center;color:var(--ink)}
+.iconbtn .ic{width:22px;height:22px}
+
+/* —— 书本首页 —— */
+#view-home.active{display:flex;flex-direction:column;height:calc(100vh - 84px - env(safe-area-inset-bottom));height:calc(100dvh - 84px - env(safe-area-inset-bottom))}
+.bk-head{flex:none;padding:12px 2px 8px}
+.bk-head-row{display:flex;align-items:center;gap:10px}
+.bk-name{flex:1;text-align:center;font-size:13px;color:var(--ink-2);letter-spacing:3px;font-weight:600}
+.bk-mode{position:relative;min-width:44px;display:flex;justify-content:flex-end}
+.bk-modebtn{display:inline-flex;align-items:center;gap:6px;background:#fff;border:.5px solid var(--hair);border-radius:12px;padding:9px 12px;font-size:13.5px;font-weight:600;box-shadow:var(--shadow);min-height:44px;color:var(--ink);white-space:nowrap}
+.bk-mode .db-menu{top:50px;right:0;left:auto}
+.bk-prog-row{display:flex;align-items:baseline;justify-content:space-between;margin-top:10px}
+.bk-pageno{font-size:16px;font-weight:800}
+.bk-pageno b{color:var(--brand)}
+.bk-unit{font-size:12.5px;color:var(--ink-2)}
+.bk-prog{height:8px;background:#EFE7D8;border-radius:99px;overflow:hidden;margin-top:6px}
+.bk-prog i{display:block;height:100%;background:var(--brand);border-radius:99px;transition:width .45s var(--spring)}
+.bk-chips{display:flex;gap:8px;margin-top:10px}
+.bk-chip{flex:1;background:#fff;border-radius:12px;padding:7px 4px;text-align:center;font-size:12.5px;color:var(--ink-2);box-shadow:var(--shadow);border:.5px solid var(--hair);white-space:nowrap}
+.bk-chip b,.bk-chip span{color:var(--ink);font-weight:800;font-variant-numeric:tabular-nums}
+#streakChip{color:var(--accent)}
+#streakChip .ic{width:16px;height:16px;vertical-align:-3px;margin-right:2px}
+#streakChip span{color:var(--accent)}
+.bk-scroll{flex:1;overflow-y:auto;min-height:0;touch-action:pan-y;-webkit-overflow-scrolling:touch}
+.bk-page{position:relative;isolation:isolate;background:#FFFDF6;border-radius:8px 20px 20px 8px;box-shadow:0 1px 2px rgba(60,50,20,.06),0 12px 32px rgba(60,50,20,.13),0 32px 64px rgba(60,50,20,.07);padding:18px 16px 16px 22px;margin:12px 6px 14px 2px}
+.bk-page:before{content:"";position:absolute;inset:0;transform:translate(5px,5px);background:#FAF4E6;border-radius:8px 20px 20px 8px;z-index:-1;box-shadow:0 1px 3px rgba(60,50,20,.12)}
+.bk-page:after{content:"";position:absolute;left:0;top:0;bottom:0;width:14px;border-radius:8px 0 0 8px;background:linear-gradient(90deg,rgba(120,100,60,.16),rgba(120,100,60,.04) 55%,transparent);pointer-events:none}
+@keyframes bkInNext{from{transform:translateX(52px);opacity:.35}to{transform:none;opacity:1}}
+@keyframes bkInPrev{from{transform:translateX(-52px);opacity:.35}to{transform:none;opacity:1}}
+.bk-page.turn-next{animation:bkInNext .22s var(--ease-out)}
+.bk-page.turn-prev{animation:bkInPrev .22s var(--ease-out)}
+.bk-done{display:flex;align-items:center;gap:8px;background:var(--ok-bg);color:var(--ok);border-radius:12px;padding:9px 12px;font-weight:700;font-size:14.5px;margin-bottom:12px}
+.bk-done .ic{width:19px;height:19px}
+.bk-title{font-size:23px;font-weight:800;letter-spacing:.2px}
+.bk-en{color:var(--brand);font-weight:600;font-size:15px;margin-top:1px}
+.bk-story{font-size:14px;line-height:1.6;color:#44403C;background:#FAF6EC;border:1px dashed #E0D5BA;border-radius:12px;padding:9px 11px;margin-top:10px}
+.bk-hero{width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:14px;display:block;margin-top:12px;box-shadow:var(--shadow-card)}
+.bk-label{font-size:12px;font-weight:800;letter-spacing:2px;color:#92400E;margin-top:15px}
+.bk-wchips{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.bk-wchip{background:#EEF7F4;border:1.5px solid #99CDC2;color:#134E4A;border-radius:999px;padding:8px 13px;font-size:14.5px;font-weight:600;min-height:44px}
+.bk-wchip .ipa{color:#5F7A74;font-weight:400;font-size:12.5px;margin-left:5px}
+.bk-lines{margin-top:6px}
+.bk-line{display:flex;align-items:baseline;gap:9px;width:100%;text-align:left;padding:10px 2px;border-bottom:.5px solid #F0EAD9;min-height:44px;font-size:15.5px}
+.bk-line .who{font-weight:700;color:var(--brand);flex:none;min-width:42px;font-size:13.5px}
+.bk-line .en{flex:1;min-width:0}
+.bk-line .cn{color:var(--ink-2);font-size:12.5px;flex:none;max-width:38%;text-align:right}
+.bk-page .culture-card{margin:14px 0 2px;box-shadow:none}
+.bk-actions{flex:none;padding:10px 2px 2px;background:var(--glass);backdrop-filter:blur(18px) saturate(1.6);-webkit-backdrop-filter:blur(18px) saturate(1.6);border-top:.5px solid var(--hair)}
+.bk-actstate{text-align:center;font-weight:700;color:var(--ok);font-size:14.5px;margin-bottom:8px}
+.bk-actrow{display:flex;gap:10px}
+.bk-actrow .btn.listen{flex:.85}
+.bk-actrow .btn.start{flex:1.15}
+.turnhint{text-align:center;font-size:11.5px;color:#A8A29E;padding:2px 0 12px}
+
+/* —— 目录（TOC） —— */
+.toc-overlay{position:fixed;inset:0;background:rgba(20,28,38,.42);z-index:80;opacity:0;pointer-events:none;transition:opacity .25s var(--ease-out)}
+.toc-overlay.show{opacity:1;pointer-events:auto}
+.toc-sheet{position:absolute;left:0;top:0;bottom:0;width:min(348px,88vw);background:#FFFCF4;box-shadow:var(--shadow-pop);transform:translateX(-102%);transition:transform .3s var(--spring);display:flex;flex-direction:column}
+.toc-overlay.show .toc-sheet{transform:none}
+.toc-head{display:flex;align-items:center;justify-content:space-between;padding:14px 16px 10px;border-bottom:.5px solid var(--hair);background:var(--glass);backdrop-filter:blur(18px) saturate(1.6);-webkit-backdrop-filter:blur(18px) saturate(1.6)}
+.toc-head b{font-size:18px}
+.toc-body{flex:1;overflow-y:auto;padding:6px 0 18px;-webkit-overflow-scrolling:touch}
+.toc-chapter{font-size:13px;font-weight:800;letter-spacing:2px;color:var(--ink-2);margin:16px 16px 4px}
+.toc-row{display:flex;align-items:center;gap:11px;width:100%;text-align:left;padding:11px 16px;min-height:52px;font-size:15.5px}
+.toc-row:active{background:var(--brand-soft)}
+.toc-row.cur{background:var(--brand-soft)}
+.toc-pno{flex:none;width:30px;height:30px;border-radius:50%;background:#EFE7D8;color:#78716C;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;font-variant-numeric:tabular-nums}
+.toc-row.done .toc-pno{background:var(--ok);color:#fff}
+.toc-row .tt{flex:1;min-width:0;font-weight:600}
+.toc-row .tt .en{color:var(--ink-2);font-size:12.5px;font-weight:500;margin-left:5px}
+.toc-row .acc{flex:none;color:var(--brand);font-size:12.5px;font-weight:700;font-variant-numeric:tabular-nums}
+.toc-body .scene-card{box-shadow:none;border:.5px solid var(--hair);border-radius:14px;margin:4px 14px 10px;width:auto;padding:12px 14px}
+
+/* —— 桌面：书本首页时藏顶栏（下拉进页眉槽位） —— */
+body.desk-on.book-on .desk-bar{display:none}
+body.desk-on.book-on #app{padding-top:0}
+
+/* —— 一屏练习/复习：固定列 + 恒高底部槽 —— */
+body.flow-lock{overflow:hidden}
+body.flow-lock #app{padding-bottom:0}
+#view-practice.active,#view-reviewrun.active{display:flex;flex-direction:column;height:calc(100vh - 84px - env(safe-area-inset-bottom));height:100dvh;overflow:hidden}
+body.desk-on #view-practice.active,body.desk-on #view-reviewrun.active{height:calc(100dvh - 44px)}
+#practiceBox,#reviewBox{flex:1;display:flex;flex-direction:column;min-height:0}
+.qwrap{flex:1;overflow-y:auto;min-height:0;padding-bottom:10px;-webkit-overflow-scrolling:touch}
+.pslot{flex:none;height:84px;box-sizing:border-box;display:flex;align-items:center;justify-content:center;gap:10px;margin:4px calc(-1 * var(--padx)) 0;padding:10px var(--padx) calc(10px + env(safe-area-inset-bottom));border-top:.5px solid var(--hair);background:var(--glass);backdrop-filter:blur(18px) saturate(1.6);-webkit-backdrop-filter:blur(18px) saturate(1.6)}
+.pslot .skipbtn{margin:0}
+.pslot .btn{flex:1}
+.qreveal{margin-top:12px;background:#fff;border:1.5px solid var(--brand-soft);border-radius:14px;padding:11px 14px;font-size:17px;box-shadow:var(--shadow)}
+.qreveal .hl{color:var(--accent);font-weight:800}
+.answerbox .chip.right{background:var(--ok);border-color:var(--ok);color:#fff}
+
+/* —— 答对庆祝微动画 —— */
+@keyframes burstPop{0%{transform:scale(1)}35%{transform:scale(1.05)}100%{transform:scale(1)}}
+.opt{position:relative}
+.opt.wrong:disabled{text-decoration:line-through}
+.opt.burst{animation:burstPop .32s var(--spring)}
+.opt.burst:after{content:"✓";position:absolute;top:-8px;right:-6px;width:23px;height:23px;border-radius:50%;background:var(--ok);color:#fff;font-size:13.5px;font-weight:800;line-height:23px;text-align:center;box-shadow:0 2px 8px rgba(4,120,87,.45);animation:burstPop .32s var(--spring)}
+
+/* —— 结算 / 复习主页：主按钮吸底毛玻璃 —— */
+.settle-actions{position:sticky;bottom:calc(10px + env(safe-area-inset-bottom));background:var(--glass);backdrop-filter:blur(18px) saturate(1.6);-webkit-backdrop-filter:blur(18px) saturate(1.6);border:.5px solid var(--hair);border-radius:20px;padding:10px;box-shadow:var(--shadow-card);margin-top:14px}
+.sticky-cta{position:sticky;bottom:calc(10px + env(safe-area-inset-bottom));background:var(--glass);backdrop-filter:blur(18px) saturate(1.6);-webkit-backdrop-filter:blur(18px) saturate(1.6);border:.5px solid var(--hair);border-radius:20px;padding:8px;box-shadow:var(--shadow-card);margin-top:18px}
+.sticky-cta .btn{margin-top:0!important}
+
+/* —— 单词页：左上角导入按钮 + 吸顶页眉 —— */
+.words-head{position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:10px;padding:10px 0 8px;background:var(--glass);backdrop-filter:blur(18px) saturate(1.6);-webkit-backdrop-filter:blur(18px) saturate(1.6)}
+.words-head .btn{width:auto;min-height:44px;padding:8px 16px;font-size:15px}
+.words-head h2{font-size:20px;margin:0}
+.import-panel{margin-top:10px}
+
+@media (min-width:1024px){
+  :root{--padx:28px}
+  #view-home.active{height:calc(100vh - 96px - env(safe-area-inset-bottom));height:calc(100dvh - 96px - env(safe-area-inset-bottom))}
+}
 /* ===== 桌面适配（≥1024px，与皮肤无关） ===== */
 @media (min-width:1024px){
   #app{max-width:900px;padding:0 28px calc(96px + env(safe-area-inset-bottom))}
@@ -296,7 +421,7 @@ input[type=file]{display:none}
 }
 
 /* ===== 交互回馈（按压 / 答错抖动 / 题目切换动画） ===== */
-.pressed{transform:scale(.96)!important;box-shadow:0 1px 2px rgba(0,0,0,.18)!important;transition:transform .06s ease,box-shadow .06s ease}
+.pressed{transform:scale(.96)!important;box-shadow:0 0 1px rgba(16,24,40,.10)!important;transition:transform .16s var(--spring),box-shadow .16s var(--spring)}
 @keyframes shakeX{0%,100%{transform:translateX(0)}20%{transform:translateX(-7px)}45%{transform:translateX(6px)}70%{transform:translateX(-4px)}85%{transform:translateX(3px)}}
 .shake{animation:shakeX .32s ease}
 @keyframes qIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
@@ -410,26 +535,40 @@ body.boss-on #app,body.boss-on #tabbar,body.boss-on #feedbackBar{visibility:hidd
 <body>
 <div id="app">
 
-  <!-- ① 首页（场景标签） -->
+  <!-- ① 首页（v3.15 书本：一页一景，滑动翻页，☰ 目录） -->
   <section id="view-home" class="view active">
-    <header class="top">
-      <h1>情景英语</h1>
-      <div class="top-badges">
-        <span class="streak-chip" id="streakChip"></span>
-        <span class="ring-wrap">
-          <span class="ring-box">
-            <svg width="42" height="42" viewBox="0 0 42 42"><circle class="ring-bg" cx="21" cy="21" r="15.5"></circle><circle class="ring-fg" id="todayRingFg" cx="21" cy="21" r="15.5"></circle></svg>
-            <span class="ring-num" id="todayNum">0</span>
-          </span>
-          <span class="ring-label">今日进度<br>目标 1 次</span>
-        </span>
+    <div class="bk-head">
+      <div class="bk-head-row">
+        <button class="iconbtn" id="btnToc" aria-label="打开目录"></button>
+        <div class="bk-name">情 景 英 语 · 第 一 册</div>
+        <div class="bk-mode" id="bookModeSlot"></div>
       </div>
-    </header>
-    <div class="muted" id="streakFreezeNote" style="font-size:12px;margin:0 2px 6px"></div>
-    <button class="due-banner hidden" id="dueBanner"><span id="dueBannerTxt">有 0 条复习到期</span><span class="arr" id="dueBannerArr"></span></button>
-    <div id="sceneList"></div>
-    <div class="placeholder-row" id="moreRow"></div>
+      <div class="bk-prog-row">
+        <span class="bk-pageno" id="bookPageNo"></span>
+        <span class="bk-unit" id="bookUnitInfo"></span>
+      </div>
+      <div class="bk-prog"><i id="bookBarFill"></i></div>
+      <div class="bk-chips">
+        <span class="bk-chip" id="streakChip"></span>
+        <span class="bk-chip" id="bookTodayChip"></span>
+        <button class="bk-chip" id="bookDueChip"></button>
+      </div>
+      <div class="muted" id="streakFreezeNote" style="font-size:12px;margin:6px 2px 0"></div>
+      <button class="due-banner hidden" id="dueBanner" style="margin-top:8px"><span id="dueBannerTxt">有 0 条复习到期</span><span class="arr" id="dueBannerArr"></span></button>
+    </div>
+    <div class="bk-scroll" id="bookScroll">
+      <div class="bk-page" id="bookPage"></div>
+      <div class="turnhint">← 左滑翻到下一页 · 右滑回上一页 →</div>
+    </div>
+    <div class="bk-actions" id="bookActions"></div>
   </section>
+  <!-- 目录浮层 -->
+  <div class="toc-overlay" id="tocOverlay">
+    <div class="toc-sheet">
+      <div class="toc-head"><b>目录</b><button class="iconbtn" id="tocClose" aria-label="关闭目录"></button></div>
+      <div class="toc-body" id="tocBody"></div>
+    </div>
+  </div>
 
   <!-- ② 场景详情 -->
   <section id="view-scene" class="view">
@@ -477,14 +616,19 @@ body.boss-on #app,body.boss-on #tabbar,body.boss-on #feedbackBar{visibility:hidd
     <div class="streak-note" id="streakNote"></div>
     <div class="muted hidden" id="speakDeferredNote" style="text-align:center;margin:-6px 0 14px"></div>
     <div class="muted hidden" id="errorRoundNote" style="text-align:center;margin:-6px 0 14px"></div>
-    <button class="btn" id="setDone">完成</button>
-    <button class="btn secondary" id="setRetry" style="margin-top:10px">再练一次</button>
+    <div class="settle-actions">
+      <button class="btn" id="setDone">完成</button>
+      <button class="btn secondary" id="setRetry" style="margin-top:10px">再练一次</button>
+    </div>
   </section>
 
-  <!-- ⑤ 单词标签 -->
+  <!-- ⑤ 单词标签（v3.15：导入收进左上角按钮 + 弹出面板） -->
   <section id="view-words" class="view">
-    <div id="wordList"></div>
-    <div class="card book-import">
+    <div class="words-head">
+      <button class="btn secondary" id="btnImportOpen">导入单词</button>
+      <h2>单词本</h2>
+    </div>
+    <div class="card import-panel hidden" id="importPanel">
       <div style="font-weight:700">导入单词</div>
       <p class="muted" style="margin:6px 0 10px">一行一个词，可带中文意思：单词,意思 或用 Tab 分隔。导入的词只进词书查阅，不进练习和复习。</p>
       <button class="btn secondary" id="btnWordFile">文件导入（.txt / .csv）</button>
@@ -495,6 +639,7 @@ body.boss-on #app,body.boss-on #tabbar,body.boss-on #feedbackBar{visibility:hidd
       </div>
       <p class="msg-line" id="bookImportMsg"></p>
     </div>
+    <div id="wordList"></div>
   </section>
 
   <!-- ⑥ 复习标签 -->
@@ -518,7 +663,9 @@ body.boss-on #app,body.boss-on #tabbar,body.boss-on #feedbackBar{visibility:hidd
       <img class="review-empty-img" id="reviewEmptyImg" alt="Wei">
       <div class="review-empty-txt">今天的复习都完成了</div>
     </div>
-    <button class="btn" id="btnStartReview" style="margin-top:18px">开始复习</button>
+    <div class="sticky-cta">
+      <button class="btn" id="btnStartReview">开始复习</button>
+    </div>
   </section>
 
   <!-- ⑥b 复习流程 -->
@@ -540,7 +687,9 @@ body.boss-on #app,body.boss-on #tabbar,body.boss-on #feedbackBar{visibility:hidd
       <div class="stat-cell"><span id="rsetNextIc"></span><div class="v" id="rsetNext" style="margin-top:9px;font-size:17px">—</div><div class="k">下次复习</div></div>
     </div>
     <div class="streak-note" id="rStreakNote"></div>
-    <button class="btn" id="rsetDone">完成</button>
+    <div class="settle-actions">
+      <button class="btn" id="rsetDone">完成</button>
+    </div>
   </section>
 
   <!-- ⑦ 我的标签 -->
@@ -599,7 +748,7 @@ body.boss-on #app,body.boss-on #tabbar,body.boss-on #feedbackBar{visibility:hidd
       </div>
       <p class="muted" style="margin-bottom:0">开启双端同步后，进度会自动在手机和电脑之间同步。单词音标来源：ECDICT 开源英汉词典（MIT 许可）；对话与题目均为原创。</p>
     </div>
-    <div class="version-line">情景英语 v3.14</div>
+    <div class="version-line">情景英语 v3.15</div>
   </section>
 </div>
 <!-- 底部反馈条 -->
@@ -2036,7 +2185,8 @@ var ICON_PATHS = {
   clock:'<circle cx="12" cy="12" r="8.6"/><path d="M12 7.4V12l3.2 2"/>',
   target:'<circle cx="12" cy="12" r="8.6"/><circle cx="12" cy="12" r="4.6"/><circle cx="12" cy="12" r="1" fill="currentColor"/>',
   tag:'<path d="M3.6 12.4V3.6h8.8L20.5 11.7a2 2 0 0 1 0 2.8l-6.1 6.1a2 2 0 0 1-2.8 0z"/><circle cx="8.2" cy="8.2" r="1.5"/>',
-  star:'<path d="M12 3.9l2.4 5.1 5.6.7-4.1 3.9 1.1 5.6L12 16.6l-5 2.6 1.1-5.6L4 9.7l5.6-.7z"/>'
+  star:'<path d="M12 3.9l2.4 5.1 5.6.7-4.1 3.9 1.1 5.6L12 16.6l-5 2.6 1.1-5.6L4 9.7l5.6-.7z"/>',
+  menu:'<path d="M4.5 7h15M4.5 12h15M4.5 17h15"/>'
 };
 function icon(name){
   return '<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + (ICON_PATHS[name] || '') + '</svg>';
@@ -2447,6 +2597,9 @@ function refreshModeUI(){
   if(deskRefs.btnLabel) deskRefs.btnLabel.textContent = '模式：' + (MODE_LABELS[curMode] || '场景学习');
   if(deskRefs.muteItem) deskRefs.muteItem.textContent = '静音：' + (store.settings && store.settings.wordMute ? '开' : '关');
   if(deskRefs.hint) deskRefs.hint.textContent = keyLabel(((store.settings && store.settings.keys) || KEY_DEFAULTS).mode) + ' 切换模式';
+  /* v3.15：书本页眉槽位里的下拉与顶栏下拉同步文案 */
+  if(bookRefs.btnLabel) bookRefs.btnLabel.textContent = '模式：' + (MODE_LABELS[curMode] || '场景学习');
+  if(bookRefs.muteItem) bookRefs.muteItem.textContent = '静音：' + (store.settings && store.settings.wordMute ? '开' : '关');
 }
 /* —— 桌面顶栏（模式下拉）：桌面才建，手机上不存在 —— */
 function buildDeskBar(){
@@ -2486,12 +2639,18 @@ function buildDeskBar(){
   deskRefs = {bar:bar, btnLabel:lab, muteItem:mu, hint:hint, menu:menu};
   refreshModeUI();
 }
-function closeModeMenu(){ if(deskRefs.menu) deskRefs.menu.classList.add('hidden'); }
+function closeModeMenu(){
+  if(deskRefs.menu) deskRefs.menu.classList.add('hidden');
+  closeBookModeMenu();
+}
 if(document.addEventListener) document.addEventListener('click', function(ev){
-  if(!deskRefs.menu || deskRefs.menu.classList.contains('hidden')) return;
   var t = ev && ev.target;
-  if(t && t.closest && t.closest('#deskBar')) return;
-  closeModeMenu();
+  if(deskRefs.menu && !deskRefs.menu.classList.contains('hidden')){
+    if(!(t && t.closest && t.closest('#deskBar'))) closeModeMenu();
+  }
+  if(bookRefs.menu && !bookRefs.menu.classList.contains('hidden')){
+    if(!(t && t.closest && t.closest('#bookModeSlot'))) closeBookModeMenu();
+  }
 });
 function enterMode(m){
   closeModeMenu();
@@ -2683,6 +2842,7 @@ function checkDesktopCrossing(){
     if(deskRefs.bar) deskRefs.bar.style.display = '';
     document.body.classList.add('desk-on');
     refreshModeUI();
+    if(curView === 'home') renderBookModeSlot();
   } else {
     if(curMode !== 'scene'){ curMode = 'scene'; applyModeChrome(); }
     wmActive = false;
@@ -3238,6 +3398,9 @@ function show(name){
   ALL_VIEWS.forEach(function(v){
     document.getElementById('view-' + v).classList.toggle('active', v === name);
   });
+  /* v3.15：书本首页藏桌面顶栏（下拉进页眉槽位）；练习/复习一屏锁定不滚页 */
+  document.body.classList.toggle('book-on', name === 'home');
+  document.body.classList.toggle('flow-lock', name === 'practice' || name === 'reviewrun');
   document.getElementById('tabbar').classList.toggle('hidden', FLOW_VIEWS.indexOf(name) >= 0);
   document.querySelectorAll('.tab').forEach(function(t){
     t.classList.toggle('on', t.getAttribute('data-tab') === name);
@@ -3289,51 +3452,238 @@ function unitTestRow(unit){
   b.addEventListener('click', function(){ startTest(unit); });
   return b;
 }
+/* ===== ① 书本首页（v3.15：一页一景，滑动翻页，☰ 目录） ===== */
+var bookIdx = -1; /* 当前翻开的页序号；-1 = 跟随进度（第一个未完成场景） */
+var bookRefs = {};
+var bookPlayTimer = null;
+function currentBookIdx(){
+  for(var i = 0; i < SCENES.length; i++) if(!sceneCompleted(SCENES[i])) return i;
+  return SCENES.length - 1;
+}
+function bookAllDone(){ return SCENES.every(function(s){ return sceneCompleted(s); }); }
+function unitInfoOf(idx){
+  var u = SCENES[idx].unit;
+  var list = [];
+  SCENES.forEach(function(s, i){ if(s.unit === u) list.push(i); });
+  return {unit:u, pos:list.indexOf(idx) + 1, size:list.length};
+}
+function stopBookPlay(){ if(bookPlayTimer){ clearTimeout(bookPlayTimer); bookPlayTimer = null; } }
+function playBookLines(){
+  var s = SCENES[bookIdx]; if(!s) return;
+  speakStop(); stopBookPlay();
+  var i = 0;
+  function next(){
+    if(i >= s.lines.length) return;
+    speak(s.lines[i].en); i++;
+    bookPlayTimer = setTimeout(next, 2100);
+  }
+  next();
+}
+function renderBookHead(){
+  if(bookIdx < 0 || bookIdx >= SCENES.length) return;
+  var ui = unitInfoOf(bookIdx);
+  document.getElementById('bookPageNo').innerHTML = '第 <b>' + (bookIdx + 1) + '</b> 页 / 共 ' + SCENES.length + ' 页';
+  document.getElementById('bookUnitInfo').textContent = ui.unit + ' · 本组 ' + ui.pos + '/' + ui.size;
+  var doneN = SCENES.filter(function(x){ return sceneCompleted(x); }).length;
+  document.getElementById('bookBarFill').style.width = Math.round(doneN / SCENES.length * 100) + '%';
+  document.getElementById('bookTodayChip').innerHTML = '今日已学 <b>' + store.today.done + '</b>';
+  document.getElementById('bookDueChip').innerHTML = '到期复习 <b>' + dueIds().length + '</b> 条';
+}
+function renderBookPage(dir){
+  var s = SCENES[bookIdx]; if(!s) return;
+  var page = document.getElementById('bookPage');
+  page.innerHTML = '';
+  page.classList.remove('turn-next'); page.classList.remove('turn-prev');
+  var done = sceneCompleted(s);
+  var stats = store.sceneStats[s.id];
+  if(done){
+    var db = document.createElement('div'); db.className = 'bk-done';
+    db.innerHTML = icon('checkc') + '<span>已学完' + ((stats && typeof stats.accuracy === 'number') ? ' · 正确率 ' + stats.accuracy + '%' : '') + '</span>';
+    page.appendChild(db);
+  }
+  var t = document.createElement('div'); t.className = 'bk-title'; t.textContent = s.title; page.appendChild(t);
+  var en = document.createElement('div'); en.className = 'bk-en'; en.textContent = s.en; page.appendChild(en);
+  var story = document.createElement('div'); story.className = 'bk-story';
+  story.textContent = '小故事：' + s.desc.replace(/点句子可以看中文，点喇叭听发音。\s*$/, '');
+  page.appendChild(story);
+  var img = document.createElement('img'); img.className = 'bk-hero'; img.src = s.img; img.alt = s.title + '场景图';
+  page.appendChild(img);
+  var lab = document.createElement('div'); lab.className = 'bk-label'; lab.textContent = '本页重点词'; page.appendChild(lab);
+  var wc = document.createElement('div'); wc.className = 'bk-wchips';
+  s.targets.forEach(function(w){
+    var wd = wordOf(w);
+    var c = document.createElement('button'); c.className = 'bk-wchip'; c.setAttribute('data-w', w);
+    c.innerHTML = esc(w) + '<span class="ipa">/' + esc(wd.ipa || '') + '/</span>';
+    c.addEventListener('click', function(){ speak(w); });
+    wc.appendChild(c);
+  });
+  page.appendChild(wc);
+  var lab2 = document.createElement('div'); lab2.className = 'bk-label'; lab2.textContent = '对话（点一句听一句）'; page.appendChild(lab2);
+  var lines = document.createElement('div'); lines.className = 'bk-lines';
+  s.lines.forEach(function(L){
+    var r = document.createElement('button'); r.className = 'bk-line';
+    r.innerHTML = '<span class="who">' + esc(L.sp) + '</span><span class="en">' + esc(L.en) + '</span><span class="cn">' + esc(L.cn) + '</span>';
+    r.addEventListener('click', function(){ speak(L.en); });
+    lines.appendChild(r);
+  });
+  page.appendChild(lines);
+  var cc = document.createElement('div'); cc.className = 'card culture-card hidden';
+  page.appendChild(cc);
+  fillCultureCard(cc, s);
+  if(dir){ void page.offsetWidth; page.classList.add(dir > 0 ? 'turn-next' : 'turn-prev'); }
+  var sc = document.getElementById('bookScroll'); if(sc) sc.scrollTop = 0;
+}
+function renderBookActions(){
+  var s = SCENES[bookIdx]; if(!s) return;
+  var bar = document.getElementById('bookActions'); bar.innerHTML = '';
+  var done = sceneCompleted(s);
+  var stats = store.sceneStats[s.id];
+  if(done){
+    var st = document.createElement('div'); st.className = 'bk-actstate';
+    st.textContent = '已学完' + ((stats && typeof stats.accuracy === 'number') ? ' · 正确率 ' + stats.accuracy + '%' : '') + (bookAllDone() ? ' · 第一季全部学完' : '');
+    bar.appendChild(st);
+  }
+  var row = document.createElement('div'); row.className = 'bk-actrow';
+  var lb = document.createElement('button'); lb.className = 'btn secondary listen'; lb.id = 'btnBookListen';
+  lb.innerHTML = icon('play') + '<span>听完整对话</span>';
+  lb.addEventListener('click', function(){ playBookLines(); });
+  var sb = document.createElement('button'); sb.className = 'btn start'; sb.id = 'btnBookStart';
+  sb.textContent = done ? '再练一次' : '开始练习';
+  sb.addEventListener('click', function(){ cur = SCENES[bookIdx]; startPractice(); });
+  row.appendChild(lb); row.appendChild(sb);
+  bar.appendChild(row);
+}
+function bookTurn(dir){
+  var n = bookIdx + dir;
+  if(n < 0 || n >= SCENES.length || n === bookIdx) return false;
+  speakStop(); stopBookPlay();
+  bookIdx = n;
+  renderBookHead(); renderBookPage(dir); renderBookActions();
+  return true;
+}
+function buildToc(){
+  var body = document.getElementById('tocBody'); body.innerHTML = '';
+  var lastUnit = '';
+  SCENES.forEach(function(s, i){
+    if(s.unit && s.unit !== lastUnit){
+      lastUnit = s.unit;
+      var h = document.createElement('div'); h.className = 'toc-chapter'; h.textContent = s.unit;
+      body.appendChild(h);
+    }
+    var done = sceneCompleted(s);
+    var stats = store.sceneStats[s.id];
+    var r = document.createElement('button');
+    r.className = 'toc-row';
+    if(done) r.classList.add('done');
+    if(i === bookIdx) r.classList.add('cur');
+    r.setAttribute('data-page', i);
+    r.innerHTML = '<span class="toc-pno">' + (done ? '✓' : (i + 1)) + '</span>' +
+      '<span class="tt">' + esc(s.title) + '<span class="en">' + esc(s.en) + '</span></span>' +
+      ((stats && typeof stats.accuracy === 'number') ? '<span class="acc">' + stats.accuracy + '%</span>' : '');
+    r.addEventListener('click', function(){
+      closeToc();
+      if(i !== bookIdx){
+        speakStop(); stopBookPlay();
+        var d = i > bookIdx ? 1 : -1;
+        bookIdx = i;
+        renderBookHead(); renderBookPage(d); renderBookActions(); buildToc();
+      }
+    });
+    body.appendChild(r);
+    var nextS = SCENES[i + 1];
+    if(s.unit && (!nextS || nextS.unit !== s.unit)) body.appendChild(unitTestRow(s.unit));
+  });
+  var foot = document.createElement('div'); foot.className = 'toc-chapter';
+  foot.textContent = '第一季 · 共 ' + SCENES.length + ' 页';
+  body.appendChild(foot);
+}
+function openToc(){ buildToc(); document.getElementById('tocOverlay').classList.add('show'); }
+function closeToc(){ document.getElementById('tocOverlay').classList.remove('show'); }
+/* 桌面：模式下拉搬进书本页眉右上槽位（手机槽位为空；桌面顶栏在首页隐藏，只留这一个下拉） */
+function closeBookModeMenu(){ if(bookRefs.menu) bookRefs.menu.classList.add('hidden'); }
+function renderBookModeSlot(){
+  var slot = document.getElementById('bookModeSlot');
+  if(!slot) return;
+  slot.innerHTML = '';
+  bookRefs = {};
+  if(!isDesktop() || !deskBuilt) return;
+  var btn = document.createElement('button');
+  btn.type = 'button'; btn.className = 'bk-modebtn'; btn.id = 'bookModeBtn';
+  var lab = document.createElement('span'); lab.id = 'bookModeBtnLabel'; lab.textContent = '模式：场景学习';
+  var caret = document.createElement('span'); caret.className = 'db-caret'; caret.textContent = '▾';
+  btn.appendChild(lab); btn.appendChild(caret);
+  var menu = document.createElement('div'); menu.className = 'db-menu'; menu.id = 'bookModeMenu'; menu.classList.add('hidden');
+  [['scene', '场景学习'], ['excel', 'Excel 背词'], ['word', 'Word 背词'], ['python', 'Python 背词']].forEach(function(pair){
+    var it = document.createElement('button');
+    it.type = 'button'; it.className = 'db-item'; it.setAttribute('data-mode', pair[0]); it.textContent = pair[1];
+    it.addEventListener('click', function(){ closeBookModeMenu(); enterMode(pair[0]); });
+    menu.appendChild(it);
+  });
+  var sep = document.createElement('div'); sep.className = 'db-sep'; menu.appendChild(sep);
+  var ki = document.createElement('button');
+  ki.type = 'button'; ki.className = 'db-item'; ki.id = 'bookModeKeysItem'; ki.textContent = '快捷键设置…';
+  ki.addEventListener('click', function(){ closeBookModeMenu(); openShortcuts(); });
+  menu.appendChild(ki);
+  var mu = document.createElement('button');
+  mu.type = 'button'; mu.className = 'db-item'; mu.id = 'bookModeMuteItem'; mu.textContent = '静音：关';
+  mu.addEventListener('click', function(){ toggleWordMute(); });
+  menu.appendChild(mu);
+  btn.addEventListener('click', function(ev){
+    if(ev && ev.stopPropagation) ev.stopPropagation();
+    menu.classList.toggle('hidden');
+  });
+  slot.appendChild(btn); slot.appendChild(menu);
+  bookRefs = {btnLabel:lab, muteItem:mu, menu:menu};
+  refreshModeUI();
+}
 function renderHome(){
   rollDay(); evalStreak();
-  document.getElementById('streakChip').innerHTML = icon('flame') + '<span>' + store.streak.count + '</span>';
+  document.getElementById('streakChip').innerHTML = icon('flame') + '<span>' + store.streak.count + '</span> 天连胜';
   document.getElementById('streakFreezeNote').textContent = '连胜保护：' + (freezeAvailable() ? '本周可用' : '本周已用');
-  document.getElementById('todayNum').textContent = store.today.done;
-  document.getElementById('todayRingFg').style.strokeDashoffset = String(97.4 * (1 - Math.min(1, store.today.done)));
   var due = dueIds().length;
   var banner = document.getElementById('dueBanner');
   if(due > 0){
     banner.classList.remove('hidden');
     document.getElementById('dueBannerTxt').textContent = '有 ' + due + ' 条复习到期，去巩固一下';
   } else banner.classList.add('hidden');
-  var list = document.getElementById('sceneList'); list.innerHTML = '';
-  var lastUnit = '';
-  SCENES.forEach(function(s, si){
-    if(s.unit && s.unit !== lastUnit){
-      lastUnit = s.unit;
-      var uh = document.createElement('div'); uh.className = 'unit-header';
-      uh.textContent = s.unit;
-      list.appendChild(uh);
-    }
-    var stats = store.sceneStats[s.id];
-    var done = sceneCompleted(s), started = sceneStarted(s);
-    var stateHtml = done
-      ? '<span class="done-badge">' + icon('check') + '</span>'
-      : (started
-        ? '<svg class="mini-ring" width="30" height="30" viewBox="0 0 30 30"><circle class="mini-bg" cx="15" cy="15" r="11"></circle><circle class="mini-fg" cx="15" cy="15" r="11" stroke-dashoffset="34.6"></circle></svg>'
-        : '<span class="dot"></span>');
-    var card = document.createElement('button'); card.className = 'scene-card';
-    card.innerHTML = '<img class="thumb" alt="' + s.title + '场景图">' +
-      '<span class="sc-main">' +
-        '<span class="sc-title">' + s.title + '<span class="en">' + s.en + '</span></span>' +
-        '<span class="sc-meta" style="display:block">' + s.lines.length + ' 句对话 · ' + s.targets.length + ' 个重点词 · 约 8 分钟</span>' +
-        ((stats && typeof stats.accuracy === 'number') ? '<span class="sc-acc">上次正确率 ' + stats.accuracy + '%</span>' : '') +
-        '<span class="btn sc-cta" style="display:flex">' + (done ? '再练一次' : (started ? '继续学习' : '开始学习')) + '</span>' +
-      '</span>' +
-      '<span class="sc-state">' + stateHtml + '</span>';
-    card.querySelector('.thumb').src = s.img;
-    card.addEventListener('click', function(){ openScene(s.id); });
-    list.appendChild(card);
-    var nextS = SCENES[si + 1];
-    if(s.unit && (!nextS || nextS.unit !== s.unit)) list.appendChild(unitTestRow(s.unit));
-  });
+  if(bookIdx < 0 || bookIdx >= SCENES.length) bookIdx = currentBookIdx();
+  renderBookHead();
+  renderBookPage(0);
+  renderBookActions();
+  buildToc();
+  renderBookModeSlot();
   updateTabBadge();
 }
+document.getElementById('btnToc').addEventListener('click', function(){ openToc(); });
+document.getElementById('tocClose').addEventListener('click', function(){ closeToc(); });
+document.getElementById('tocOverlay').addEventListener('click', function(ev){
+  if(ev && ev.target && ev.target.id === 'tocOverlay') closeToc();
+});
+document.getElementById('bookDueChip').addEventListener('click', function(){ goTab('review'); });
+/* 翻页手势：横滑（横向占优才触发，不抢竖向滚动）；桌面可用鼠标拖动 */
+(function(){
+  var sc = document.getElementById('bookScroll');
+  if(!sc || !sc.addEventListener) return;
+  var sx = 0, sy = 0, swipeActive = false;
+  function spt(e){
+    if(e.changedTouches && e.changedTouches[0]) return e.changedTouches[0];
+    if(e.touches && e.touches[0]) return e.touches[0];
+    return e;
+  }
+  function swipeStart(e){ var p = spt(e); if(!p) return; sx = p.clientX || 0; sy = p.clientY || 0; swipeActive = true; }
+  function swipeEnd(e){
+    if(!swipeActive) return;
+    swipeActive = false;
+    if(curView !== 'home') return;
+    var p = spt(e); if(!p) return;
+    var dx = (p.clientX || 0) - sx, dy = (p.clientY || 0) - sy;
+    if(Math.abs(dx) > 48 && Math.abs(dx) > Math.abs(dy) * 1.6) bookTurn(dx < 0 ? 1 : -1);
+  }
+  sc.addEventListener('touchstart', swipeStart, {passive:true});
+  sc.addEventListener('touchend', swipeEnd);
+  sc.addEventListener('mousedown', swipeStart);
+  sc.addEventListener('mouseup', swipeEnd);
+})();
 document.getElementById('dueBanner').addEventListener('click', function(){ goTab('review'); });
 
 function fillCultureCard(el, scene){
@@ -3434,21 +3784,22 @@ document.getElementById('sceneBack').addEventListener('click', function(){
 });
 
 /* ===== 底部反馈条 ===== */
-var PRAISE = ['记住了，就是这个', '漂亮，答对了', '对，就是这一句'];
+var PRAISE = ['答对了', '太棒了', '就是它', '很好', '继续保持'];
 var ENCOURAGE = ['差一点，看上面这句', '没关系，先把正确答案记下来', '这句很常用，多看两眼'];
 function pickOf(a){ return a[Math.floor(Math.random() * a.length)]; }
 var DWELL_OK_MS = 350;
 var DWELL_BAD_MS = 900;
 var fbState = {onContinue:null, timer:null, auto:false, tapSkip:null};
 function showFeedback(ok, correctText, onContinue){
+  /* v3.15：反馈条只报状态（答对表扬 / 答错鼓励），答案一律在题目原地揭晓，不再由反馈条承载 */
   if(fbState.timer){ clearTimeout(fbState.timer); fbState.timer = null; }
   fbState.auto = false;
   fbState.tapSkip = null;
   document.getElementById('fbContinue').classList.remove('hidden');
   var bar = document.getElementById('feedbackBar');
   bar.className = ok ? 'ok show' : 'no show';
-  document.getElementById('fbTitle').textContent = ok ? '答对了' : '差一点';
-  document.getElementById('fbText').textContent = ok ? pickOf(PRAISE) : ('正确答案：' + correctText);
+  document.getElementById('fbTitle').textContent = ok ? pickOf(PRAISE) : '差一点';
+  document.getElementById('fbText').textContent = '';
   var sub = document.getElementById('fbSub');
   if(ok) sub.classList.add('hidden');
   else { sub.textContent = pickOf(ENCOURAGE); sub.classList.remove('hidden'); }
@@ -3548,11 +3899,17 @@ function renderOptions(box, options, correct, onDone, opts){
       settled = true;
       var btns = box.querySelectorAll('.opt');
       btns.forEach(function(x){ x.disabled = true; if(x.textContent === correct) x.classList.add('right'); });
-      if(!ok){ b.classList.add('wrong'); b.classList.add('shake'); } else b.classList.add('pop');
+      if(!ok){ b.classList.add('wrong'); b.classList.add('shake'); } else { b.classList.add('pop'); b.classList.add('burst'); }
       onDone(ok);
     });
     box.appendChild(b);
   });
+}
+/* v3.15：一屏练习的恒高底部槽——练习/复习渲染时置 curSlot，跳过类按钮一律落槽（与反馈状态同区，零位移） */
+var curSlot = null;
+function slotTarget(box){
+  if(curSlot && box && (box.id === 'practiceBox' || box.id === 'reviewBox' || (box.className || '').split(' ').indexOf('qwrap') >= 0)) return curSlot;
+  return box;
 }
 /* 低调文字按钮（跳过 / 静默跟读共用）：点击后立即禁用并隐藏，避免与反馈条计时器双触发 */
 function addMutedActionButton(box, text, onClick){
@@ -3564,7 +3921,7 @@ function addMutedActionButton(box, text, onClick){
     disable();
     onClick();
   });
-  box.appendChild(b);
+  slotTarget(box).appendChild(b);
   return {button:b, disable:disable};
 }
 function addSkipButton(box, onSkip){ return addMutedActionButton(box, '不会，跳过', onSkip); }
@@ -3575,7 +3932,7 @@ function addTestSkipButton(box, fn){
   b.type = 'button'; b.className = 'skipbtn';
   b.textContent = '跳过（测试）';
   b.addEventListener('click', function(){ fn(); });
-  box.appendChild(b);
+  slotTarget(box).appendChild(b);
 }
 /* 全宽次级按钮（跟读步「不方便出声」专用）：与主按钮同尺寸，禁用/隐藏语义同上 */
 function addBigActionButton(box, text, onClick){
@@ -3587,7 +3944,7 @@ function addBigActionButton(box, text, onClick){
     disable();
     onClick();
   });
-  box.appendChild(b);
+  slotTarget(box).appendChild(b);
   return {button:b, disable:disable};
 }
 function disableSkipButtons(box){
@@ -3638,6 +3995,7 @@ function renderBuildQ(box, cfg){
   var finished = false;
   var attempts = 0;
   var skipControl = null;
+  var revealCorrect = false; /* v3.15：定稿后在答案区原地拼出正确句 */
   box.innerHTML = '<div class="qprompt">' + cfg.title + '</div>';
   if(cfg.listen){
     var pb = document.createElement('button'); pb.className = 'playbig';
@@ -3661,6 +4019,7 @@ function renderBuildQ(box, cfg){
     }
     st.placed.forEach(function(c, pos){
       var b = document.createElement('button'); b.className = 'chip placed'; b.textContent = c.text;
+      if(revealCorrect) b.classList.add('right');
       b.addEventListener('click', function(){
         if(finished) return;
         orderRemoveAt(st, pos);
@@ -3694,6 +4053,10 @@ function renderBuildQ(box, cfg){
         }
         finished = true;
         if(!ok) ansBox.classList.add('shake');
+        /* v3.15：对错都在答案区原地揭晓——答对词块转绿，答错直接拼出正确句 */
+        revealCorrect = true;
+        if(!ok) st.placed = st.chunks.slice();
+        paintAnswer();
         if(skipControl) skipControl.disable();
         bank.forEach(function(x){ bankBtns[x.id].disabled = true; });
         ansBox.querySelectorAll('.chip').forEach(function(x){ x.disabled = true; });
@@ -3712,6 +4075,10 @@ function renderBuildQ(box, cfg){
     skipControl = addSkipButton(box, function(){
       if(finished) return;
       finished = true;
+      /* v3.15：跳过也在答案区原地拼出正确句 */
+      revealCorrect = true;
+      st.placed = st.chunks.slice();
+      paintAnswer();
       bank.forEach(function(x){ bankBtns[x.id].disabled = true; });
       ansBox.querySelectorAll('.chip').forEach(function(x){ x.disabled = true; });
       btnRedo.disabled = true;
@@ -4012,6 +4379,17 @@ function recMatchRatio(heard, target){
   return hit / t.length;
 }
 
+/* v3.15：听力题定稿后把目标句亮在题面（目标词高亮），答案不走反馈条 */
+function revealListenLine(box, S, L){
+  var d = document.createElement('div'); d.className = 'qreveal';
+  d.innerHTML = hlTargetsOf(S, L.en);
+  box.appendChild(d);
+}
+function revealHeardWord(box, w, wd){
+  var d = document.createElement('div'); d.className = 'qreveal';
+  d.innerHTML = '<b>' + esc(w) + '</b> <span class="muted">/' + esc((wd && wd.ipa) || '') + '/ ' + esc((wd && wd.cn) || '') + '</span>';
+  box.appendChild(d);
+}
 function renderPracticeQ(){
   stopRecognition();
   practice.attempts = 0;
@@ -4020,6 +4398,12 @@ function renderPracticeQ(){
   var q = currentPracticeQ();
   var S = (q && q.sceneObj) || practice.scene;
   var box = document.getElementById('practiceBox'); box.innerHTML = '';
+  /* v3.15：一屏固定列——题目区内部滚动，底部恒高槽承载跳过/操作（视图本身不滚） */
+  var qwrap = document.createElement('div'); qwrap.className = 'qwrap';
+  var slot = document.createElement('div'); slot.className = 'pslot';
+  box.appendChild(qwrap); box.appendChild(slot);
+  curSlot = slot;
+  box = qwrap;
   if(q.type === 'listen'){
     var L = S.lines[q.line];
     box.innerHTML = '<div class="qprompt">听一听，选出这句话的意思</div>';
@@ -4029,9 +4413,11 @@ function renderPracticeQ(){
     box.appendChild(pb);
     var opts = pick3(S.lines.map(function(x){ return x.cn; }), L.cn);
     renderOptions(box, opts, L.cn, function(ok){
+      revealListenLine(box, S, L);
       practiceAnswer(ok, L.cn, {scene:S.id, line:q.line, label:'听句选义：' + L.en});
     }, {retryFirstWrong:true, onFirstWrong:showRetryFeedback});
     addSkipButton(box, function(){
+      revealListenLine(box, S, L);
       practiceAnswer(false, L.cn, {scene:S.id, line:q.line, label:'听句选义：' + L.en});
     });
     speak(L.en);
@@ -4055,9 +4441,11 @@ function renderPracticeQ(){
     pbL.addEventListener('click', function(){ speak(q.word); });
     box.appendChild(pbL);
     renderOptions(box, wordOptsEn(S, q.word), q.word, function(ok){
+      revealHeardWord(box, q.word, wdL);
       practiceAnswer(ok, q.word + '（' + wdL.cn + '）', {scene:S.id, line:0, label:'听词选拼写：' + q.word});
     }, {retryFirstWrong:true, onFirstWrong:showRetryFeedback});
     addSkipButton(box, function(){
+      revealHeardWord(box, q.word, wdL);
       practiceAnswer(false, q.word + '（' + wdL.cn + '）', {scene:S.id, line:0, label:'听词选拼写：' + q.word});
     });
     speak(q.word);
@@ -4119,6 +4507,7 @@ function renderPracticeQ(){
         pairs.forEach(function(p){ if(p.en === enVal) pr = p; });
         if(pr && pr.cn === cnVal){
           enBtn.classList.add('right'); cnBtn.classList.add('right');
+          enBtn.classList.add('burst'); cnBtn.classList.add('burst');
           enBtn.disabled = true; cnBtn.disabled = true;
           speak(enVal);
           lockedM++;
@@ -4147,6 +4536,11 @@ function renderPracticeQ(){
       if(doneM) return;
       doneM = true;
       grid.querySelectorAll('.opt').forEach(function(x){ x.disabled = true; });
+      /* v3.15：跳过时正确配对在原地亮绿 */
+      pairs.forEach(function(p){
+        for(var mi = 0; mi < colL.children.length; mi++) if(colL.children[mi].textContent === p.en) colL.children[mi].classList.add('right');
+        for(var mj = 0; mj < colR.children.length; mj++) if(colR.children[mj].textContent === p.cn) colR.children[mj].classList.add('right');
+      });
       practiceAnswer(false, pairText, {scene:S.id, line:0, label:'词语配对：点错了 ' + mistakesM + ' 次'});
     });
   }
@@ -4510,7 +4904,11 @@ document.getElementById('errList').addEventListener('click', function(e){
   var r = e.target.closest('[data-line]');
   if(r) goSceneLine(r.getAttribute('data-scene') || 'price', parseInt(r.getAttribute('data-line'), 10));
 });
-document.getElementById('setDone').addEventListener('click', function(){ show('home'); });
+document.getElementById('setDone').addEventListener('click', function(){
+  /* v3.15：场景练习完成 → 书翻到新的当前页；组测验结算保持原样 */
+  if(settleMode !== 'test') bookIdx = -1;
+  show('home');
+});
 document.getElementById('setRetry').addEventListener('click', function(){
   if(settleMode === 'test'){ startTest(settleUnit); return; }
   startPractice();
@@ -4683,6 +5081,10 @@ function importWordsFromText(text){
   renderWords();
   return added;
 }
+document.getElementById('importPanel').classList.add('hidden');
+document.getElementById('btnImportOpen').addEventListener('click', function(){
+  document.getElementById('importPanel').classList.toggle('hidden');
+});
 document.getElementById('btnWordFile').addEventListener('click', function(){ document.getElementById('fileWords').click(); });
 document.getElementById('fileWords').addEventListener('change', function(ev){
   var f = ev.target.files && ev.target.files[0]; if(!f) return;
@@ -4776,6 +5178,12 @@ function renderReviewQ(){
   reviewHead();
   review.rated = false;
   var box = document.getElementById('reviewBox'); box.innerHTML = '';
+  /* v3.15：与练习同一屏固定列 + 恒高底部槽 */
+  var qwrap = document.createElement('div'); qwrap.className = 'qwrap';
+  var slot = document.createElement('div'); slot.className = 'pslot';
+  box.appendChild(qwrap); box.appendChild(slot);
+  curSlot = slot;
+  box = qwrap;
   var id = review.ids[review.idx];
   var skipControlR = null;
   function answerReview(ok, correctText){
@@ -4814,8 +5222,8 @@ function renderReviewQ(){
       pb.addEventListener('click', function(){ speak(L.en); });
       box.appendChild(pb);
       var opts2 = pick3(S.lines.map(function(x){ return x.cn; }), L.cn);
-      renderOptions(box, opts2, L.cn, function(ok){ answerReview(ok, L.cn); });
-      skipControlR = addSkipButton(box, function(){ answerReview(false, L.cn); });
+      renderOptions(box, opts2, L.cn, function(ok){ revealListenLine(box, S, L); answerReview(ok, L.cn); });
+      skipControlR = addSkipButton(box, function(){ revealListenLine(box, S, L); answerReview(false, L.cn); });
       speak(L.en);
     }
   } else {
@@ -5037,7 +5445,8 @@ document.getElementById('setTimeIc').innerHTML = icon('clock');
 document.getElementById('setWordsIc').innerHTML = icon('target');
 document.getElementById('rsetCountIc').innerHTML = icon('checkc');
 document.getElementById('rsetNextIc').innerHTML = icon('clock');
-document.getElementById('moreRow').innerHTML = icon('clock') + '<span>更多场景制作中</span>';
+document.getElementById('btnToc').innerHTML = icon('menu');
+document.getElementById('tocClose').innerHTML = icon('x');
 
 /* ===== 启动 ===== */
 rollDay(); saveStore();
@@ -5047,7 +5456,7 @@ if(!tryRestoreSession()) show('home');
 if(document.addEventListener) document.addEventListener('pointerdown', function(ev){
   var t = ev && ev.target;
   if(t && t.closest){
-    var b = t.closest('.opt,.chip,.btn,.playbig,.rate,.wm-act');
+    var b = t.closest('.opt,.chip,.btn,.playbig,.rate,.wm-act,.iconbtn,.bk-wchip,.bk-line,.toc-row,.bk-modebtn,.bk-chip');
     if(b) flashPress(b);
   }
   if(fbState.tapSkip && !bossOn){
