@@ -18,7 +18,7 @@
   --accent:#EA580C; --accent-soft:#FDF0E7;
   --bg:#FFF9F0; --card:#FFFFFF;
   --ink:#1F2937; --ink-2:#6B7280; --line:#F0E7DA;
-  --ok:#047857; --ok-bg:#ECFDF5; --err:#B91C1C; --err-bg:#FEF2F2;
+  --ok:#10B981; --ok-dark:#065F46; --ok-mid:#6EE7B7; --ok-bg:#DDF7E9; --err:#FF5252; --err-dark:#D92B2B; --err-bg:#FFE1E1;
   --shadow:0 1px 2px rgba(31,41,55,.05),0 4px 14px rgba(31,41,55,.05);
   /* v3.15 苹果级视觉系统：分层仿真阴影 / 发丝线 / 弹簧曲线 */
   --shadow-card:0 1px 2px rgba(16,24,40,.05),0 8px 24px rgba(16,24,40,.07);
@@ -136,34 +136,34 @@ header.top h1{font-size:22px;margin:0;color:var(--brand);font-weight:800}
 .flow-head{display:flex;align-items:center;gap:12px;padding:12px 0 10px;flex:none}
 .flow-x{width:44px;height:44px;display:flex;align-items:center;justify-content:center;color:var(--ink-2);flex:none;margin-left:-10px}
 .flow-x .ic{width:26px;height:26px}
-.flow-prog{flex:1;height:4px;background:var(--line);border-radius:999px;overflow:hidden}
-.flow-prog .fill{height:100%;background:var(--brand);border-radius:999px;transition:width .3s ease}
+.flow-prog{flex:1;height:15px;background:#E9E2D0;border-radius:999px;overflow:hidden}
+.flow-prog .fill{height:100%;background:linear-gradient(180deg,rgba(255,255,255,.28) 0,rgba(255,255,255,.28) 32%,rgba(255,255,255,0) 33%),var(--brand);border-radius:999px;transition:width .45s cubic-bezier(.22,1,.36,1)}
 .flow-count{font-size:14px;color:var(--ink-2);font-weight:600;flex:none;min-width:38px;text-align:right}
 .qprompt{font-size:17px;font-weight:600;margin:10px 0 14px}
-.opt{position:relative;display:flex;align-items:center;width:100%;text-align:left;background:#fff;border:1.5px solid var(--line);border-radius:16px;padding:14px 16px;font-size:17px;margin-bottom:10px;min-height:56px;box-shadow:var(--shadow);transition:transform .15s ease,background .15s ease,border-color .15s ease}
-.opt.right{border-color:var(--ok);background:var(--ok);color:#fff}
-.opt.right:after{content:"✓";position:absolute;top:-9px;right:8px;width:26px;height:26px;border-radius:50%;background:var(--ok);color:#fff;font-size:15px;font-weight:800;line-height:26px;text-align:center;border:2px solid #fff;box-shadow:0 2px 8px rgba(4,120,87,.45);z-index:2}
-.opt.wrong{border-color:var(--err);background:var(--err-bg);text-decoration:line-through}
+.opt{position:relative;display:flex;align-items:center;width:100%;text-align:left;background:#fff;border:2px solid #E8DFCE;border-radius:16px;padding:14px 16px;font-size:17px;margin-bottom:10px;min-height:56px;box-shadow:0 2px 0 #E8DFCE;transition:transform .15s ease,background .15s ease,border-color .15s ease}
+.opt.right{border-color:var(--ok-dark);background:var(--ok);color:#fff;box-shadow:0 2px 0 var(--ok-dark)}
+.opt.right:after{content:"✓";position:absolute;top:-9px;right:8px;width:26px;height:26px;border-radius:50%;background:var(--ok);color:#fff;font-size:15px;font-weight:800;line-height:26px;text-align:center;border:2px solid #fff;box-shadow:0 2px 8px rgba(6,95,70,.45);z-index:2}
+.opt.wrong{border-color:var(--err-dark);background:var(--err-bg);text-decoration:line-through;box-shadow:0 2px 0 #F3C2C2}
 .opt:disabled{opacity:.92}
 .opt.pop{transform:scale(1.045)}
 .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
-.chip{background:#fff;border:1.5px solid var(--brand);color:var(--brand);border-radius:999px;padding:9px 16px;font-size:17px;min-height:44px}
+.chip{background:#fff;border:2px solid var(--brand);color:var(--brand);border-radius:999px;padding:9px 16px;font-size:17px;min-height:44px}
 .chip.used{background:var(--brand);color:#fff}
 .chip.placed{background:var(--brand);color:#fff;border-color:var(--brand)}
 .answerbox .chip{margin:2px 3px}
 .matchgrid{display:flex;gap:12px;margin:10px 0}
 .matchcol{flex:1;display:flex;flex-direction:column;min-width:0}
 .matchcol .opt{justify-content:center;text-align:center}
-.opt.sel{border-color:var(--brand);background:var(--accent-soft)}
+.opt.sel{border-color:var(--brand-dark);background:var(--brand-soft);color:var(--brand-dark);box-shadow:0 2px 0 var(--brand-dark)}
 .answerbox{min-height:52px;background:#fff;border-radius:16px;box-shadow:var(--shadow);padding:13px 14px;font-size:18px;margin:10px 0}
 .playbig{display:flex;align-items:center;justify-content:center;gap:8px;margin:10px auto 16px;background:var(--brand);color:#fff;border-radius:999px;padding:13px 30px;font-size:17px;font-weight:600;min-height:52px}
 .playbig .ic{width:20px;height:20px}
 .qimg{width:100%;border-radius:16px;margin-bottom:12px;display:block}
 .rate-row{display:flex;gap:10px;margin-top:14px}
 .rate{flex:1;padding:13px;border-radius:16px;font-size:16px;font-weight:600;background:#fff;border:1.5px solid var(--line);min-height:52px}
-.rate.r1{color:var(--err)}
+.rate.r1{color:var(--err-dark)}
 .rate.r2{color:#92400E}
-.rate.r3{color:var(--ok)}
+.rate.r3{color:var(--ok-dark)}
 
 /* ===== 底部反馈条 ===== */
 /* v3.18：反馈条只作状态——真玻璃打底，对错只用左侧色点（✓/✕）表达，不再整条平涂、不承载任何文案 */
@@ -188,7 +188,7 @@ header.top h1{font-size:22px;margin:0;color:var(--brand);font-weight:800}
 .stat-cell .k{font-size:12px;color:var(--ink-2)}
 .err-row{display:flex;width:100%;align-items:center;gap:10px;padding:12px 4px;border-bottom:1px solid var(--line);text-align:left;font-size:15px;min-height:48px}
 .err-row:last-child{border-bottom:none}
-.err-row .ic{width:18px;height:18px;color:var(--err);flex:none}
+.err-row .ic{width:18px;height:18px;color:var(--err-dark);flex:none}
 .err-row .arr{margin-left:auto;color:var(--ink-2)}
 .streak-note{display:flex;align-items:center;justify-content:center;gap:6px;color:var(--accent);font-weight:700;font-size:16px;margin:4px 0 16px}
 .streak-note .ic{width:20px;height:20px}
@@ -282,7 +282,7 @@ input[type=file]{display:none}
 .book-chapter .book-arrow{margin-left:auto;color:var(--ink-2);font-size:13px}
 .word-row.dim{opacity:.5}
 .tag.learned{background:#E5F4EA;color:#1C7C43}
-.word-del{flex:none;color:var(--err);align-self:center}
+.word-del{flex:none;color:var(--err-dark);align-self:center}
 .scene-src{flex:none;align-self:center}
 .py-scene-link{display:inline-block;margin-left:10px;color:#4ec9b0;cursor:pointer;font-size:12px;text-decoration:underline}
 /* ===== v3.15 苹果级视觉系统 + 书本首页 + 一屏练习 ===== */
@@ -319,7 +319,7 @@ input[type=file]{display:none}
 @keyframes bkInPrev{from{transform:translateX(-52px);opacity:.35}to{transform:none;opacity:1}}
 .bk-page.turn-next{animation:bkInNext .22s var(--ease-out)}
 .bk-page.turn-prev{animation:bkInPrev .22s var(--ease-out)}
-.bk-done{display:flex;align-items:center;gap:8px;background:var(--ok-bg);color:var(--ok);border-radius:12px;padding:9px 12px;font-weight:700;font-size:14.5px;margin-bottom:12px}
+.bk-done{display:flex;align-items:center;gap:8px;background:var(--ok-bg);color:var(--ok-dark);border-radius:12px;padding:9px 12px;font-weight:700;font-size:14.5px;margin-bottom:12px}
 .bk-done .ic{width:19px;height:19px}
 .bk-title{font-size:23px;font-weight:800;letter-spacing:.2px}
 .bk-en{color:var(--brand);font-weight:600;font-size:15px;margin-top:1px}
@@ -336,7 +336,7 @@ input[type=file]{display:none}
 .bk-line .cn{color:var(--ink-2);font-size:12.5px;flex:none;max-width:38%;text-align:right}
 .bk-page .culture-card{margin:14px 0 2px;box-shadow:none}
 .bk-actions{flex:none;padding:10px 2px 2px;background:var(--glass);backdrop-filter:blur(22px) saturate(1.8);-webkit-backdrop-filter:blur(22px) saturate(1.8);border-top:.5px solid var(--hair)}
-.bk-actstate{text-align:center;font-weight:700;color:var(--ok);font-size:14.5px;margin-bottom:8px}
+.bk-actstate{text-align:center;font-weight:700;color:var(--ok-dark);font-size:14.5px;margin-bottom:8px}
 .bk-actrow{display:flex;gap:10px}
 .bk-actrow .btn.listen{flex:.85}
 .bk-actrow .btn.start{flex:1.15}
@@ -371,14 +371,14 @@ input[type=file]{display:none}
 .pslot .btn{flex:1}
 .qreveal{margin-top:12px;background:#fff;border:1.5px solid var(--brand-soft);border-radius:14px;padding:11px 14px;font-size:17px;box-shadow:var(--shadow)}
 .qreveal .hl{color:var(--accent);font-weight:800}
-.answerbox .chip.right{background:var(--ok);border-color:var(--ok);color:#fff}
+.answerbox .chip.right{background:var(--ok);border-color:var(--ok-dark);color:#fff}
 
 /* —— 答对庆祝微动画 —— */
 @keyframes burstPop{0%{transform:scale(1)}35%{transform:scale(1.06)}100%{transform:scale(1)}}
 .opt{position:relative}
 .opt.wrong:disabled{text-decoration:line-through}
 .opt.burst{animation:burstPop .38s cubic-bezier(.34,1.56,.64,1)}
-.opt.burst:after{content:"✓";position:absolute;top:-8px;right:8px;width:23px;height:23px;border-radius:50%;background:var(--ok);color:#fff;font-size:13.5px;font-weight:800;line-height:23px;text-align:center;box-shadow:0 2px 8px rgba(4,120,87,.45);animation:badgePop .38s cubic-bezier(.34,1.56,.64,1) both}
+.opt.burst:after{content:"✓";position:absolute;top:-8px;right:8px;width:23px;height:23px;border-radius:50%;background:var(--ok);color:#fff;font-size:13.5px;font-weight:800;line-height:23px;text-align:center;box-shadow:0 2px 8px rgba(6,95,70,.45);animation:badgePop .38s cubic-bezier(.34,1.56,.64,1) both}
 
 /* —— 结算 / 复习主页：主按钮吸底毛玻璃 —— */
 .settle-actions{position:sticky;bottom:calc(10px + env(safe-area-inset-bottom));background:var(--glass);backdrop-filter:blur(22px) saturate(1.8);-webkit-backdrop-filter:blur(22px) saturate(1.8);border:.5px solid var(--hair);border-radius:20px;padding:10px;box-shadow:var(--shadow-card);margin-top:14px}
@@ -417,7 +417,7 @@ input[type=file]{display:none}
 .lr-title .en{color:var(--ink-2);font-size:12.5px;font-weight:500;margin-left:6px}
 .lr-goal{font-size:13.5px;color:var(--ink-2);margin-top:3px;line-height:1.45}
 .lr-state{flex:none;text-align:right;font-size:12px;color:var(--ink-2)}
-.lr-state .st-done{color:var(--ok);font-weight:700;font-size:13px}
+.lr-state .st-done{color:var(--ok-dark);font-weight:700;font-size:13px}
 .lr-state .st-cur{color:var(--brand);font-weight:800;font-size:12.5px;background:var(--brand-soft);border-radius:999px;padding:4px 9px}
 .lr-state .st-new{color:#B6AB98}
 .unit-test-row{margin-bottom:9px}
@@ -485,7 +485,7 @@ input[type=file]{display:none}
 .ce-arr{font-size:19px;color:#C4B898}
 .weak-row{margin-top:10px;background:var(--card);border:.5px solid var(--hair);border-radius:16px;box-shadow:var(--shadow-card);overflow:hidden}
 .weak-head{display:flex;width:100%;align-items:center;gap:6px;padding:13px 15px;font-size:14.5px;color:var(--ink)}
-.weak-head b{color:var(--err)}
+.weak-head b{color:var(--err-dark)}
 .weak-head .ce-arr{margin-left:auto}
 .weak-chips{display:flex;flex-wrap:wrap;gap:7px;padding:0 15px 14px}
 .weak-chips i{font-style:normal;font-size:13px;background:#FDF0EC;border:1px solid #F3C2B2;color:#B3401F;border-radius:999px;padding:4px 10px}
@@ -496,8 +496,6 @@ input[type=file]{display:none}
 .cc-art{position:relative;height:104px;overflow:hidden}
 .cc-art img{width:100%;height:100%;object-fit:cover;display:block}
 .cc-art:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,12,0,.05),rgba(20,12,0,.34))}
-.cc-no{position:absolute;left:12px;top:10px;z-index:2;font-size:11.5px;font-weight:800;letter-spacing:1px;color:#FFF6DE;background:rgba(30,20,6,.42);border:.5px solid rgba(255,246,222,.55);border-radius:999px;padding:3.5px 9px;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
-.cc-unit{position:absolute;right:12px;top:10px;z-index:2;font-size:11.5px;font-weight:700;color:#FFF6DE;background:rgba(30,20,6,.42);border:.5px solid rgba(255,246,222,.55);border-radius:999px;padding:3.5px 9px;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
 .cc-body{padding:16px 18px 18px}
 .cc-tag{font-size:11px;letter-spacing:3px;color:#B45309;font-weight:800}
 .cc-quote{position:relative;font-size:21px;font-weight:800;line-height:1.4;margin:10px 0 4px;padding-left:19px;color:#292018}
@@ -557,7 +555,7 @@ input[type=file]{display:none}
 /* 卡片型玻璃控件：渐变描边 */
 .settle-actions,.sticky-cta{background:linear-gradient(rgba(255,253,248,.62),rgba(255,253,248,.62)) padding-box,linear-gradient(135deg,rgba(255,255,255,.95),rgba(255,255,255,.3) 38%,rgba(255,255,255,.08) 62%,rgba(255,255,255,.6)) border-box;border:.5px solid transparent}
 /* —— 就地反馈：夸奖/反应飘在题目区上方，不占底部条 —— */
-.praise-pop{position:absolute;top:10px;left:50%;transform:translateX(-50%);z-index:6;display:flex;align-items:center;gap:7px;background:rgba(255,255,255,.94);border-radius:999px;padding:5px 15px 5px 6px;box-shadow:0 10px 24px rgba(4,120,87,.22);font-weight:800;color:var(--ok);font-size:15px;pointer-events:none;animation:praiseIn .34s cubic-bezier(.34,1.56,.64,1) both;white-space:nowrap}
+.praise-pop{position:absolute;top:10px;left:50%;transform:translateX(-50%);z-index:6;display:flex;align-items:center;gap:7px;background:rgba(255,255,255,.94);border-radius:999px;padding:5px 15px 5px 6px;box-shadow:0 10px 24px rgba(6,95,70,.22);font-weight:800;color:var(--ok-dark);font-size:15px;pointer-events:none;animation:praiseIn .34s cubic-bezier(.34,1.56,.64,1) both;white-space:nowrap}
 .praise-pop img{width:26px;height:26px;border-radius:50%;object-fit:cover;object-position:top;flex:none}
 .wrong-pop{position:absolute;top:10px;left:50%;transform:translateX(-50%);z-index:6;width:38px;height:38px;border-radius:50%;overflow:hidden;box-shadow:0 8px 20px rgba(185,28,28,.25);pointer-events:none;animation:praiseIn .3s ease-out both;background:#fff}
 .wrong-pop img{width:100%;height:100%;object-fit:cover;object-position:top;display:block}
@@ -568,7 +566,7 @@ input[type=file]{display:none}
 /* 填空回填 */
 .cloze-fill{background:var(--ok);color:#fff;border-radius:6px;padding:0 5px;font-weight:800}
 /* 配对错配持久标记（红边 + ✕ 角标，直到配对成功或本题结束） */
-.opt.merr{border-color:var(--err)}
+.opt.merr{border-color:var(--err-dark)}
 .opt.merr:after{content:"✕";position:absolute;top:-9px;right:8px;width:22px;height:22px;border-radius:50%;background:var(--err);color:#fff;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;border:2px solid #fff;box-shadow:0 2px 6px rgba(185,28,28,.4);z-index:2}
 /* 曾错配的正确配对：定稿时同色描边 + 光晕揭示一次 */
 .matchcol .opt.reveal{outline:3px solid rgba(217,167,90,.9);outline-offset:-1px;animation:revealPulse .5s ease-out both}
@@ -577,6 +575,80 @@ input[type=file]{display:none}
 /* 文化本新卡角标 + 灰卡暗纹 */
 .ccell .ca .cnew{position:absolute;right:7px;top:6px;z-index:2;font-size:10px;font-weight:800;color:#fff;background:var(--err);border-radius:999px;padding:2px 7px;box-shadow:0 2px 6px rgba(185,28,28,.35)}
 .ccell.lock:before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(45deg,rgba(90,70,30,.06) 0 6px,transparent 6px 12px);pointer-events:none;z-index:1}
+
+/* ===== v3.18.1 热修：反馈预留行 / 玻璃在平底上读得出 / 按钮 chunky / 文化卡成卡 ===== */
+/* 正文页 subtle 暖色渐变底：与全站奶油色系一致，给玻璃控件可透的层次（不改文字区底色对比） */
+body{background:radial-gradient(130% 55% at 50% -6%,rgba(255,255,255,.75),rgba(255,255,255,0) 60%),linear-gradient(168deg,#FFF9EE 0%,#FDEFD7 46%,#FFF6E7 76%,#FBE7C6 100%)}
+/* 玻璃加强：边缘光梯度拉开 + inset 顶部高光明确 + 分层投影，纯色底上也读得出 */
+#tabbar:before,#feedbackBar:before,.pslot:before,.bk-actions:before,.op-actions:before{background:linear-gradient(90deg,rgba(255,255,255,1),rgba(255,255,255,.55) 30%,rgba(255,255,255,.16) 60%,rgba(255,255,255,.82))}
+.home-head:after,.op-top:after{background:linear-gradient(90deg,rgba(255,255,255,1),rgba(255,255,255,.55) 30%,rgba(255,255,255,.16) 60%,rgba(255,255,255,.82))}
+.op-actions:before{content:"";position:absolute;left:0;right:0;top:0;height:1px;pointer-events:none;z-index:3}
+#tabbar{box-shadow:inset 0 1px 0 rgba(255,255,255,.92),0 -12px 32px rgba(122,72,16,.14)}
+#feedbackBar{box-shadow:inset 0 1px 0 rgba(255,255,255,.92),0 -10px 30px rgba(122,72,16,.14)}
+.pslot{box-shadow:inset 0 1px 0 rgba(255,255,255,.92),0 -8px 26px rgba(122,72,16,.11)}
+.home-head{box-shadow:inset 0 1px 0 rgba(255,255,255,.92),0 10px 26px rgba(122,72,16,.09)}
+.op-top{box-shadow:inset 0 1px 0 rgba(255,255,255,.85),0 8px 22px rgba(30,18,4,.17)}
+.op-actions{box-shadow:inset 0 1px 0 rgba(255,255,255,.85),0 -10px 26px rgba(30,18,4,.19)}
+.settle-actions,.sticky-cta{box-shadow:0 1px 2px rgba(122,72,16,.07),0 16px 36px rgba(122,72,16,.14)}
+/* —— 反馈预留行：题干与选项之间固定 40px，反馈元素一律在行内流动，永不压字 —— */
+.qfbrow{height:40px;display:flex;align-items:center;justify-content:flex-end;gap:8px;padding:0 2px;flex:none}
+@keyframes fbRowIn{from{opacity:0;transform:translateY(8px) scale(.8)}to{opacity:1;transform:none}}
+.praise-pop{position:static;transform:none;animation:fbRowIn .34s cubic-bezier(.34,1.56,.64,1) both;padding:1px 14px 1px 4px;border:1.5px solid var(--ok-mid)}
+.praise-pop img{width:34px;height:34px}
+.wrong-pop{position:static;transform:none;width:34px;height:34px;flex:none;animation:fbRowIn .3s ease-out both}
+.retry-hint{position:static;transform:none;animation:fbRowIn .28s ease-out both}
+.review-status{position:static;transform:none;animation:fbRowIn .28s ease-out both}
+/* —— 按钮 chunky 立体（多邻国式）：底边厚度阴影 + 按下压缩；选项明确按压态 —— */
+.btn{box-shadow:0 4px 0 var(--brand-dark);transition:background .15s ease,transform .08s ease,box-shadow .08s ease}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--brand-dark)}
+.btn.accent{box-shadow:0 4px 0 #C2410C}
+.btn.accent:active{box-shadow:0 1px 0 #C2410C}
+.btn.danger{box-shadow:0 4px 0 #7F1D1D}
+.btn.danger:active{box-shadow:0 1px 0 #7F1D1D}
+.btn.secondary{box-shadow:0 3px 0 #E3D7BF}
+.btn.secondary:active{box-shadow:0 1px 0 #E3D7BF}
+.btn:disabled{box-shadow:none;transform:none}
+.btn.cc-collect{box-shadow:0 5px 0 #7E4C12,0 10px 22px rgba(168,100,31,.3)}
+.btn.cc-collect:active{transform:translateY(3px);box-shadow:0 1px 0 #7E4C12}
+#feedbackBar.ok .fb-continue{box-shadow:0 4px 0 #065F46}
+#feedbackBar.no .fb-continue{box-shadow:0 4px 0 var(--err-dark)}
+#feedbackBar .fb-continue:active{transform:translateY(3px);box-shadow:0 1px 0 rgba(16,24,40,.35)}
+.playbig{box-shadow:0 4px 0 var(--brand-dark);transition:transform .08s ease,box-shadow .08s ease,background .15s ease}
+.playbig:active{transform:translateY(3px);box-shadow:0 1px 0 var(--brand-dark)}
+.chip{box-shadow:0 2px 0 rgba(15,118,110,.35);transition:transform .08s ease,box-shadow .08s ease,background .15s ease}
+.chip:active{transform:translateY(2px);box-shadow:0 0 0 rgba(15,118,110,0)}
+.chip.used,.chip.placed{box-shadow:0 2px 0 var(--brand-dark)}
+.chip.used:active,.chip.placed:active{box-shadow:0 0 0 rgba(0,0,0,0)}
+.opt{transition:transform .1s ease,background .15s ease,border-color .15s ease,box-shadow .1s ease}
+.opt:active{transform:translateY(2px);box-shadow:0 0 0 rgba(31,41,55,0)}
+.opt.pop{transform:scale(1.045)}
+.glass-btn{transition:transform .08s ease,box-shadow .08s ease}
+.glass-btn:active{transform:translateY(1px) scale(.96)}
+/* —— 文化卡成卡：竖版 5:7 居中浮起，分区如实体卡（图窗/标题带/正文/底部条） —— */
+.cult-overlay{padding:20px}
+.cult-card-pop{position:relative;width:min(82vw,302px);max-width:302px;aspect-ratio:5/7;display:flex;flex-direction:column;border-radius:20px;border-width:2px;box-shadow:inset 0 1px 0 rgba(255,255,255,.85),inset 0 -12px 20px rgba(146,96,10,.10),0 2px 3px rgba(20,12,0,.20),0 10px 22px rgba(20,12,0,.20),0 34px 70px rgba(20,12,0,.42)}
+.cult-card-pop:after{content:"";position:absolute;inset:0;border-radius:inherit;background:linear-gradient(115deg,transparent 32%,rgba(255,255,255,.30) 47%,transparent 60%);transform:translateX(-135%);animation:ccSheen .9s ease-out .25s both;pointer-events:none;z-index:6}
+.cc-art{flex:0 0 33%;height:auto}
+.cc-band{flex:none;display:flex;align-items:center;gap:8px;padding:9px 14px 8px;background:linear-gradient(180deg,#FFF6DE,#FDEBC3);border-top:1px solid rgba(217,167,90,.55);border-bottom:1px solid rgba(217,167,90,.45)}
+.ccb-no{font-size:11px;font-weight:800;letter-spacing:1.2px;color:#92600A;flex:none}
+.ccb-name{font-size:14.5px;font-weight:800;color:#3A2A16;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ccb-unit{font-size:10.5px;font-weight:700;color:#92600A;border:1px solid rgba(146,96,10,.45);border-radius:999px;padding:2px 8px;flex:none}
+.cc-body{flex:1;padding:12px 18px 4px;display:flex;flex-direction:column;overflow:hidden}
+.cc-quote{font-size:22px;margin-top:8px}
+.cc-foot{flex:none;padding:8px 14px 13px;border-top:.5px solid #F0E0BC;background:linear-gradient(180deg,rgba(253,235,195,.30),rgba(253,235,195,.65))}
+.ccf-src{display:block;font-size:10.5px;letter-spacing:2px;color:#A5854F;margin-bottom:8px;text-align:center}
+.cc-foot .cc-collect{margin-top:0}
+/* —— 文化本卡片同形制：竖版比例 + 图窗/标题带/正文/底部条（展开态除外） —— */
+.ccell{display:flex;flex-direction:column;aspect-ratio:5/7;border-radius:15px}
+.ccell .ca{flex:0 0 36%;height:auto}
+.ccell .cband{flex:none;display:flex;align-items:center;gap:6px;padding:6px 10px 5px;background:linear-gradient(180deg,#FFF6DE,#FDEBC3);border-top:1px solid rgba(217,167,90,.5);border-bottom:1px solid rgba(240,224,188,.95)}
+.ccell .cno2{font-size:9.5px;font-weight:800;letter-spacing:.8px;color:#92600A;flex:none}
+.ccell .ctt{font-size:11.5px;font-weight:800;color:#3A2A16;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:left}
+.ccell .cb{flex:1;padding:8px 11px 6px}
+.ccell .cfoot{flex:none;display:flex;justify-content:space-between;font-size:9.5px;letter-spacing:1.2px;color:#A5854F;border-top:.5px solid #F0E4C8;padding:5px 10px 7px}
+.ccell.lock .cband{background:#EFE9DB;border-top-color:#E0D5BC;border-bottom-color:#E7DCC2}
+.ccell.exp{aspect-ratio:auto}
+.ccell.exp .ca{flex:0 0 74px}
 </style>
 </head>
 <body>
@@ -783,7 +855,7 @@ input[type=file]{display:none}
       </div>
       <p class="muted" style="margin-bottom:0">开启双端同步后，进度会自动在手机和电脑之间同步。单词音标来源：ECDICT 开源英汉词典（MIT 许可）；对话与题目均为原创。</p>
     </div>
-    <div class="version-line">情景英语 v3.18</div>
+    <div class="version-line">情景英语 v3.18.1</div>
   </section>
 </div>
 <!-- 文化卡收藏弹窗（v3.16：首次完成场景时弹，卡面按实体收藏卡设计） -->
@@ -791,13 +863,19 @@ input[type=file]{display:none}
   <div class="cult-card-pop">
     <div class="cc-art">
       <img id="cultPopImg" alt="场景图">
-      <span class="cc-no" id="cultPopNo">No.01/36</span>
-      <span class="cc-unit" id="cultPopUnit"></span>
+    </div>
+    <div class="cc-band">
+      <span class="ccb-no" id="cultPopNo">No.01/36</span>
+      <span class="ccb-name" id="cultPopName"></span>
+      <span class="ccb-unit" id="cultPopUnit"></span>
     </div>
     <div class="cc-body">
       <div class="cc-tag">文 化 卡 · 新 收 入</div>
       <div class="cc-quote" id="cultPopLine"></div>
       <p class="cc-note2" id="cultPopNote"></p>
+    </div>
+    <div class="cc-foot">
+      <span class="ccf-src" id="cultPopSrc">情景英语 · 第一季</span>
       <button class="btn cc-collect" id="btnCollect">收入文化本 ✓</button>
     </div>
   </div>
@@ -3018,6 +3096,18 @@ function showFeedback(ok, correctText, onContinue){
   fbState.onContinue = onContinue || null;
   blip(ok);
 }
+/* v3.18.1：反馈预留行——题干与选项区之间固定 40px 的一行，反馈元素只进这一行，永不压字。
+   渲染时预先插入（零位移）；反馈函数取行时兜底补建 */
+function fbRowOf(wrap){
+  if(!wrap) return null;
+  var found = wrap.querySelectorAll('.qfbrow');
+  if(found.length) return found[0];
+  var row = document.createElement('div'); row.className = 'qfbrow';
+  var qp = wrap.querySelectorAll('.qprompt')[0];
+  if(qp && typeof wrap.insertBefore === 'function' && qp.nextSibling) wrap.insertBefore(row, qp.nextSibling);
+  else wrap.appendChild(row);
+  return row;
+}
 /* 当前题目区（练习/复习的 .qwrap）：就地反馈元素一律挂这里 */
 function currentQWrap(){
   var pb = document.getElementById('practiceBox');
@@ -3026,30 +3116,32 @@ function currentQWrap(){
   if(rb && rb.querySelectorAll('.qwrap').length) return rb.querySelector('.qwrap');
   return null;
 }
-/* 多邻国式三件套之二：答对——开心 Wei + 夸奖语在题目区上方就地飘（动画 340ms 内完成） */
+/* 多邻国式三件套之二：答对——开心 Wei + 夸奖语在反馈预留行内出现（动画 340ms 内完成） */
 function showPraisePop(){
   var wrap = currentQWrap(); if(!wrap) return;
-  var hints = wrap.querySelectorAll('.retry-hint');
+  var row = fbRowOf(wrap); if(!row) return;
+  var hints = row.querySelectorAll('.retry-hint');
   for(var hi = 0; hi < hints.length; hi++) hints[hi].remove();
-  var olds = wrap.querySelectorAll('.praise-pop');
+  var olds = row.querySelectorAll('.praise-pop');
   for(var i = 0; i < olds.length; i++) olds[i].remove();
   var d = document.createElement('div'); d.className = 'praise-pop';
   var img = document.createElement('img'); img.src = IMG_WEI_HAPPY; img.alt = 'Wei';
   var sp = document.createElement('span'); sp.textContent = pickOf(PRAISE);
   d.appendChild(img); d.appendChild(sp);
-  wrap.appendChild(d);
+  row.appendChild(d);
 }
-/* 答错——差一点表情的 Wei（思考脸）在题目区原地出现，不带文案 */
+/* 答错——差一点表情的 Wei（思考脸，34px）在反馈预留行内出现，不带文案 */
 function showWrongPop(){
   var wrap = currentQWrap(); if(!wrap) return;
-  var hints2 = wrap.querySelectorAll('.retry-hint');
+  var row = fbRowOf(wrap); if(!row) return;
+  var hints2 = row.querySelectorAll('.retry-hint');
   for(var hj = 0; hj < hints2.length; hj++) hints2[hj].remove();
-  var olds = wrap.querySelectorAll('.wrong-pop');
+  var olds = row.querySelectorAll('.wrong-pop');
   for(var i = 0; i < olds.length; i++) olds[i].remove();
   var d = document.createElement('div'); d.className = 'wrong-pop';
   var img = document.createElement('img'); img.src = IMG_WEI_THINK; img.alt = 'Wei';
   d.appendChild(img);
-  wrap.appendChild(d);
+  row.appendChild(d);
 }
 function showRetryFeedback(){
   /* v3.18：首次答错不惊动底部条——错选项划掉本身即提示，另在题目区原地小字「再想一想」 */
@@ -3059,9 +3151,10 @@ function showRetryFeedback(){
   if(practice) practice.attempts = 1;
   hideFeedback();
   var wrap = currentQWrap();
-  if(wrap && !wrap.querySelectorAll('.retry-hint').length){
+  var row = fbRowOf(wrap);
+  if(row && !row.querySelectorAll('.retry-hint').length){
     var h = document.createElement('div'); h.className = 'retry-hint'; h.textContent = '再想一想';
-    wrap.appendChild(h);
+    row.appendChild(h);
   }
 }
 function showAutoFeedback(ok, correctText, delay, onNext){
@@ -3312,7 +3405,7 @@ function renderBuildQ(box, cfg){
         bank.forEach(function(x){ bankBtns[x.id].disabled = true; });
         ansBox.querySelectorAll('.chip').forEach(function(x){ x.disabled = true; });
         btnRedo.disabled = true;
-        setTimeout(function(){ cfg.onDone(ok); }, 180);
+        cfg.onDone(ok); /* v3.18.1：判定帧四件同帧——变色/回填与 Wei/进度/状态点同帧齐发，不再隔 180ms */
       }
     });
     chipBox.appendChild(b);
@@ -3896,6 +3989,7 @@ function renderPracticeQ(){
   });
   /* v3.16：题型说明同课同题型只出现第一次——本题渲染完即标记 */
   if(practice && q && practice.seenTypes) practice.seenTypes[q.type] = 1;
+  fbRowOf(qwrap); /* v3.18.1：预留反馈行（题干之后、选项之前），渲染时先占位，反馈零位移零压字 */
   sessAnsweredCurrent = false;
   saveSession();
 }
@@ -4036,7 +4130,9 @@ function showCulturePop(S){
   var idx = SCENES.indexOf(S);
   document.getElementById('cultPopImg').src = S.img;
   document.getElementById('cultPopNo').textContent = 'No.' + String(idx + 1).padStart(2, '0') + '/' + SCENES.length;
+  document.getElementById('cultPopName').textContent = S.title;
   document.getElementById('cultPopUnit').textContent = S.unit;
+  document.getElementById('cultPopSrc').textContent = '情景英语 · 第一季 · ' + S.unit;
   document.getElementById('cultPopLine').textContent = S.culture.line;
   document.getElementById('cultPopNote').textContent = S.culture.note;
   document.getElementById('culturePop').classList.remove('hidden');
@@ -4453,18 +4549,21 @@ function renderCultureBook(){
       var cell = document.createElement('button');
       cell.className = 'ccell ' + (owned ? 'got' : 'lock') + (expanded ? ' exp' : '');
       cell.setAttribute('data-scene', sc.id);
-      var art = '<span class="ca"><img src="' + sc.img + '" alt=""><span class="cno">No.' + String(i + 1).padStart(2, '0') + '</span>' + (isNew ? '<span class="cnew">新</span>' : '') + '</span>';
+      /* v3.18.1：与弹窗同形制——图窗 / 标题带（No.+卡名） / 正文 / 底部条（出处+收集状态） */
+      var art = '<span class="ca"><img src="' + sc.img + '" alt="">' + (isNew ? '<span class="cnew">新</span>' : '') + '</span>';
+      var band = '<span class="cband"><span class="cno2">No.' + String(i + 1).padStart(2, '0') + '</span><span class="ctt">' + esc(sc.title) + '</span></span>';
+      var foot = '<span class="cfoot"><span>第一季</span><span>' + (owned ? '已收集 ✓' : '未收集') + '</span></span>';
       if(!owned){
-        cell.innerHTML = art + '<span class="lk">🔒</span><span class="cb" style="display:block"><span class="cl">' + esc(sc.title) + '</span><span class="cn2">未收集 · 学完这一课收入</span></span>';
+        cell.innerHTML = art + band + '<span class="lk">🔒</span><span class="cb"><span class="cl">未收集</span><span class="cn2">学完这一课，这张卡就是你的</span></span>' + foot;
       } else if(!expanded){
-        cell.innerHTML = art + '<span class="cb" style="display:block"><span class="cl">' + esc(sc.culture.line) + '</span><span class="cn2">' + esc(sc.culture.note) + '</span></span>';
+        cell.innerHTML = art + band + '<span class="cb"><span class="cl">' + esc(sc.culture.line) + '</span><span class="cn2">' + esc(sc.culture.note) + '</span></span>' + foot;
         cell.addEventListener('click', function(){ cultureOpenId = sc.id; renderCultureBook(); });
       } else {
-        var inner = art + '<span class="cb" style="display:block"><span class="cl">“' + esc(sc.culture.line) + '”</span>' +
+        var inner = art + band + '<span class="cb"><span class="cl">“' + esc(sc.culture.line) + '”</span>' +
           '<span class="cn2">' + esc(sc.culture.note) + '</span>';
         if(sc.culture.story) inner += '<span class="cc-story" style="display:block"><b>小 故 事</b>' + esc(sc.culture.story) + '</span>';
         if(sc.culture.link) inner += '<a class="cc-link" href="' + esc(sc.culture.link) + '" target="_blank" rel="noopener">延伸阅读：简单英语维基 · ' + esc(cultureLinkLabel(sc.culture.link)) + ' ↗</a>';
-        inner += '</span>';
+        inner += '</span>' + foot;
         cell.innerHTML = inner;
         cell.addEventListener('click', function(ev){
           if(ev && ev.target && ev.target.closest && ev.target.closest('a')) return;
@@ -4526,9 +4625,12 @@ function renderReviewQ(){
       reviewDoneToday++;
     }
     /* v3.18：复习状态字改到题面原地（不再借底部反馈条写字）；进度条同步先长一格 */
+    /* v3.18.1：状态字进反馈预留行，不再绝对定位压内容 */
+    var oldRst = box.querySelectorAll('.review-status');
+    for(var ri = 0; ri < oldRst.length; ri++) oldRst[ri].remove();
     var rst = document.createElement('div'); rst.className = 'review-status';
     rst.textContent = ok ? '已记为「认识」' : '已记为「不认识」';
-    box.appendChild(rst);
+    fbRowOf(box).appendChild(rst);
     document.getElementById('rvProg').style.width = Math.round((review.idx + 1) / Math.max(1, review.ids.length) * 100) + '%';
     saveSession(); showAutoFeedback(ok, correctText, ok ? DWELL_OK_MS : DWELL_BAD_MS, function(){
       review.idx++;
@@ -4587,6 +4689,7 @@ function renderReviewQ(){
   }
   var rb = document.getElementById('reviewBox');
   if(rb){ rb.classList.remove('qanim'); void rb.offsetWidth; rb.classList.add('qanim'); }
+  fbRowOf(qwrap); /* v3.18.1：预留反馈行 */
   addTestSkipButton(box, function(){
     hideFeedback();
     review.idx++;
