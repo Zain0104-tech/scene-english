@@ -411,7 +411,7 @@ input[type=file]{display:none}
       <p class="msg-line" id="myMsg"></p>
       <p class="muted" style="margin-bottom:0">学习进度只保存在这台设备上。换设备前，请先导出进度。单词音标来源：ECDICT 开源英汉词典（MIT 许可）；对话与题目均为原创。</p>
     </div>
-    <div class="version-line">情景英语 v3.2</div>
+    <div class="version-line">情景英语 v3.3</div>
   </section>
 </div>
 
@@ -1836,7 +1836,7 @@ function renderHome(){
     card.innerHTML = '<img class="thumb" alt="' + s.title + '场景图">' +
       '<span class="sc-main">' +
         '<span class="sc-title">' + s.title + '<span class="en">' + s.en + '</span></span>' +
-        '<span class="sc-meta" style="display:block">' + s.lines.length + ' 句对话 · ' + s.targets.length + ' 个重点词</span>' +
+        '<span class="sc-meta" style="display:block">' + s.lines.length + ' 句对话 · ' + s.targets.length + ' 个重点词 · 约 8 分钟</span>' +
         ((stats && typeof stats.accuracy === 'number') ? '<span class="sc-acc">上次正确率 ' + stats.accuracy + '%</span>' : '') +
         '<span class="btn sc-cta" style="display:flex">' + (done ? '再练一次' : (started ? '继续学习' : '开始学习')) + '</span>' +
       '</span>' +
@@ -2114,74 +2114,166 @@ function renderBuildQ(box, cfg){
 
 /* ===== ③ 练习流程 ===== */
 function buildPractice(scene){
-  /* 难度阶梯：认读 → 听辨 → 提取 → 产出 → 迁移，共 13 步（跟读 1 步不计分） */
+  /* 三段式一课（约 29 步）：精听跟读 → 理解与词汇 → 结尾复测。
+     题型→能力：听 = listen / wordListen / listenOrder；说 = 每句跟读（不计分）；
+     读 = wordMeaning / respond / image；写·产出 = cloze / order / buildFromCn。
+     目标词在一课内走完生命周期：听见（wordListen / 跟读台词）→ 认出（wordMeaning）
+     → 反向想起（wordRecall）→ 用进句子（cloze / match / 拼句台词）→ 结尾复测（Phase 3）。
+     选题用 cover 计数：先把固定题（配对、排序、看图、结尾复测、结尾拼句）算进去，
+     变量题优先补练得最少的词，保证每个目标词至少被 4 道计分题练到。 */
   var qs = [];
   var T = scene.targets;
   var n = scene.lines.length;
-  var usedLines = {};
-  function markUsed(i){ if(i != null) usedLines[i] = 1; }
+  function wordIn(text, w){ return new RegExp('\\b' + w + '(?:s|es|ed|ing|d)?\\b', 'i').test(text); }
+  function lineTargets(i){ return T.filter(function(w){ return wordIn(scene.lines[i].en, w); }); }
+  function respondTargets(i){
+    var u = [];
+    lineTargets(i).concat(lineTargets(i + 1)).forEach(function(w){ if(u.indexOf(w) < 0) u.push(w); });
+    return u;
+  }
   function linesWithTarget(){
     var c = [];
     scene.lines.forEach(function(_, i){ if(lineTargetOf(scene, i)) c.push(i); });
     return c;
   }
   function wordCount(i){ return scene.lines[i].en.replace(/[.!?]+$/, '').split(' ').filter(Boolean).length; }
+  function rnd(arr){ return arr[Math.floor(Math.random() * arr.length)]; }
+  function allIdx(){ var a = []; for(var i = 0; i < n; i++) a.push(i); return a; }
+  /* cloze 能考到的目标词（某句里第一个出现的目标词） */
+  var clozeTargets = {};
+  linesWithTarget().forEach(function(i){ clozeTargets[lineTargetOf(scene, i)] = 1; });
+  /* cover 初值：match（+1 全词）与 Phase 3 wordRecall（+1 全词） */
+  var cover = {};
+  T.forEach(function(w){ cover[w] = 2; });
+  lineTargets(scene.orderLine).forEach(function(w){ cover[w] += 2; }); /* order + 结尾拼句 */
+  T.filter(function(w){ return wordIn(scene.imgAnswer, w); }).forEach(function(w){ cover[w] += 1; }); /* image */
+  function bump(ws){ ws.forEach(function(w){ cover[w]++; }); }
+  function pickTarget(cands, preferNonCloze){
+    if(!cands.length) return null;
+    var pool = cands.slice();
+    if(preferNonCloze){
+      var hard = pool.filter(function(w){ return !clozeTargets[w]; });
+      if(hard.length) pool = hard;
+    }
+    var min = Math.min.apply(null, pool.map(function(w){ return cover[w]; }));
+    var w = rnd(pool.filter(function(x){ return cover[x] === min; }));
+    cover[w]++;
+    return w;
+  }
+  function pickLine(cands, targetsOf){
+    if(!cands.length) return null;
+    var scored = cands.map(function(i){
+      var ws = targetsOf(i);
+      return {i:i, need:ws.filter(function(w){ return cover[w] < 4; }).length,
+              sum:ws.reduce(function(a, w){ return a + cover[w]; }, 0),
+              minC:ws.length ? Math.min.apply(null, ws.map(function(w){ return cover[w]; })) : 99};
+    });
+    /* 先救最缺练的词（含它的台词优先），再比覆盖面与总次数 */
+    var minC = Math.min.apply(null, scored.map(function(x){ return x.minC; }));
+    var pool = scored.filter(function(x){ return x.minC === minC; });
+    var maxNeed = Math.max.apply(null, pool.map(function(x){ return x.need; }));
+    pool = pool.filter(function(x){ return x.need === maxNeed; });
+    var minSum = Math.min.apply(null, pool.map(function(x){ return x.sum; }));
+    var chosen = rnd(pool.filter(function(x){ return x.sum === minSum; })).i;
+    bump(targetsOf(chosen));
+    return chosen;
+  }
+  function pickCloze(exclLines, exclTargets, allowAny){
+    var attempts = [{lines:exclLines, targets:exclTargets}, {lines:exclLines, targets:[]}];
+    if(allowAny) attempts.push({lines:[], targets:[]});
+    for(var a = 0; a < attempts.length; a++){
+      var exL = attempts[a].lines, exT = attempts[a].targets;
+      var cand = [];
+      scene.lines.forEach(function(_, i){
+        var t = lineTargetOf(scene, i);
+        if(t && exL.indexOf(i) < 0 && exT.indexOf(t) < 0) cand.push(i);
+      });
+      if(cand.length){
+        var ts = [];
+        cand.forEach(function(i){ var t = lineTargetOf(scene, i); if(ts.indexOf(t) < 0) ts.push(t); });
+        var w = pickTarget(ts, false);
+        var li = rnd(cand.filter(function(i){ return lineTargetOf(scene, i) === w; }));
+        return {line:li, word:w};
+      }
+    }
+    return null;
+  }
+  function pickBuildLine(excl, minWords){
+    var tiers = [minWords, 3, 0];
+    for(var t = 0; t < tiers.length; t++){
+      var cand = [];
+      scene.lines.forEach(function(_, i){ if(excl.indexOf(i) < 0 && wordCount(i) >= tiers[t]) cand.push(i); });
+      if(cand.length) return pickLine(cand, lineTargets);
+    }
+    return scene.orderLine;
+  }
+
+  /* ===== Phase 1 精听跟读：每一句对话 1 步，不计分（先看中文懂意思 → 听音 → 出声读） ===== */
+  scene.lines.forEach(function(_, i){ qs.push({type:'speak', line:i, scored:false}); });
+
+  /* ===== Phase 2 理解与词汇：16 步计分 ===== */
   /* 1 听句选义 */
-  var li = Math.floor(Math.random() * n);
-  qs.push({type:'listen', line:li}); markUsed(li);
-  /* 2 听词选拼写 */
-  var wListen = T[Math.floor(Math.random() * T.length)];
+  var liA = pickLine(allIdx(), lineTargets);
+  qs.push({type:'listen', line:liA});
+  /* 2 听词选拼写（优先选 cloze 考不到的词，先把难词听出来） */
+  var wListen = pickTarget(T, true);
   qs.push({type:'wordListen', word:wListen});
   /* 3 看词选义 */
-  var wMean = T[Math.floor(Math.random() * T.length)];
+  var wMean = pickTarget(T.filter(function(w){ return w !== wListen; }), true);
   qs.push({type:'wordMeaning', word:wMean});
-  /* 4 看义选词（尽量与第 3 题不同的词） */
-  var restT = T.filter(function(w){ return w !== wMean; });
-  var wRecall = restT.length ? restT[Math.floor(Math.random() * restT.length)] : wMean;
+  /* 4 看义选词（与第 3 题不同的词） */
+  var wRecall = pickTarget(T.filter(function(w){ return w !== wMean; }), true);
   qs.push({type:'wordRecall', word:wRecall});
   /* 5 词语配对（4 个目标词全覆盖） */
   qs.push({type:'match'});
   /* 6 对话填空 A */
-  var candA = linesWithTarget();
-  var ciA = candA[Math.floor(Math.random() * candA.length)];
-  var wordA = lineTargetOf(scene, ciA);
-  qs.push({type:'cloze', line:ciA, word:wordA}); markUsed(ciA);
-  /* 7 接下一句 */
-  var ri = Math.floor(Math.random() * (n - 1));
-  qs.push({type:'respond', line:ri}); markUsed(ri); markUsed(ri + 1);
-  /* 8 句子排序 */
-  qs.push({type:'order', line:scene.orderLine}); markUsed(scene.orderLine);
-  /* 9 听音拼句（与排序不同的台词，优先未用过、至少 3 个词） */
-  var loCands = [];
-  scene.lines.forEach(function(_, i){ if(i !== scene.orderLine && wordCount(i) >= 3) loCands.push(i); });
-  var loFresh = loCands.filter(function(i){ return !usedLines[i]; });
-  var loPool = loFresh.length ? loFresh : loCands;
-  var loLine = loPool.length ? loPool[Math.floor(Math.random() * loPool.length)] : scene.orderLine;
-  qs.push({type:'listenOrder', line:loLine}); markUsed(loLine);
-  /* 10 填空 B（不同台词、不同目标词；实在没有就换一个没考过的词做看义选词） */
-  var candB = [];
-  scene.lines.forEach(function(_, i){ var t = lineTargetOf(scene, i); if(t && t !== wordA && i !== ciA) candB.push(i); });
-  if(!candB.length) scene.lines.forEach(function(_, i){ if(lineTargetOf(scene, i) && i !== ciA) candB.push(i); });
-  if(candB.length){
-    var ciB = candB[Math.floor(Math.random() * candB.length)];
-    qs.push({type:'cloze', line:ciB, word:lineTargetOf(scene, ciB)}); markUsed(ciB);
-  } else {
-    var unusedT = T.filter(function(w){ return w !== wMean && w !== wRecall; });
-    qs.push({type:'wordRecall', word:(unusedT.length ? unusedT[0] : T[0])});
+  var czA = pickCloze([], [], true);
+  var ciA = -1, wordA = null;
+  if(czA){ ciA = czA.line; wordA = czA.word; qs.push({type:'cloze', line:ciA, word:wordA}); }
+  else qs.push({type:'wordMeaning', word:pickTarget(T, false)});
+  /* 7 接下一句 A */
+  var riA = pickLine(allIdx().filter(function(i){ return i < n - 1; }), respondTargets);
+  qs.push({type:'respond', line:riA});
+  /* 8 句子排序（本场关键句） */
+  qs.push({type:'order', line:scene.orderLine});
+  /* 9 听音拼句（与排序不同的台词） */
+  var loLine = pickBuildLine([scene.orderLine], 3);
+  qs.push({type:'listenOrder', line:loLine});
+  /* 10 填空 B（不同台词、尽量不同目标词） */
+  var czB = pickCloze([ciA], [wordA], false);
+  var ciB = -1, wordB = null;
+  if(czB){ ciB = czB.line; wordB = czB.word; qs.push({type:'cloze', line:ciB, word:wordB}); }
+  else {
+    var unB = T.filter(function(w){ return [wListen, wMean, wRecall].indexOf(w) < 0; });
+    qs.push({type:'wordRecall', word:(unB.length ? pickTarget(unB, false) : pickTarget(T, false))});
   }
-  /* 11 看图选句 */
+  /* 11 接下一句 B（与 A 不同的对话回合） */
+  var riB = pickLine(allIdx().filter(function(i){ return i < n - 1 && i !== riA; }), respondTargets);
+  qs.push({type:'respond', line:riB});
+  /* 12 看中文拼句 A（与排序、听音拼句都不同的台词） */
+  var bcA = pickBuildLine([scene.orderLine, loLine], 4);
+  qs.push({type:'buildFromCn', line:bcA});
+  /* 13 看图选句（结合小故事与画面） */
   qs.push({type:'image'});
-  /* 12 跟读（不计分） */
-  var spCands = linesWithTarget();
-  var spLine = spCands.length ? spCands[Math.floor(Math.random() * spCands.length)] : Math.floor(Math.random() * n);
-  qs.push({type:'speak', line:spLine, scored:false});
-  /* 13 看中文拼句（与 8、9 不同的台词，优先至少 4 个词） */
-  var bcCands = [];
-  scene.lines.forEach(function(_, i){ if(i !== scene.orderLine && i !== loLine && wordCount(i) >= 4) bcCands.push(i); });
-  if(!bcCands.length) scene.lines.forEach(function(_, i){ if(i !== scene.orderLine && i !== loLine && wordCount(i) >= 3) bcCands.push(i); });
-  if(!bcCands.length) scene.lines.forEach(function(_, i){ if(i !== scene.orderLine && i !== loLine) bcCands.push(i); });
-  var bcLine = bcCands.length ? bcCands[Math.floor(Math.random() * bcCands.length)] : scene.orderLine;
-  qs.push({type:'buildFromCn', line:bcLine});
+  /* 14 听句选义 B（与第 1 题不同的台词） */
+  var liB = pickLine(allIdx().filter(function(i){ return i !== liA; }), lineTargets);
+  qs.push({type:'listen', line:liB});
+  /* 15 填空 C（还有没练过的台词/目标词就继续填空，否则看义选词补一个没考过的词） */
+  var czC = pickCloze([ciA, ciB], [wordA, wordB], false);
+  if(czC) qs.push({type:'cloze', line:czC.line, word:czC.word});
+  else {
+    var unC = T.filter(function(w){ return [wListen, wMean, wRecall, wordA, wordB].indexOf(w) < 0; });
+    qs.push({type:'wordRecall', word:(unC.length ? pickTarget(unC, false) : pickTarget(T, false))});
+  }
+  /* 16 看中文拼句 B（再换一句台词） */
+  var bcB = pickBuildLine([scene.orderLine, loLine, bcA], 4);
+  qs.push({type:'buildFromCn', line:bcB});
+  /* 台词不足 8 句的场景（price 只有 7 句）补 1 步听词，保证整课 ≥29 步 */
+  if(n < 8) qs.push({type:'wordListen', word:pickTarget(T, false)});
+
+  /* ===== Phase 3 结尾复测：5 步计分（间隔复测 + 关键句重构） ===== */
+  T.forEach(function(w){ qs.push({type:'wordRecall', word:w}); });
+  qs.push({type:'buildFromCn', line:scene.orderLine, final:true});
   return qs;
 }
 var practice = null;
@@ -2207,8 +2299,8 @@ function practiceAnswer(ok, correctText, errInfo){
   if(ok) practice.right++;
   else {
     if(errInfo && !(q && q.retry)) practice.errors.push(errInfo);
-    /* 答错的计分题在本轮末尾再考一次（克隆题不再追加，队列上限 18） */
-    if(q && !q.retry && practice.qs.length < 18){
+    /* 答错的计分题在本轮末尾再考一次（克隆题不再追加，整队上限 40） */
+    if(q && !q.retry && practice.qs.length < 40){
       var clone = {};
       for(var k in q) clone[k] = q[k];
       clone.retry = true;
