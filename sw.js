@@ -1,4 +1,4 @@
-var CACHE = 'scene-english-v3.21';
+var CACHE = 'scene-english-v3.22';
 var STATIC_FILES = ['./manifest.json', './icon-192.png', './icon-512.png'];
 
 self.addEventListener('install', function(e){
