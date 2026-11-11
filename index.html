@@ -3,6 +3,49 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script>
+/* ===== v3.23 启动看门狗：主脚本若未完整到达（传输截断 / 毒化缓存），页面只剩空壳。
+   主脚本完整启动后会在启动尾部置 window.__booted；本脚本 6 秒后检查，未置位且首页
+   未渲染时给出自愈重试入口（带随机参数重载，绕开毒化缓存）。正常启动零显形、零副作用。 ===== */
+(function(){
+  function homeRendered(){
+    var hl = document.getElementById('homeList');
+    return !!(hl && hl.children.length > 0);
+  }
+  function showRetry(){
+    if(document.getElementById('bootRetry')) return;
+    var host = document.body || document.documentElement;
+    if(!host) return;
+    var box = document.createElement('div');
+    box.id = 'bootRetry';
+    box.setAttribute('style', 'position:fixed;top:0;left:0;right:0;bottom:0;z-index:9999;display:flex;align-items:center;justify-content:center;padding:24px;box-sizing:border-box;pointer-events:none;');
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.textContent = '加载未完成，点此重试';
+    btn.setAttribute('style', 'pointer-events:auto;min-height:56px;min-width:200px;padding:16px 28px;border:none;border-radius:16px;background:#0F766E;color:#FFFFFF;font-size:17px;font-weight:700;line-height:1.35;box-shadow:0 8px 24px rgba(0,0,0,0.35);cursor:pointer;-webkit-tap-highlight-color:transparent;');
+    btn.addEventListener('mousedown', function(){ btn.style.transform = 'scale(0.97)'; });
+    btn.addEventListener('mouseup', function(){ btn.style.transform = ''; });
+    btn.addEventListener('touchstart', function(){ btn.style.transform = 'scale(0.97)'; }, {passive: true});
+    btn.addEventListener('touchend', function(){ btn.style.transform = ''; });
+    btn.addEventListener('click', function(){
+      location.replace(location.pathname + '?r=' + Date.now());
+    });
+    box.appendChild(btn);
+    host.appendChild(box);
+    var n = 0;
+    var iv = setInterval(function(){
+      n += 1;
+      if(window.__booted){ clearInterval(iv); if(box.parentNode) box.parentNode.removeChild(box); }
+      else if(n >= 20){ clearInterval(iv); }
+    }, 1000);
+  }
+  setTimeout(function(){
+    if(window.__booted) return;
+    if(homeRendered()) return;
+    showRetry();
+  }, 6000);
+})();
+</script>
 <title>情景英语</title>
 <meta name="theme-color" content="#0F766E">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -816,7 +859,7 @@ header.top h1,.settle-title,.stat-cell .v,.review-due-num .n{font-family:'Baloo 
       </div>
       <p class="muted" style="margin-bottom:0">开启双端同步后，进度会自动在手机和电脑之间同步。单词音标来源：ECDICT 开源英汉词典（MIT 许可）；对话与题目均为原创。</p>
     </div>
-    <div class="version-line">情景英语 v3.22</div>
+    <div class="version-line">情景英语 v3.23</div>
   </section>
 </div>
 <!-- 文化卡收藏弹窗（v3.16：首次完成场景时弹，卡面按实体收藏卡设计） -->
@@ -2664,6 +2707,7 @@ function wordInScene(w, scene){
   return {w: w, ipa: wd ? wd.ipa : '', cn: glossOf(w, scene ? scene.id : null)};
 }
 function sceneById(id){ for(var i=0;i<SCENES.length;i++) if(SCENES[i].id===id) return SCENES[i]; return SCENES[0]; }
+function sceneExists(id){ for(var i=0;i<SCENES.length;i++) if(SCENES[i].id===id) return true; return false; } /* v3.23：会话恢复守卫用 */
 var cur = SCENES[0];
 var ALL_WORDS = [];
 SCENES.forEach(function(s){ s.words.forEach(function(wd){
@@ -3465,6 +3509,7 @@ function tryRestoreSession(){
   try{ d = JSON.parse(raw); }catch(e){ clearSession(); return false; }
   if(!d || !d.kind){ clearSession(); return false; }
   if(d.kind === 'scene'){
+    if(!sceneExists(d.sceneId)){ clearSession(); return false; } /* v3.23 守卫：指向已下线场景时不许靠 sceneById 兜底命中 */
     cur = sceneById(d.sceneId);
     sceneMuted = !!d.muted;
     hideFeedback();
@@ -3473,6 +3518,15 @@ function tryRestoreSession(){
     return true;
   }
   if(d.kind === 'practice'){
+    /* v3.23 守卫：会话本体或任一题目指向已下线场景时整档作废回首页，
+       不许靠 sceneById 兜底把题目渲染到别的课文上（v3.21 restaurant 会话在 v3.22 实证错位） */
+    var sessDangling = !sceneExists(d.sceneId);
+    if(!sessDangling){
+      [d.qs, d.missed, d.errorQs].forEach(function(arr){
+        (arr || []).forEach(function(c){ if(c && c.sceneId && !sceneExists(c.sceneId)) sessDangling = true; });
+      });
+    }
+    if(sessDangling){ clearSession(); return false; }
     /* v3.16：旧版本会话里的 speak 题（原 Phase 1）已下线，恢复时滤掉，避免落到已删除的题型 */
     var notSpeak = function(q){ return q && q.type !== 'speak'; };
     practice = {mode:d.mode || undefined, unit:d.unit || undefined, scene:sceneById(d.sceneId),
@@ -3493,6 +3547,8 @@ function tryRestoreSession(){
   }
   if(d.kind === 'review'){
     if(!d.ids || !d.ids.length || (d.idx || 0) >= d.ids.length){ clearSession(); return false; }
+    /* v3.23 守卫：行卡指向已下线场景时整档作废回首页，不许靠 sceneById 兜底把课文行串场 */
+    if(d.ids.some(function(id){ return typeof id === 'string' && id.indexOf('L:') === 0 && !sceneExists(id.split(':')[1]); })){ clearSession(); return false; }
     review = {ids:d.ids, idx:d.idx || 0, rated:false, hadRated:!!d.hadRated, dirMap:d.dirMap || {}};
     reviewDoneToday = 0;
     hideFeedback();
@@ -6017,6 +6073,7 @@ var ceiEl = document.getElementById('cultEntryIc'); if(ceiEl) ceiEl.innerHTML = 
 rollDay(); saveStore();
 updateTabBadge();
 if(!tryRestoreSession()) show('home');
+window.__booted = true; /* v3.23：启动看门狗置位——主脚本已完整执行到启动尾部 */
 if(document.addEventListener) document.addEventListener('pointerdown', function(ev){
   var t = ev && ev.target;
   if(t && t.closest){
